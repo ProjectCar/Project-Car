@@ -1,0 +1,260 @@
+
+MOTOR_MANAGEMENT_V0_1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000154  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .comment      00000030  00000000  00000000  000001a8  2**0
+                  CONTENTS, READONLY
+  2 .debug_aranges 00000048  00000000  00000000  000001d8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   0000036b  00000000  00000000  00000220  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 00000230  00000000  00000000  0000058b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   000002ec  00000000  00000000  000007bb  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000058  00000000  00000000  00000aa8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    000001c5  00000000  00000000  00000b00  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    0000004e  00000000  00000000  00000cc5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_ranges 00000060  00000000  00000000  00000d13  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 40 00 	call	0x80	; 0x80 <main>
+  78:	0c 94 a8 00 	jmp	0x150	; 0x150 <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <main>:
+#include "motor_management/servo_lib.h"
+
+
+int main(void)
+{
+	init_servo_1();
+  80:	0e 94 6d 00 	call	0xda	; 0xda <init_servo_1>
+    while(1)
+    {		
+		for(int x = 0; x < 180; x++)
+  84:	c0 e0       	ldi	r28, 0x00	; 0
+  86:	d0 e0       	ldi	r29, 0x00	; 0
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  88:	0f 2e       	mov	r0, r31
+  8a:	f4 eb       	ldi	r31, 0xB4	; 180
+  8c:	ff 2e       	mov	r15, r31
+  8e:	f0 2d       	mov	r31, r0
+  90:	00 e0       	ldi	r16, 0x00	; 0
+  92:	10 e0       	ldi	r17, 0x00	; 0
+  94:	04 c0       	rjmp	.+8      	; 0x9e <main+0x1e>
+		{
+			control_servo_1(x);
+  96:	8c 2f       	mov	r24, r28
+  98:	0e 94 98 00 	call	0x130	; 0x130 <control_servo_1>
+int main(void)
+{
+	init_servo_1();
+    while(1)
+    {		
+		for(int x = 0; x < 180; x++)
+  9c:	21 96       	adiw	r28, 0x01	; 1
+  9e:	c4 3b       	cpi	r28, 0xB4	; 180
+  a0:	d1 05       	cpc	r29, r1
+  a2:	cc f3       	brlt	.-14     	; 0x96 <main+0x16>
+  a4:	2f ef       	ldi	r18, 0xFF	; 255
+  a6:	83 ed       	ldi	r24, 0xD3	; 211
+  a8:	90 e3       	ldi	r25, 0x30	; 48
+  aa:	21 50       	subi	r18, 0x01	; 1
+  ac:	80 40       	sbci	r24, 0x00	; 0
+  ae:	90 40       	sbci	r25, 0x00	; 0
+  b0:	e1 f7       	brne	.-8      	; 0xaa <main+0x2a>
+  b2:	00 c0       	rjmp	.+0      	; 0xb4 <main+0x34>
+  b4:	00 00       	nop
+  b6:	cf 2d       	mov	r28, r15
+
+		_delay_ms(1000);
+
+		for(int x = 180; x > 0; x--)
+		{
+			control_servo_1(x);
+  b8:	8c 2f       	mov	r24, r28
+  ba:	0e 94 98 00 	call	0x130	; 0x130 <control_servo_1>
+  be:	c1 50       	subi	r28, 0x01	; 1
+			control_servo_1(x);
+		}
+
+		_delay_ms(1000);
+
+		for(int x = 180; x > 0; x--)
+  c0:	d9 f7       	brne	.-10     	; 0xb8 <main+0x38>
+  c2:	2f ef       	ldi	r18, 0xFF	; 255
+  c4:	83 ed       	ldi	r24, 0xD3	; 211
+  c6:	90 e3       	ldi	r25, 0x30	; 48
+  c8:	21 50       	subi	r18, 0x01	; 1
+  ca:	80 40       	sbci	r24, 0x00	; 0
+  cc:	90 40       	sbci	r25, 0x00	; 0
+  ce:	e1 f7       	brne	.-8      	; 0xc8 <main+0x48>
+  d0:	00 c0       	rjmp	.+0      	; 0xd2 <main+0x52>
+  d2:	00 00       	nop
+int main(void)
+{
+	init_servo_1();
+    while(1)
+    {		
+		for(int x = 0; x < 180; x++)
+  d4:	c0 2f       	mov	r28, r16
+  d6:	d1 2f       	mov	r29, r17
+  d8:	e2 cf       	rjmp	.-60     	; 0x9e <main+0x1e>
+
+000000da <init_servo_1>:
+#include "util/delay.h"
+
+void init_servo_1( void )
+{
+	//Set PD5 (OC0B) to output
+	DDRD |= (1<<DDD5);
+  da:	55 9a       	sbi	0x0a, 5	; 10
+	//SET PC0-PC2 (Debug LED's) to output
+	DDRC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
+  dc:	87 b1       	in	r24, 0x07	; 7
+  de:	87 60       	ori	r24, 0x07	; 7
+  e0:	87 b9       	out	0x07, r24	; 7
+
+	
+	//Set Compare to Fast PWM with match to clear and bottom to set
+	TCCR0A |= ( (1<<COM0B1) | (1<<WGM00) | (1<<WGM01) );
+  e2:	84 b5       	in	r24, 0x24	; 36
+  e4:	83 62       	ori	r24, 0x23	; 35
+  e6:	84 bd       	out	0x24, r24	; 36
+	TCCR0A &= ~(1<<COM0B0);
+  e8:	84 b5       	in	r24, 0x24	; 36
+  ea:	8f 7e       	andi	r24, 0xEF	; 239
+  ec:	84 bd       	out	0x24, r24	; 36
+	
+	//Set Clock Dividor to 1024	
+	TCCR0B |= ( (1<<CS02)  );
+  ee:	85 b5       	in	r24, 0x25	; 37
+  f0:	84 60       	ori	r24, 0x04	; 4
+  f2:	85 bd       	out	0x25, r24	; 37
+	TCCR0B &= ~( (1<<CS01) | (1<<CS00) );
+  f4:	85 b5       	in	r24, 0x25	; 37
+  f6:	8c 7f       	andi	r24, 0xFC	; 252
+  f8:	85 bd       	out	0x25, r24	; 37
+	
+	
+	//Set Servo to 0°
+	OCR0B = 15;
+  fa:	8f e0       	ldi	r24, 0x0F	; 15
+  fc:	88 bd       	out	0x28, r24	; 40
+	
+	//Signalize successfull bootup
+	PORTC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
+  fe:	88 b1       	in	r24, 0x08	; 8
+ 100:	87 60       	ori	r24, 0x07	; 7
+ 102:	88 b9       	out	0x08, r24	; 8
+ 104:	2f ef       	ldi	r18, 0xFF	; 255
+ 106:	85 ea       	ldi	r24, 0xA5	; 165
+ 108:	9e e0       	ldi	r25, 0x0E	; 14
+ 10a:	21 50       	subi	r18, 0x01	; 1
+ 10c:	80 40       	sbci	r24, 0x00	; 0
+ 10e:	90 40       	sbci	r25, 0x00	; 0
+ 110:	e1 f7       	brne	.-8      	; 0x10a <init_servo_1+0x30>
+ 112:	00 c0       	rjmp	.+0      	; 0x114 <init_servo_1+0x3a>
+ 114:	00 00       	nop
+	_delay_ms(300);
+	PORTC &= ~( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
+ 116:	88 b1       	in	r24, 0x08	; 8
+ 118:	88 7f       	andi	r24, 0xF8	; 248
+ 11a:	88 b9       	out	0x08, r24	; 8
+ 11c:	2f ef       	ldi	r18, 0xFF	; 255
+ 11e:	85 ea       	ldi	r24, 0xA5	; 165
+ 120:	9e e0       	ldi	r25, 0x0E	; 14
+ 122:	21 50       	subi	r18, 0x01	; 1
+ 124:	80 40       	sbci	r24, 0x00	; 0
+ 126:	90 40       	sbci	r25, 0x00	; 0
+ 128:	e1 f7       	brne	.-8      	; 0x122 <init_servo_1+0x48>
+ 12a:	00 c0       	rjmp	.+0      	; 0x12c <init_servo_1+0x52>
+ 12c:	00 00       	nop
+ 12e:	08 95       	ret
+
+00000130 <control_servo_1>:
+}
+
+//Function excepts a Value between 0° and 180°
+void control_servo_1( char grad )
+{
+	PORTC |= (1<<DDC1);		
+ 130:	41 9a       	sbi	0x08, 1	; 8
+	
+	OCR0B = (grad/3) + 15;
+ 132:	9b ea       	ldi	r25, 0xAB	; 171
+ 134:	89 9f       	mul	r24, r25
+ 136:	81 2d       	mov	r24, r1
+ 138:	11 24       	eor	r1, r1
+ 13a:	86 95       	lsr	r24
+ 13c:	81 5f       	subi	r24, 0xF1	; 241
+ 13e:	88 bd       	out	0x28, r24	; 40
+ 140:	8f e1       	ldi	r24, 0x1F	; 31
+ 142:	9e e4       	ldi	r25, 0x4E	; 78
+ 144:	01 97       	sbiw	r24, 0x01	; 1
+ 146:	f1 f7       	brne	.-4      	; 0x144 <control_servo_1+0x14>
+ 148:	00 c0       	rjmp	.+0      	; 0x14a <control_servo_1+0x1a>
+ 14a:	00 00       	nop
+	
+	_delay_ms(5);
+	
+	PORTC &= ~(1<<DDC1);		
+ 14c:	41 98       	cbi	0x08, 1	; 8
+ 14e:	08 95       	ret
+
+00000150 <_exit>:
+ 150:	f8 94       	cli
+
+00000152 <__stop_program>:
+ 152:	ff cf       	rjmp	.-2      	; 0x152 <__stop_program>
