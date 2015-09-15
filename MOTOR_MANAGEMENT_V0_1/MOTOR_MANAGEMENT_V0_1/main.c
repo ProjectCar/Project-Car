@@ -23,7 +23,7 @@ int main(void)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
 			_delay_ms(500);
-	    }
+        }
 
         _delay_ms(1000);
 
@@ -31,7 +31,7 @@ int main(void)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
 			_delay_ms(500);        
-	    }
+        }
         
 		
         _delay_ms(1000);
