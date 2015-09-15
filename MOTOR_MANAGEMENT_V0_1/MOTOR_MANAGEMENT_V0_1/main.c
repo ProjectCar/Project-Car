@@ -15,22 +15,22 @@
 
 int main(void)
 {
-	init_servo_1();                                                 //Initalize our Servo1
+    init_servo_1();                                                 //Initalize our Servo1
 
     while(1)
-    {		
-		for(int x = 0; x < 180; x++)
-		{
-			control_servo_1(x);                                     //Set the Servo1 to Position x
-		}
+    {        
+        for(int x = 0; x < 180; x++)
+        {
+            control_servo_1(x);                                     //Set the Servo1 to Position x
+        }
 
-		_delay_ms(1000);
+        _delay_ms(1000);
 
-		for(int x = 180; x > 0; x--)
-		{
-			control_servo_1(x);                                     //Set the Servo1 to Position x
-		}
-		
-		_delay_ms(1000);
+        for(int x = 180; x > 0; x--)
+        {
+            control_servo_1(x);                                     //Set the Servo1 to Position x
+        }
+        
+        _delay_ms(1000);
     }
 }
