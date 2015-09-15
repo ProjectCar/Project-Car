@@ -29,7 +29,6 @@ void init_servo_1( void )
     _delay_ms(300);
 }
 
-//Function excepts a Value between 0° and 180°
 void control_servo_1( char grad )
 {
     PORTC |= (1<<DDC1);                                             //Set orange LED to show that there is something happening
