@@ -19,10 +19,18 @@ int main(void)
 
     while(1)
     {        
-        for(int x = 0; x < 180; x++)
+        for(int x = 0; x < 90; x++)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
-			_delay_ms(500);
+			_delay_ms(10);
+        }
+
+        _delay_ms(1000);
+
+        for(int x = 90; x < 180; x++)
+        {
+	        control_servo_1(x);                                     //Set the Servo1 to Position x
+	        _delay_ms(10);
         }
 
         _delay_ms(1000);
@@ -30,10 +38,9 @@ int main(void)
         for(int x = 180; x > 0; x--)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
-			_delay_ms(500);        
+			_delay_ms(10);        
         }
-        
-		
+
         _delay_ms(1000);
     }
 }
