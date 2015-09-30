@@ -24,16 +24,16 @@ int main(void)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
             control_motor_1(x);                                     //Set the Motor1 to Position x
-			_delay_ms(10);
+            _delay_ms(10);
         }
 
         _delay_ms(1000);
 
         for(int x = 90; x < 180; x++)
         {
-	        control_servo_1(x);                                     //Set the Servo1 to Position x
+            control_servo_1(x);                                     //Set the Servo1 to Position x
             control_motor_1(x);                                     //Set the Motor1 to Position x
-	        _delay_ms(10);
+            _delay_ms(10);
         }
 
         _delay_ms(1000);
@@ -42,7 +42,7 @@ int main(void)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
             control_motor_1(x);                                     //Set the Motor1 to Position x
-			_delay_ms(10);        
+            _delay_ms(10);        
         }
 
         _delay_ms(1000);

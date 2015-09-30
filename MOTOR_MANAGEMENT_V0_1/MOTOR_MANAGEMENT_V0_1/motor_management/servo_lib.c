@@ -12,7 +12,7 @@
 
 void init_servo_1( void )
 {
-    DDRB |= (1<<DDB1);                                              //Set PD5 (OC1A) to output
+    DDRB |= (1<<DDB1);                                              //Set PB1 (OC1A) to output
     DDRC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );                  //SET PC0-PC2 (Debug LED's) to output
     
     TCCR1A |= ( (1<<COM1A1) |  (1<<WGM11) );                        //Set Compare to Fast PWM with match to clear and bottom to set    
@@ -43,7 +43,7 @@ void control_servo_1( char grad )
 
 void init_motor_1( void )
 {
-    DDRB |= (1<<DDB2);                                              //Set PD5 (OC1A) to output
+    DDRB |= (1<<DDB2);                                              //Set PB2 (OC1B) to output
     DDRC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );                  //SET PC0-PC2 (Debug LED's) to output
     
     TCCR1A |= ( (1<<COM1B1) |  (1<<WGM11) );                        //Set Compare to Fast PWM with match to clear and bottom to set    
