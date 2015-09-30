@@ -3,25 +3,25 @@ MOTOR_MANAGEMENT_V0_1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000154  00000000  00000000  00000054  2**1
+  0 .text         00000250  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .comment      00000030  00000000  00000000  000001a8  2**0
+  1 .comment      00000030  00000000  00000000  000002a4  2**0
                   CONTENTS, READONLY
-  2 .debug_aranges 00000048  00000000  00000000  000001d8  2**0
+  2 .debug_aranges 00000058  00000000  00000000  000002d4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   0000036b  00000000  00000000  00000220  2**0
+  3 .debug_info   00000588  00000000  00000000  0000032c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 00000230  00000000  00000000  0000058b  2**0
+  4 .debug_abbrev 00000276  00000000  00000000  000008b4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   000002ec  00000000  00000000  000007bb  2**0
+  5 .debug_line   0000036c  00000000  00000000  00000b2a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  00000058  00000000  00000000  00000aa8  2**2
+  6 .debug_frame  00000078  00000000  00000000  00000e98  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    000001c5  00000000  00000000  00000b00  2**0
+  7 .debug_str    000001ed  00000000  00000000  00000f10  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    0000004e  00000000  00000000  00000cc5  2**0
+  8 .debug_loc    00000110  00000000  00000000  000010fd  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_ranges 00000060  00000000  00000000  00000d13  2**0
+  9 .debug_ranges 00000070  00000000  00000000  0000120d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -62,199 +62,350 @@ Disassembly of section .text:
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
   74:	0e 94 40 00 	call	0x80	; 0x80 <main>
-  78:	0c 94 a8 00 	jmp	0x150	; 0x150 <_exit>
+  78:	0c 94 26 01 	jmp	0x24c	; 0x24c <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <main>:
-#include "motor_management/servo_lib.h"
 
+#include "motor_management/servo_lib.h"                             //Include Servo Library
 
 int main(void)
 {
-	init_servo_1();
-  80:	0e 94 6d 00 	call	0xda	; 0xda <init_servo_1>
+    init_servo_1();                                                 //Initalize our Servo1
+  80:	0e 94 9a 00 	call	0x134	; 0x134 <init_servo_1>
+    init_motor_1();                                                 //Initalize our Motor1
+  84:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <init_motor_1>
+
     while(1)
-    {		
-		for(int x = 0; x < 180; x++)
-  84:	c0 e0       	ldi	r28, 0x00	; 0
-  86:	d0 e0       	ldi	r29, 0x00	; 0
+    {        
+        for(int x = 0; x < 90; x++)
+  88:	c0 e0       	ldi	r28, 0x00	; 0
+  8a:	d0 e0       	ldi	r29, 0x00	; 0
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  88:	0f 2e       	mov	r0, r31
-  8a:	f4 eb       	ldi	r31, 0xB4	; 180
-  8c:	ff 2e       	mov	r15, r31
-  8e:	f0 2d       	mov	r31, r0
-  90:	00 e0       	ldi	r16, 0x00	; 0
-  92:	10 e0       	ldi	r17, 0x00	; 0
-  94:	04 c0       	rjmp	.+8      	; 0x9e <main+0x1e>
-		{
-			control_servo_1(x);
-  96:	8c 2f       	mov	r24, r28
-  98:	0e 94 98 00 	call	0x130	; 0x130 <control_servo_1>
-int main(void)
-{
-	init_servo_1();
+  8c:	0f 2e       	mov	r0, r31
+  8e:	f4 eb       	ldi	r31, 0xB4	; 180
+  90:	ff 2e       	mov	r15, r31
+  92:	f0 2d       	mov	r31, r0
+  94:	00 e0       	ldi	r16, 0x00	; 0
+  96:	10 e0       	ldi	r17, 0x00	; 0
+  98:	0d c0       	rjmp	.+26     	; 0xb4 <main+0x34>
+        {
+            control_servo_1(x);                                     //Set the Servo1 to Position x
+  9a:	8c 2f       	mov	r24, r28
+  9c:	0e 94 cd 00 	call	0x19a	; 0x19a <control_servo_1>
+            control_motor_1(x);                                     //Set the Motor1 to Position x
+  a0:	8c 2f       	mov	r24, r28
+  a2:	0e 94 13 01 	call	0x226	; 0x226 <control_motor_1>
+  a6:	8f e1       	ldi	r24, 0x1F	; 31
+  a8:	9e e4       	ldi	r25, 0x4E	; 78
+  aa:	01 97       	sbiw	r24, 0x01	; 1
+  ac:	f1 f7       	brne	.-4      	; 0xaa <main+0x2a>
+  ae:	00 c0       	rjmp	.+0      	; 0xb0 <main+0x30>
+  b0:	00 00       	nop
+    init_servo_1();                                                 //Initalize our Servo1
+    init_motor_1();                                                 //Initalize our Motor1
+
     while(1)
-    {		
-		for(int x = 0; x < 180; x++)
-  9c:	21 96       	adiw	r28, 0x01	; 1
-  9e:	c4 3b       	cpi	r28, 0xB4	; 180
-  a0:	d1 05       	cpc	r29, r1
-  a2:	cc f3       	brlt	.-14     	; 0x96 <main+0x16>
-  a4:	2f ef       	ldi	r18, 0xFF	; 255
-  a6:	83 ed       	ldi	r24, 0xD3	; 211
-  a8:	90 e3       	ldi	r25, 0x30	; 48
-  aa:	21 50       	subi	r18, 0x01	; 1
-  ac:	80 40       	sbci	r24, 0x00	; 0
-  ae:	90 40       	sbci	r25, 0x00	; 0
-  b0:	e1 f7       	brne	.-8      	; 0xaa <main+0x2a>
-  b2:	00 c0       	rjmp	.+0      	; 0xb4 <main+0x34>
-  b4:	00 00       	nop
-  b6:	cf 2d       	mov	r28, r15
+    {        
+        for(int x = 0; x < 90; x++)
+  b2:	21 96       	adiw	r28, 0x01	; 1
+  b4:	ca 35       	cpi	r28, 0x5A	; 90
+  b6:	d1 05       	cpc	r29, r1
+  b8:	84 f3       	brlt	.-32     	; 0x9a <main+0x1a>
+  ba:	9f ef       	ldi	r25, 0xFF	; 255
+  bc:	29 e6       	ldi	r18, 0x69	; 105
+  be:	88 e1       	ldi	r24, 0x18	; 24
+  c0:	91 50       	subi	r25, 0x01	; 1
+  c2:	20 40       	sbci	r18, 0x00	; 0
+  c4:	80 40       	sbci	r24, 0x00	; 0
+  c6:	e1 f7       	brne	.-8      	; 0xc0 <main+0x40>
+  c8:	00 c0       	rjmp	.+0      	; 0xca <main+0x4a>
+  ca:	00 00       	nop
+  cc:	ca e5       	ldi	r28, 0x5A	; 90
 
-		_delay_ms(1000);
+        _delay_ms(1000);
 
-		for(int x = 180; x > 0; x--)
-		{
-			control_servo_1(x);
-  b8:	8c 2f       	mov	r24, r28
-  ba:	0e 94 98 00 	call	0x130	; 0x130 <control_servo_1>
-  be:	c1 50       	subi	r28, 0x01	; 1
-			control_servo_1(x);
-		}
+        for(int x = 90; x < 180; x++)
+        {
+	        control_servo_1(x);                                     //Set the Servo1 to Position x
+  ce:	8c 2f       	mov	r24, r28
+  d0:	0e 94 cd 00 	call	0x19a	; 0x19a <control_servo_1>
+            control_motor_1(x);                                     //Set the Motor1 to Position x
+  d4:	8c 2f       	mov	r24, r28
+  d6:	0e 94 13 01 	call	0x226	; 0x226 <control_motor_1>
+  da:	8f e1       	ldi	r24, 0x1F	; 31
+  dc:	9e e4       	ldi	r25, 0x4E	; 78
+  de:	01 97       	sbiw	r24, 0x01	; 1
+  e0:	f1 f7       	brne	.-4      	; 0xde <main+0x5e>
+  e2:	00 c0       	rjmp	.+0      	; 0xe4 <main+0x64>
+  e4:	00 00       	nop
+  e6:	cf 5f       	subi	r28, 0xFF	; 255
+			_delay_ms(10);
+        }
 
-		_delay_ms(1000);
+        _delay_ms(1000);
 
-		for(int x = 180; x > 0; x--)
-  c0:	d9 f7       	brne	.-10     	; 0xb8 <main+0x38>
-  c2:	2f ef       	ldi	r18, 0xFF	; 255
-  c4:	83 ed       	ldi	r24, 0xD3	; 211
-  c6:	90 e3       	ldi	r25, 0x30	; 48
-  c8:	21 50       	subi	r18, 0x01	; 1
-  ca:	80 40       	sbci	r24, 0x00	; 0
-  cc:	90 40       	sbci	r25, 0x00	; 0
-  ce:	e1 f7       	brne	.-8      	; 0xc8 <main+0x48>
-  d0:	00 c0       	rjmp	.+0      	; 0xd2 <main+0x52>
-  d2:	00 00       	nop
-int main(void)
-{
-	init_servo_1();
+        for(int x = 90; x < 180; x++)
+  e8:	c4 3b       	cpi	r28, 0xB4	; 180
+  ea:	89 f7       	brne	.-30     	; 0xce <main+0x4e>
+  ec:	9f ef       	ldi	r25, 0xFF	; 255
+  ee:	29 e6       	ldi	r18, 0x69	; 105
+  f0:	88 e1       	ldi	r24, 0x18	; 24
+  f2:	91 50       	subi	r25, 0x01	; 1
+  f4:	20 40       	sbci	r18, 0x00	; 0
+  f6:	80 40       	sbci	r24, 0x00	; 0
+  f8:	e1 f7       	brne	.-8      	; 0xf2 <main+0x72>
+  fa:	00 c0       	rjmp	.+0      	; 0xfc <main+0x7c>
+  fc:	00 00       	nop
+  fe:	cf 2d       	mov	r28, r15
+
+        _delay_ms(1000);
+
+        for(int x = 180; x > 0; x--)
+        {
+            control_servo_1(x);                                     //Set the Servo1 to Position x
+ 100:	8c 2f       	mov	r24, r28
+ 102:	0e 94 cd 00 	call	0x19a	; 0x19a <control_servo_1>
+            control_motor_1(x);                                     //Set the Motor1 to Position x
+ 106:	8c 2f       	mov	r24, r28
+ 108:	0e 94 13 01 	call	0x226	; 0x226 <control_motor_1>
+ 10c:	8f e1       	ldi	r24, 0x1F	; 31
+ 10e:	9e e4       	ldi	r25, 0x4E	; 78
+ 110:	01 97       	sbiw	r24, 0x01	; 1
+ 112:	f1 f7       	brne	.-4      	; 0x110 <main+0x90>
+ 114:	00 c0       	rjmp	.+0      	; 0x116 <main+0x96>
+ 116:	00 00       	nop
+ 118:	c1 50       	subi	r28, 0x01	; 1
+	        _delay_ms(10);
+        }
+
+        _delay_ms(1000);
+
+        for(int x = 180; x > 0; x--)
+ 11a:	91 f7       	brne	.-28     	; 0x100 <main+0x80>
+ 11c:	9f ef       	ldi	r25, 0xFF	; 255
+ 11e:	29 e6       	ldi	r18, 0x69	; 105
+ 120:	88 e1       	ldi	r24, 0x18	; 24
+ 122:	91 50       	subi	r25, 0x01	; 1
+ 124:	20 40       	sbci	r18, 0x00	; 0
+ 126:	80 40       	sbci	r24, 0x00	; 0
+ 128:	e1 f7       	brne	.-8      	; 0x122 <main+0xa2>
+ 12a:	00 c0       	rjmp	.+0      	; 0x12c <main+0xac>
+ 12c:	00 00       	nop
+    init_servo_1();                                                 //Initalize our Servo1
+    init_motor_1();                                                 //Initalize our Motor1
+
     while(1)
-    {		
-		for(int x = 0; x < 180; x++)
-  d4:	c0 2f       	mov	r28, r16
-  d6:	d1 2f       	mov	r29, r17
-  d8:	e2 cf       	rjmp	.-60     	; 0x9e <main+0x1e>
+    {        
+        for(int x = 0; x < 90; x++)
+ 12e:	c0 2f       	mov	r28, r16
+ 130:	d1 2f       	mov	r29, r17
+ 132:	c0 cf       	rjmp	.-128    	; 0xb4 <main+0x34>
 
-000000da <init_servo_1>:
-#include "util/delay.h"
+00000134 <init_servo_1>:
+#include <avr/io.h>                                                 //Include AVR Library to get the nice Bit definitions
+#include "util/delay.h"                                             //Delay Function
 
 void init_servo_1( void )
 {
-	//Set PD5 (OC0B) to output
-	DDRD |= (1<<DDD5);
-  da:	55 9a       	sbi	0x0a, 5	; 10
-	//SET PC0-PC2 (Debug LED's) to output
-	DDRC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
-  dc:	87 b1       	in	r24, 0x07	; 7
-  de:	87 60       	ori	r24, 0x07	; 7
-  e0:	87 b9       	out	0x07, r24	; 7
+    DDRB |= (1<<DDB1);                                              //Set PD5 (OC1A) to output
+ 134:	21 9a       	sbi	0x04, 1	; 4
+    DDRC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );                  //SET PC0-PC2 (Debug LED's) to output
+ 136:	87 b1       	in	r24, 0x07	; 7
+ 138:	87 60       	ori	r24, 0x07	; 7
+ 13a:	87 b9       	out	0x07, r24	; 7
+    
+    TCCR1A |= ( (1<<COM1A1) |  (1<<WGM11) );                        //Set Compare to Fast PWM with match to clear and bottom to set    
+ 13c:	e0 e8       	ldi	r30, 0x80	; 128
+ 13e:	f0 e0       	ldi	r31, 0x00	; 0
+ 140:	80 81       	ld	r24, Z
+ 142:	82 68       	ori	r24, 0x82	; 130
+ 144:	80 83       	st	Z, r24
+    TCCR1B |= ( (1<<WGM12) | (1<<WGM13) | (1<<CS11) );              //Set Clock Dividor to 1024    
+ 146:	e1 e8       	ldi	r30, 0x81	; 129
+ 148:	f0 e0       	ldi	r31, 0x00	; 0
+ 14a:	80 81       	ld	r24, Z
+ 14c:	8a 61       	ori	r24, 0x1A	; 26
+ 14e:	80 83       	st	Z, r24
 
-	
-	//Set Compare to Fast PWM with match to clear and bottom to set
-	TCCR0A |= ( (1<<COM0B1) | (1<<WGM00) | (1<<WGM01) );
-  e2:	84 b5       	in	r24, 0x24	; 36
-  e4:	83 62       	ori	r24, 0x23	; 35
-  e6:	84 bd       	out	0x24, r24	; 36
-	TCCR0A &= ~(1<<COM0B0);
-  e8:	84 b5       	in	r24, 0x24	; 36
-  ea:	8f 7e       	andi	r24, 0xEF	; 239
-  ec:	84 bd       	out	0x24, r24	; 36
-	
-	//Set Clock Dividor to 1024	
-	TCCR0B |= ( (1<<CS02)  );
-  ee:	85 b5       	in	r24, 0x25	; 37
-  f0:	84 60       	ori	r24, 0x04	; 4
-  f2:	85 bd       	out	0x25, r24	; 37
-	TCCR0B &= ~( (1<<CS01) | (1<<CS00) );
-  f4:	85 b5       	in	r24, 0x25	; 37
-  f6:	8c 7f       	andi	r24, 0xFC	; 252
-  f8:	85 bd       	out	0x25, r24	; 37
-	
-	
-	//Set Servo to 0°
-	OCR0B = 15;
-  fa:	8f e0       	ldi	r24, 0x0F	; 15
-  fc:	88 bd       	out	0x28, r24	; 40
-	
-	//Signalize successfull bootup
-	PORTC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
-  fe:	88 b1       	in	r24, 0x08	; 8
- 100:	87 60       	ori	r24, 0x07	; 7
- 102:	88 b9       	out	0x08, r24	; 8
- 104:	2f ef       	ldi	r18, 0xFF	; 255
- 106:	85 ea       	ldi	r24, 0xA5	; 165
- 108:	9e e0       	ldi	r25, 0x0E	; 14
- 10a:	21 50       	subi	r18, 0x01	; 1
- 10c:	80 40       	sbci	r24, 0x00	; 0
- 10e:	90 40       	sbci	r25, 0x00	; 0
- 110:	e1 f7       	brne	.-8      	; 0x10a <init_servo_1+0x30>
- 112:	00 c0       	rjmp	.+0      	; 0x114 <init_servo_1+0x3a>
- 114:	00 00       	nop
-	_delay_ms(300);
-	PORTC &= ~( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
- 116:	88 b1       	in	r24, 0x08	; 8
- 118:	88 7f       	andi	r24, 0xF8	; 248
- 11a:	88 b9       	out	0x08, r24	; 8
- 11c:	2f ef       	ldi	r18, 0xFF	; 255
- 11e:	85 ea       	ldi	r24, 0xA5	; 165
- 120:	9e e0       	ldi	r25, 0x0E	; 14
- 122:	21 50       	subi	r18, 0x01	; 1
- 124:	80 40       	sbci	r24, 0x00	; 0
- 126:	90 40       	sbci	r25, 0x00	; 0
- 128:	e1 f7       	brne	.-8      	; 0x122 <init_servo_1+0x48>
- 12a:	00 c0       	rjmp	.+0      	; 0x12c <init_servo_1+0x52>
- 12c:	00 00       	nop
- 12e:	08 95       	ret
+    OCR1A = 0x08FF;
+ 150:	8f ef       	ldi	r24, 0xFF	; 255
+ 152:	98 e0       	ldi	r25, 0x08	; 8
+ 154:	90 93 89 00 	sts	0x0089, r25
+ 158:	80 93 88 00 	sts	0x0088, r24
 
-00000130 <control_servo_1>:
-}
+    ICR1 = 0x5000;
+ 15c:	80 e0       	ldi	r24, 0x00	; 0
+ 15e:	90 e5       	ldi	r25, 0x50	; 80
+ 160:	90 93 87 00 	sts	0x0087, r25
+ 164:	80 93 86 00 	sts	0x0086, r24
 
-//Function excepts a Value between 0° and 180°
+    PORTC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );                 //Signalize successfull bootup with all LED's
+ 168:	88 b1       	in	r24, 0x08	; 8
+ 16a:	87 60       	ori	r24, 0x07	; 7
+ 16c:	88 b9       	out	0x08, r24	; 8
+ 16e:	2f ef       	ldi	r18, 0xFF	; 255
+ 170:	82 e5       	ldi	r24, 0x52	; 82
+ 172:	97 e0       	ldi	r25, 0x07	; 7
+ 174:	21 50       	subi	r18, 0x01	; 1
+ 176:	80 40       	sbci	r24, 0x00	; 0
+ 178:	90 40       	sbci	r25, 0x00	; 0
+ 17a:	e1 f7       	brne	.-8      	; 0x174 <init_servo_1+0x40>
+ 17c:	00 c0       	rjmp	.+0      	; 0x17e <init_servo_1+0x4a>
+ 17e:	00 00       	nop
+    _delay_ms(300);
+    PORTC &= ~( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
+ 180:	88 b1       	in	r24, 0x08	; 8
+ 182:	88 7f       	andi	r24, 0xF8	; 248
+ 184:	88 b9       	out	0x08, r24	; 8
+ 186:	2f ef       	ldi	r18, 0xFF	; 255
+ 188:	82 e5       	ldi	r24, 0x52	; 82
+ 18a:	97 e0       	ldi	r25, 0x07	; 7
+ 18c:	21 50       	subi	r18, 0x01	; 1
+ 18e:	80 40       	sbci	r24, 0x00	; 0
+ 190:	90 40       	sbci	r25, 0x00	; 0
+ 192:	e1 f7       	brne	.-8      	; 0x18c <init_servo_1+0x58>
+ 194:	00 c0       	rjmp	.+0      	; 0x196 <init_servo_1+0x62>
+ 196:	00 00       	nop
+ 198:	08 95       	ret
+
+0000019a <control_servo_1>:
+
 void control_servo_1( char grad )
 {
-	PORTC |= (1<<DDC1);		
- 130:	41 9a       	sbi	0x08, 1	; 8
-	
-	OCR0B = (grad/3) + 15;
- 132:	9b ea       	ldi	r25, 0xAB	; 171
- 134:	89 9f       	mul	r24, r25
- 136:	81 2d       	mov	r24, r1
- 138:	11 24       	eor	r1, r1
- 13a:	86 95       	lsr	r24
- 13c:	81 5f       	subi	r24, 0xF1	; 241
- 13e:	88 bd       	out	0x28, r24	; 40
- 140:	8f e1       	ldi	r24, 0x1F	; 31
- 142:	9e e4       	ldi	r25, 0x4E	; 78
- 144:	01 97       	sbiw	r24, 0x01	; 1
- 146:	f1 f7       	brne	.-4      	; 0x144 <control_servo_1+0x14>
- 148:	00 c0       	rjmp	.+0      	; 0x14a <control_servo_1+0x1a>
- 14a:	00 00       	nop
-	
-	_delay_ms(5);
-	
-	PORTC &= ~(1<<DDC1);		
- 14c:	41 98       	cbi	0x08, 1	; 8
- 14e:	08 95       	ret
+    int CAL = 0;
 
-00000150 <_exit>:
- 150:	f8 94       	cli
+    PORTC |= (1<<DDC1);                                             //Set orange LED to show that there is something happening
+ 19a:	41 9a       	sbi	0x08, 1	; 8
 
-00000152 <__stop_program>:
- 152:	ff cf       	rjmp	.-2      	; 0x152 <__stop_program>
+    CAL = 0x08FF - 0x01FF;
+
+    OCR1A = ((CAL/180)*grad) + 0x01FF;                              //Calculate the Value for the Timer based on the given °                                  
+ 19c:	90 e0       	ldi	r25, 0x00	; 0
+ 19e:	9c 01       	movw	r18, r24
+ 1a0:	22 0f       	add	r18, r18
+ 1a2:	33 1f       	adc	r19, r19
+ 1a4:	22 0f       	add	r18, r18
+ 1a6:	33 1f       	adc	r19, r19
+ 1a8:	22 0f       	add	r18, r18
+ 1aa:	33 1f       	adc	r19, r19
+ 1ac:	82 0f       	add	r24, r18
+ 1ae:	93 1f       	adc	r25, r19
+ 1b0:	81 50       	subi	r24, 0x01	; 1
+ 1b2:	9e 4f       	sbci	r25, 0xFE	; 254
+ 1b4:	90 93 89 00 	sts	0x0089, r25
+ 1b8:	80 93 88 00 	sts	0x0088, r24
+
+    PORTC &= ~(1<<DDC1);                                            //Turn off LED
+ 1bc:	41 98       	cbi	0x08, 1	; 8
+ 1be:	08 95       	ret
+
+000001c0 <init_motor_1>:
+}
+
+void init_motor_1( void )
+{
+    DDRB |= (1<<DDB2);                                              //Set PD5 (OC1A) to output
+ 1c0:	22 9a       	sbi	0x04, 2	; 4
+    DDRC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );                  //SET PC0-PC2 (Debug LED's) to output
+ 1c2:	87 b1       	in	r24, 0x07	; 7
+ 1c4:	87 60       	ori	r24, 0x07	; 7
+ 1c6:	87 b9       	out	0x07, r24	; 7
+    
+    TCCR1A |= ( (1<<COM1B1) |  (1<<WGM11) );                        //Set Compare to Fast PWM with match to clear and bottom to set    
+ 1c8:	e0 e8       	ldi	r30, 0x80	; 128
+ 1ca:	f0 e0       	ldi	r31, 0x00	; 0
+ 1cc:	80 81       	ld	r24, Z
+ 1ce:	82 62       	ori	r24, 0x22	; 34
+ 1d0:	80 83       	st	Z, r24
+    TCCR1B |= ( (1<<WGM12) | (1<<WGM13) | (1<<CS11) );              //Set Clock Dividor to 1024    
+ 1d2:	e1 e8       	ldi	r30, 0x81	; 129
+ 1d4:	f0 e0       	ldi	r31, 0x00	; 0
+ 1d6:	80 81       	ld	r24, Z
+ 1d8:	8a 61       	ori	r24, 0x1A	; 26
+ 1da:	80 83       	st	Z, r24
+
+    OCR1B = 0x08FF;
+ 1dc:	8f ef       	ldi	r24, 0xFF	; 255
+ 1de:	98 e0       	ldi	r25, 0x08	; 8
+ 1e0:	90 93 8b 00 	sts	0x008B, r25
+ 1e4:	80 93 8a 00 	sts	0x008A, r24
+
+    ICR1 = 0x5000;
+ 1e8:	80 e0       	ldi	r24, 0x00	; 0
+ 1ea:	90 e5       	ldi	r25, 0x50	; 80
+ 1ec:	90 93 87 00 	sts	0x0087, r25
+ 1f0:	80 93 86 00 	sts	0x0086, r24
+
+    PORTC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );                 //Signalize successfull bootup with all LED's
+ 1f4:	88 b1       	in	r24, 0x08	; 8
+ 1f6:	87 60       	ori	r24, 0x07	; 7
+ 1f8:	88 b9       	out	0x08, r24	; 8
+ 1fa:	2f ef       	ldi	r18, 0xFF	; 255
+ 1fc:	82 e5       	ldi	r24, 0x52	; 82
+ 1fe:	97 e0       	ldi	r25, 0x07	; 7
+ 200:	21 50       	subi	r18, 0x01	; 1
+ 202:	80 40       	sbci	r24, 0x00	; 0
+ 204:	90 40       	sbci	r25, 0x00	; 0
+ 206:	e1 f7       	brne	.-8      	; 0x200 <init_motor_1+0x40>
+ 208:	00 c0       	rjmp	.+0      	; 0x20a <init_motor_1+0x4a>
+ 20a:	00 00       	nop
+    _delay_ms(300);
+    PORTC &= ~( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
+ 20c:	88 b1       	in	r24, 0x08	; 8
+ 20e:	88 7f       	andi	r24, 0xF8	; 248
+ 210:	88 b9       	out	0x08, r24	; 8
+ 212:	2f ef       	ldi	r18, 0xFF	; 255
+ 214:	82 e5       	ldi	r24, 0x52	; 82
+ 216:	97 e0       	ldi	r25, 0x07	; 7
+ 218:	21 50       	subi	r18, 0x01	; 1
+ 21a:	80 40       	sbci	r24, 0x00	; 0
+ 21c:	90 40       	sbci	r25, 0x00	; 0
+ 21e:	e1 f7       	brne	.-8      	; 0x218 <init_motor_1+0x58>
+ 220:	00 c0       	rjmp	.+0      	; 0x222 <init_motor_1+0x62>
+ 222:	00 00       	nop
+ 224:	08 95       	ret
+
+00000226 <control_motor_1>:
+
+void control_motor_1( char grad )
+{
+    int CAL = 0;
+
+    PORTC |= (1<<DDC1);                                             //Set orange LED to show that there is something happening
+ 226:	41 9a       	sbi	0x08, 1	; 8
+
+    CAL = 0x08FF - 0x01FF;
+
+    OCR1B = ((CAL/180)*grad) + 0x01FF;                              //Calculate the Value for the Timer based on the given °                                  
+ 228:	90 e0       	ldi	r25, 0x00	; 0
+ 22a:	9c 01       	movw	r18, r24
+ 22c:	22 0f       	add	r18, r18
+ 22e:	33 1f       	adc	r19, r19
+ 230:	22 0f       	add	r18, r18
+ 232:	33 1f       	adc	r19, r19
+ 234:	22 0f       	add	r18, r18
+ 236:	33 1f       	adc	r19, r19
+ 238:	82 0f       	add	r24, r18
+ 23a:	93 1f       	adc	r25, r19
+ 23c:	81 50       	subi	r24, 0x01	; 1
+ 23e:	9e 4f       	sbci	r25, 0xFE	; 254
+ 240:	90 93 8b 00 	sts	0x008B, r25
+ 244:	80 93 8a 00 	sts	0x008A, r24
+
+    PORTC &= ~(1<<DDC1);                                            //Turn off LED
+ 248:	41 98       	cbi	0x08, 1	; 8
+ 24a:	08 95       	ret
+
+0000024c <_exit>:
+ 24c:	f8 94       	cli
+
+0000024e <__stop_program>:
+ 24e:	ff cf       	rjmp	.-2      	; 0x24e <__stop_program>

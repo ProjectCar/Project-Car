@@ -19,4 +19,16 @@ void init_servo_1( void );
 */
 void control_servo_1( char grad );
 
+
+/** \brief Init Function for Motor 1
+*/
+void init_motor_1( void );
+
+/** \brief Control Function to set the Motor Speed
+
+  \param Motor speed in grad (0-180)
+*/
+void control_motor_1( char grad );
+
+
 #endif /* SERVO_LIB_H */
