@@ -39,7 +39,8 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../main.c \
-../motor_management/servo_lib.c
+../motor_management/servo_lib.c \
+../motor_management/uart_lib.c
 
 
 PREPROCESSING_SRCS += 
@@ -50,19 +51,23 @@ ASM_SRCS +=
 
 OBJS +=  \
 main.o \
-motor_management/servo_lib.o
+motor_management/servo_lib.o \
+motor_management/uart_lib.o
 
 OBJS_AS_ARGS +=  \
 main.o \
-motor_management/servo_lib.o
+motor_management/servo_lib.o \
+motor_management/uart_lib.o
 
 C_DEPS +=  \
 main.d \
-motor_management/servo_lib.d
+motor_management/servo_lib.d \
+motor_management/uart_lib.d
 
 C_DEPS_AS_ARGS +=  \
 main.d \
-motor_management/servo_lib.d
+motor_management/servo_lib.d \
+motor_management/uart_lib.d
 
 OUTPUT_FILE_PATH +=MOTOR_MANAGEMENT_V0_1.elf
 
@@ -78,6 +83,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

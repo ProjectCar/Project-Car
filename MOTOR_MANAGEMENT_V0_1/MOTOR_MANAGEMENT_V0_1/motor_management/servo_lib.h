@@ -28,7 +28,7 @@ void init_motor_1( void );
 
   \param Motor speed in grad (0-180)
 */
-void control_motor_1( char grad );
+void control_motor_1( int power );
 
 
 #endif /* SERVO_LIB_H */

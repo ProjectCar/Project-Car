@@ -6,3 +6,5 @@ main.c
 
 motor_management\servo_lib.c
 
+motor_management\uart_lib.c
+
