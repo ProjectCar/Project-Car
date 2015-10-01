@@ -18,12 +18,17 @@ int main(void)
     init_servo_1();                                                 //Initalize our Servo1
     init_motor_1();                                                 //Initalize our Motor1
 
+	int motor = 90;
+
     while(1)
     {        
+        		
+		control_motor_1(motor);                                     //Set the Motor1 to Position x
+
         for(int x = 0; x < 90; x++)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
-            control_motor_1(x);                                     //Set the Motor1 to Position x
+            //control_motor_1(x);                                     //Set the Motor1 to Position x
             _delay_ms(10);
         }
 
@@ -32,7 +37,7 @@ int main(void)
         for(int x = 90; x < 180; x++)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
-            control_motor_1(x);                                     //Set the Motor1 to Position x
+            //control_motor_1(x);                                     //Set the Motor1 to Position x
             _delay_ms(10);
         }
 
@@ -41,7 +46,7 @@ int main(void)
         for(int x = 180; x > 0; x--)
         {
             control_servo_1(x);                                     //Set the Servo1 to Position x
-            control_motor_1(x);                                     //Set the Motor1 to Position x
+            //control_motor_1(x);                                     //Set the Motor1 to Position x
             _delay_ms(10);        
         }
 
