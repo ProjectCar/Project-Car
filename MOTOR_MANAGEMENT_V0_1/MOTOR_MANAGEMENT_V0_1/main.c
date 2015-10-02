@@ -26,7 +26,7 @@ int main(void)
 
     init_uart(MYUBRR);
 
-    int motor = 0;
+    int motor = 0;                                                  //variabel
     
     unsigned char value_uart = 0;
     
