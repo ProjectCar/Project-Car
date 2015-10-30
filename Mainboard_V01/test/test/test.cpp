@@ -2,7 +2,7 @@
  * GccApplication1.cpp
  *
  * Created: 12.10.2015 19:15:21
- *  Author: Eric
+ *  Author: Eric, Severin
  */ 
 
 
@@ -14,6 +14,7 @@
 #define r_register(x) (0b00000000 | x)
 #define nop 0xFF
 #define ce XX
+#define eric severin
 
 #define DDR_SPI DDRB
 #define DD_SCK	DDRB1
