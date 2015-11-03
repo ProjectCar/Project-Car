@@ -95,6 +95,8 @@ CDEFS =
 # Place -I options here
 CINCS =
 
+INC = -I/motor_management
+
 
 # Compiler flags.
 #  -g*:          generate debugging information
