@@ -1,0 +1,279 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.section	.rodata.str1.1,"aMS",@progbits,1
+  10               	.LC0:
+  11 0000 4D6F 746F 		.string	"Motor Controller V0.1 Ready!!"
+  11      7220 436F 
+  11      6E74 726F 
+  11      6C6C 6572 
+  11      2056 302E 
+  12               	.LC1:
+  13 001e 2569 00   		.string	"%i"
+  14               		.section	.text.startup,"ax",@progbits
+  15               	.global	main
+  17               	main:
+  18               	.LFB6:
+  19               		.file 1 "main.c"
+   1:main.c        **** /**
+   2:main.c        **** * \file     main.c
+   3:main.c        **** * \ingroup  g_applspec
+   4:main.c        **** * \brief    Main file for Motor Management.
+   5:main.c        **** * \author   Benjamin Marty
+   6:main.c        **** *
+   7:main.c        **** * This file is the place where the basic structure of the application/module is defined.
+   8:main.c        **** */
+   9:main.c        **** 
+  10:main.c        **** 
+  11:main.c        **** #define F_CPU 8000000UL                                             //Set Clock for delay to 8MHz
+  12:main.c        **** #include "util/delay.h"                                             //Delay Function
+  13:main.c        **** 
+  14:main.c        **** 
+  15:main.c        **** #define BAUD 9600
+  16:main.c        **** #define MYUBRR F_CPU/16/BAUD-1
+  17:main.c        **** 
+  18:main.c        **** #include "motor_management/uart_lib.h"
+  19:main.c        **** #include "motor_management/servo_lib.h"                             //Include Servo Library
+  20:main.c        **** 
+  21:main.c        **** 
+  22:main.c        **** int main(void)
+  23:main.c        **** {
+  20               		.loc 1 23 0
+  21 0000 CF93      		push r28
+  22               	.LCFI0:
+  23 0002 DF93      		push r29
+  24               	.LCFI1:
+  25 0004 CDB7      		in r28,__SP_L__
+  26 0006 DEB7      		in r29,__SP_H__
+  27               	.LCFI2:
+  28 0008 2A97      		sbiw r28,10
+  29               	.LCFI3:
+  30 000a 0FB6      		in __tmp_reg__,__SREG__
+  31 000c F894      		cli
+  32 000e DEBF      		out __SP_H__,r29
+  33 0010 0FBE      		out __SREG__,__tmp_reg__
+  34 0012 CDBF      		out __SP_L__,r28
+  35               	/* prologue: function */
+  36               	/* frame size = 10 */
+  37               	/* stack size = 12 */
+  38               	.L__stack_usage = 12
+  24:main.c        ****     init_servo_1();                                                 //Initalize our Servo1
+  39               		.loc 1 24 0
+  40 0014 0E94 0000 		call init_servo_1
+  41               	.LVL0:
+  25:main.c        ****     init_motor_1();                                                 //Initalize our Motor1
+  42               		.loc 1 25 0
+  43 0018 0E94 0000 		call init_motor_1
+  44               	.LVL1:
+  26:main.c        **** 
+  27:main.c        ****     init_uart(MYUBRR);
+  45               		.loc 1 27 0
+  46 001c 83E3      		ldi r24,lo8(51)
+  47 001e 90E0      		ldi r25,0
+  48 0020 0E94 0000 		call init_uart
+  49               	.LVL2:
+  28:main.c        **** 
+  29:main.c        ****     int motor = 0;                                                  //variabel
+  30:main.c        ****     
+  31:main.c        ****     unsigned char value_uart = 0;
+  32:main.c        ****     
+  33:main.c        ****     char str[10];
+  34:main.c        **** 
+  35:main.c        ****     transmit_uart_string("Motor Controller V0.1 Ready!!");
+  50               		.loc 1 35 0
+  51 0024 80E0      		ldi r24,lo8(.LC0)
+  52 0026 90E0      		ldi r25,hi8(.LC0)
+  53 0028 0E94 0000 		call transmit_uart_string
+  54               	.LVL3:
+  36:main.c        ****     transmit_uart('\r');
+  55               		.loc 1 36 0
+  56 002c 8DE0      		ldi r24,lo8(13)
+  57 002e 90E0      		ldi r25,0
+  58 0030 0E94 0000 		call transmit_uart
+  59               	.LVL4:
+  37:main.c        ****     transmit_uart('\n');    
+  60               		.loc 1 37 0
+  61 0034 8AE0      		ldi r24,lo8(10)
+  62 0036 90E0      		ldi r25,0
+  63 0038 0E94 0000 		call transmit_uart
+  64               	.LVL5:
+  29:main.c        ****     int motor = 0;                                                  //variabel
+  65               		.loc 1 29 0
+  66 003c 00E0      		ldi r16,0
+  67 003e 10E0      		ldi r17,0
+  68               	.LBB2:
+  38:main.c        **** 
+  39:main.c        ****     while(1)
+  40:main.c        ****     {        
+  41:main.c        ****                 
+  42:main.c        ****         control_motor_1(motor);                                     //Set the Motor1 to Position x
+  43:main.c        ****         
+  44:main.c        ****         value_uart = receive_uart();
+  45:main.c        ****         
+  46:main.c        ****         switch(value_uart)
+  47:main.c        ****         {
+  48:main.c        ****             case 'w':
+  49:main.c        ****                 motor++;
+  50:main.c        ****                 break;
+  51:main.c        ****             
+  52:main.c        ****             case 's':
+  53:main.c        ****                 motor--;
+  54:main.c        ****                 break;
+  55:main.c        ****         }
+  56:main.c        ****         
+  57:main.c        ****         sprintf(str,"%i",motor);
+  69               		.loc 1 57 0
+  70 0040 80E0      		ldi r24,lo8(.LC1)
+  71 0042 C82E      		mov r12,r24
+  72 0044 80E0      		ldi r24,hi8(.LC1)
+  73 0046 D82E      		mov r13,r24
+  74 0048 EE24      		clr r14
+  75 004a E394      		inc r14
+  76 004c F12C      		mov r15,__zero_reg__
+  77 004e EC0E      		add r14,r28
+  78 0050 FD1E      		adc r15,r29
+  79               	.LVL6:
+  80               	.L5:
+  42:main.c        ****         control_motor_1(motor);                                     //Set the Motor1 to Position x
+  81               		.loc 1 42 0
+  82 0052 C801      		movw r24,r16
+  83 0054 0E94 0000 		call control_motor_1
+  84               	.LVL7:
+  44:main.c        ****         value_uart = receive_uart();
+  85               		.loc 1 44 0
+  86 0058 0E94 0000 		call receive_uart
+  87               	.LVL8:
+  46:main.c        ****         switch(value_uart)
+  88               		.loc 1 46 0
+  89 005c 9927      		clr r25
+  90               	.LVL9:
+  91 005e 8337      		cpi r24,115
+  92 0060 9105      		cpc r25,__zero_reg__
+  93 0062 01F0      		breq .L3
+  94 0064 8737      		cpi r24,119
+  95 0066 9105      		cpc r25,__zero_reg__
+  96 0068 01F4      		brne .L2
+  49:main.c        ****                 motor++;
+  97               		.loc 1 49 0
+  98 006a 0F5F      		subi r16,-1
+  99 006c 1F4F      		sbci r17,-1
+ 100               	.LVL10:
+  50:main.c        ****                 break;
+ 101               		.loc 1 50 0
+ 102 006e 00C0      		rjmp .L2
+ 103               	.L3:
+  53:main.c        ****                 motor--;
+ 104               		.loc 1 53 0
+ 105 0070 0150      		subi r16,1
+ 106 0072 1109      		sbc r17,__zero_reg__
+ 107               	.LVL11:
+ 108               	.L2:
+ 109               		.loc 1 57 0
+ 110 0074 1F93      		push r17
+ 111 0076 0F93      		push r16
+ 112 0078 DF92      		push r13
+ 113 007a CF92      		push r12
+ 114 007c FF92      		push r15
+ 115 007e EF92      		push r14
+ 116 0080 0E94 0000 		call sprintf
+ 117               	.LVL12:
+  58:main.c        ****         
+  59:main.c        ****         transmit_uart_string(str);
+ 118               		.loc 1 59 0
+ 119 0084 C701      		movw r24,r14
+ 120 0086 0E94 0000 		call transmit_uart_string
+ 121               	.LVL13:
+  60:main.c        ****         transmit_uart('\r');
+ 122               		.loc 1 60 0
+ 123 008a 8DE0      		ldi r24,lo8(13)
+ 124 008c 90E0      		ldi r25,0
+ 125 008e 0E94 0000 		call transmit_uart
+ 126               	.LVL14:
+  61:main.c        ****         transmit_uart('\n');
+ 127               		.loc 1 61 0
+ 128 0092 8AE0      		ldi r24,lo8(10)
+ 129 0094 90E0      		ldi r25,0
+ 130 0096 0E94 0000 		call transmit_uart
+ 131               	.LVL15:
+ 132               	.LBE2:
+  62:main.c        **** 		        
+  63:main.c        ****         /*
+  64:main.c        ****         motor = 90;
+  65:main.c        ****         
+  66:main.c        ****         control_motor_1(180);                                     //Set the Motor1 to Position x
+  67:main.c        ****         
+  68:main.c        ****         test = 100;
+  69:main.c        ****         
+  70:main.c        ****         control_motor_1(10);                                     //Set the Motor1 to Position x
+  71:main.c        ****         
+  72:main.c        ****         test1 = 90;        
+  73:main.c        ****         */
+  74:main.c        ****         
+  75:main.c        ****         /*
+  76:main.c        **** 
+  77:main.c        ****         for(int x = 0; x < 90; x++)
+  78:main.c        ****         {
+  79:main.c        ****             control_servo_1(x);                                     //Set the Servo1 to Position x
+  80:main.c        ****             //control_motor_1(x);                                     //Set the Motor1 to Position 
+  81:main.c        ****             _delay_ms(10);
+  82:main.c        ****         }
+  83:main.c        **** 
+  84:main.c        ****         _delay_ms(1000);
+  85:main.c        **** 
+  86:main.c        ****         for(int x = 90; x < 180; x++)
+  87:main.c        ****         {
+  88:main.c        ****             control_servo_1(x);                                     //Set the Servo1 to Position x
+  89:main.c        ****             //control_motor_1(x);                                     //Set the Motor1 to Position 
+  90:main.c        ****             _delay_ms(10);
+  91:main.c        ****         }
+  92:main.c        **** 
+  93:main.c        ****         _delay_ms(1000);
+  94:main.c        **** 
+  95:main.c        ****         for(int x = 180; x > 0; x--)
+  96:main.c        ****         {
+  97:main.c        ****             control_servo_1(x);                                     //Set the Servo1 to Position x
+  98:main.c        ****             //control_motor_1(x);                                     //Set the Motor1 to Position 
+  99:main.c        ****             _delay_ms(10);        
+ 100:main.c        ****         }
+ 101:main.c        **** 
+ 102:main.c        ****         _delay_ms(1000);
+ 103:main.c        ****         
+ 104:main.c        ****         */
+ 105:main.c        ****     }
+ 133               		.loc 1 105 0
+ 134 009a 0F90      		pop __tmp_reg__
+ 135 009c 0F90      		pop __tmp_reg__
+ 136 009e 0F90      		pop __tmp_reg__
+ 137 00a0 0F90      		pop __tmp_reg__
+ 138 00a2 0F90      		pop __tmp_reg__
+ 139 00a4 0F90      		pop __tmp_reg__
+ 140 00a6 00C0      		rjmp .L5
+ 141               	.LFE6:
+ 189               	.Letext0:
+ 190               		.file 2 "motor_management/servo_lib.h"
+ 191               		.file 3 "<built-in>"
+ 192               		.file 4 "motor_management/uart_lib.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+     /tmp/ccv882Rd.s:2      *ABS*:0000003e __SP_H__
+     /tmp/ccv882Rd.s:3      *ABS*:0000003d __SP_L__
+     /tmp/ccv882Rd.s:4      *ABS*:0000003f __SREG__
+     /tmp/ccv882Rd.s:5      *ABS*:00000000 __tmp_reg__
+     /tmp/ccv882Rd.s:6      *ABS*:00000001 __zero_reg__
+     /tmp/ccv882Rd.s:17     .text.startup:00000000 main
+
+UNDEFINED SYMBOLS
+init_servo_1
+init_motor_1
+init_uart
+transmit_uart_string
+transmit_uart
+control_motor_1
+receive_uart
+sprintf
+__do_copy_data
