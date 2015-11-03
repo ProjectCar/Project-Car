@@ -7,6 +7,9 @@ install:
 script:
   - make clean
   - make
-  - git add *
-  - git commit -m "Compiled"
-  - git push origin master
+notifications:
+  email:
+    recipients:
+      - benjamin.marty@gmail.com
+    on_success: always # default: change
+    on_failure: always # default: always
