@@ -1,5 +1,6 @@
 language: c
 before_install:
+  - cd MOTOR_MANAGEMENT_V0_1/MOTOR_MANAGEMENT_V0_1
   - sudo apt-get update -qq
 install:
   - sudo apt-get install -qq gcc-avr binutils-avr avr-libc
