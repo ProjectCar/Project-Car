@@ -3,25 +3,27 @@ test.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000a8  00000000  00000000  00000054  2**1
+  0 .text         00000216  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .comment      00000030  00000000  00000000  000000fc  2**0
+  1 .bss          0000000f  00800100  00800100  0000028a  2**0
+                  ALLOC
+  2 .comment      00000030  00000000  00000000  0000028a  2**0
                   CONTENTS, READONLY
-  2 .debug_aranges 00000030  00000000  00000000  0000012c  2**0
+  3 .debug_aranges 00000068  00000000  00000000  000002ba  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   00000162  00000000  00000000  0000015c  2**0
+  4 .debug_info   00000600  00000000  00000000  00000322  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 0000011a  00000000  00000000  000002be  2**0
+  5 .debug_abbrev 000001fe  00000000  00000000  00000922  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   0000017b  00000000  00000000  000003d8  2**0
+  6 .debug_line   000002f4  00000000  00000000  00000b20  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  00000044  00000000  00000000  00000554  2**2
+  7 .debug_frame  000000d0  00000000  00000000  00000e14  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    000001d3  00000000  00000000  00000598  2**0
+  8 .debug_str    00000305  00000000  00000000  00000ee4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    00000026  00000000  00000000  0000076b  2**0
+  9 .debug_loc    000001b1  00000000  00000000  000011e9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_ranges 00000020  00000000  00000000  00000791  2**0
+ 10 .debug_ranges 00000058  00000000  00000000  0000139a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -29,73 +31,73 @@ Disassembly of section .text:
 00000000 <__vectors>:
    0:	45 c0       	rjmp	.+138    	; 0x8c <__ctors_end>
    2:	00 00       	nop
-   4:	4b c0       	rjmp	.+150    	; 0x9c <__bad_interrupt>
+   4:	53 c0       	rjmp	.+166    	; 0xac <__bad_interrupt>
    6:	00 00       	nop
-   8:	49 c0       	rjmp	.+146    	; 0x9c <__bad_interrupt>
+   8:	51 c0       	rjmp	.+162    	; 0xac <__bad_interrupt>
    a:	00 00       	nop
-   c:	47 c0       	rjmp	.+142    	; 0x9c <__bad_interrupt>
+   c:	4f c0       	rjmp	.+158    	; 0xac <__bad_interrupt>
    e:	00 00       	nop
-  10:	45 c0       	rjmp	.+138    	; 0x9c <__bad_interrupt>
+  10:	4d c0       	rjmp	.+154    	; 0xac <__bad_interrupt>
   12:	00 00       	nop
-  14:	43 c0       	rjmp	.+134    	; 0x9c <__bad_interrupt>
+  14:	4b c0       	rjmp	.+150    	; 0xac <__bad_interrupt>
   16:	00 00       	nop
-  18:	41 c0       	rjmp	.+130    	; 0x9c <__bad_interrupt>
+  18:	49 c0       	rjmp	.+146    	; 0xac <__bad_interrupt>
   1a:	00 00       	nop
-  1c:	3f c0       	rjmp	.+126    	; 0x9c <__bad_interrupt>
+  1c:	47 c0       	rjmp	.+142    	; 0xac <__bad_interrupt>
   1e:	00 00       	nop
-  20:	3d c0       	rjmp	.+122    	; 0x9c <__bad_interrupt>
+  20:	45 c0       	rjmp	.+138    	; 0xac <__bad_interrupt>
   22:	00 00       	nop
-  24:	3b c0       	rjmp	.+118    	; 0x9c <__bad_interrupt>
+  24:	43 c0       	rjmp	.+134    	; 0xac <__bad_interrupt>
   26:	00 00       	nop
-  28:	39 c0       	rjmp	.+114    	; 0x9c <__bad_interrupt>
+  28:	41 c0       	rjmp	.+130    	; 0xac <__bad_interrupt>
   2a:	00 00       	nop
-  2c:	37 c0       	rjmp	.+110    	; 0x9c <__bad_interrupt>
+  2c:	3f c0       	rjmp	.+126    	; 0xac <__bad_interrupt>
   2e:	00 00       	nop
-  30:	35 c0       	rjmp	.+106    	; 0x9c <__bad_interrupt>
+  30:	3d c0       	rjmp	.+122    	; 0xac <__bad_interrupt>
   32:	00 00       	nop
-  34:	33 c0       	rjmp	.+102    	; 0x9c <__bad_interrupt>
+  34:	3b c0       	rjmp	.+118    	; 0xac <__bad_interrupt>
   36:	00 00       	nop
-  38:	31 c0       	rjmp	.+98     	; 0x9c <__bad_interrupt>
+  38:	39 c0       	rjmp	.+114    	; 0xac <__bad_interrupt>
   3a:	00 00       	nop
-  3c:	2f c0       	rjmp	.+94     	; 0x9c <__bad_interrupt>
+  3c:	37 c0       	rjmp	.+110    	; 0xac <__bad_interrupt>
   3e:	00 00       	nop
-  40:	2d c0       	rjmp	.+90     	; 0x9c <__bad_interrupt>
+  40:	35 c0       	rjmp	.+106    	; 0xac <__bad_interrupt>
   42:	00 00       	nop
-  44:	2b c0       	rjmp	.+86     	; 0x9c <__bad_interrupt>
+  44:	33 c0       	rjmp	.+102    	; 0xac <__bad_interrupt>
   46:	00 00       	nop
-  48:	29 c0       	rjmp	.+82     	; 0x9c <__bad_interrupt>
+  48:	31 c0       	rjmp	.+98     	; 0xac <__bad_interrupt>
   4a:	00 00       	nop
-  4c:	27 c0       	rjmp	.+78     	; 0x9c <__bad_interrupt>
+  4c:	2f c0       	rjmp	.+94     	; 0xac <__bad_interrupt>
   4e:	00 00       	nop
-  50:	25 c0       	rjmp	.+74     	; 0x9c <__bad_interrupt>
+  50:	2d c0       	rjmp	.+90     	; 0xac <__bad_interrupt>
   52:	00 00       	nop
-  54:	23 c0       	rjmp	.+70     	; 0x9c <__bad_interrupt>
+  54:	2b c0       	rjmp	.+86     	; 0xac <__bad_interrupt>
   56:	00 00       	nop
-  58:	21 c0       	rjmp	.+66     	; 0x9c <__bad_interrupt>
+  58:	29 c0       	rjmp	.+82     	; 0xac <__bad_interrupt>
   5a:	00 00       	nop
-  5c:	1f c0       	rjmp	.+62     	; 0x9c <__bad_interrupt>
+  5c:	27 c0       	rjmp	.+78     	; 0xac <__bad_interrupt>
   5e:	00 00       	nop
-  60:	1d c0       	rjmp	.+58     	; 0x9c <__bad_interrupt>
+  60:	25 c0       	rjmp	.+74     	; 0xac <__bad_interrupt>
   62:	00 00       	nop
-  64:	1b c0       	rjmp	.+54     	; 0x9c <__bad_interrupt>
+  64:	23 c0       	rjmp	.+70     	; 0xac <__bad_interrupt>
   66:	00 00       	nop
-  68:	19 c0       	rjmp	.+50     	; 0x9c <__bad_interrupt>
+  68:	21 c0       	rjmp	.+66     	; 0xac <__bad_interrupt>
   6a:	00 00       	nop
-  6c:	17 c0       	rjmp	.+46     	; 0x9c <__bad_interrupt>
+  6c:	1f c0       	rjmp	.+62     	; 0xac <__bad_interrupt>
   6e:	00 00       	nop
-  70:	15 c0       	rjmp	.+42     	; 0x9c <__bad_interrupt>
+  70:	1d c0       	rjmp	.+58     	; 0xac <__bad_interrupt>
   72:	00 00       	nop
-  74:	13 c0       	rjmp	.+38     	; 0x9c <__bad_interrupt>
+  74:	1b c0       	rjmp	.+54     	; 0xac <__bad_interrupt>
   76:	00 00       	nop
-  78:	11 c0       	rjmp	.+34     	; 0x9c <__bad_interrupt>
+  78:	19 c0       	rjmp	.+50     	; 0xac <__bad_interrupt>
   7a:	00 00       	nop
-  7c:	0f c0       	rjmp	.+30     	; 0x9c <__bad_interrupt>
+  7c:	17 c0       	rjmp	.+46     	; 0xac <__bad_interrupt>
   7e:	00 00       	nop
-  80:	0d c0       	rjmp	.+26     	; 0x9c <__bad_interrupt>
+  80:	15 c0       	rjmp	.+42     	; 0xac <__bad_interrupt>
   82:	00 00       	nop
-  84:	0b c0       	rjmp	.+22     	; 0x9c <__bad_interrupt>
+  84:	13 c0       	rjmp	.+38     	; 0xac <__bad_interrupt>
   86:	00 00       	nop
-  88:	09 c0       	rjmp	.+18     	; 0x9c <__bad_interrupt>
+  88:	11 c0       	rjmp	.+34     	; 0xac <__bad_interrupt>
 	...
 
 0000008c <__ctors_end>:
@@ -105,24 +107,331 @@ Disassembly of section .text:
   92:	d0 e1       	ldi	r29, 0x10	; 16
   94:	de bf       	out	0x3e, r29	; 62
   96:	cd bf       	out	0x3d, r28	; 61
-  98:	02 d0       	rcall	.+4      	; 0x9e <main>
-  9a:	04 c0       	rjmp	.+8      	; 0xa4 <_exit>
 
-0000009c <__bad_interrupt>:
-  9c:	b1 cf       	rjmp	.-158    	; 0x0 <__vectors>
+00000098 <__do_clear_bss>:
+  98:	21 e0       	ldi	r18, 0x01	; 1
+  9a:	a0 e0       	ldi	r26, 0x00	; 0
+  9c:	b1 e0       	ldi	r27, 0x01	; 1
+  9e:	01 c0       	rjmp	.+2      	; 0xa2 <.do_clear_bss_start>
 
-0000009e <main>:
+000000a0 <.do_clear_bss_loop>:
+  a0:	1d 92       	st	X+, r1
 
-int main ( void ){
+000000a2 <.do_clear_bss_start>:
+  a2:	af 30       	cpi	r26, 0x0F	; 15
+  a4:	b2 07       	cpc	r27, r18
+  a6:	e1 f7       	brne	.-8      	; 0xa0 <.do_clear_bss_loop>
+  a8:	98 d0       	rcall	.+304    	; 0x1da <main>
+  aa:	b3 c0       	rjmp	.+358    	; 0x212 <_exit>
+
+000000ac <__bad_interrupt>:
+  ac:	a9 cf       	rjmp	.-174    	; 0x0 <__vectors>
+
+000000ae <_Z13SPI_tranceivei>:
+// Version:	 1.1
+//////////////////////////////////////////
+
+int SPI_tranceive(int transmit){						// Sendet Daten per Spi
 	
+	SPDR = transmit;									// Starte übertragung
+  ae:	8f b9       	out	0x0f, r24	; 15
 	
+	while(!(SPSR & (1<<SPIF)));							// Warten bis übertragung beendet ist
+  b0:	77 9b       	sbis	0x0e, 7	; 14
+  b2:	fe cf       	rjmp	.-4      	; 0xb0 <_Z13SPI_tranceivei+0x2>
 	
-  9e:	80 e0       	ldi	r24, 0x00	; 0
-  a0:	90 e0       	ldi	r25, 0x00	; 0
-  a2:	08 95       	ret
+	return SPDR;										// Empfangene Daten geben
+  b4:	8f b1       	in	r24, 0x0f	; 15
+	
+}
+  b6:	90 e0       	ldi	r25, 0x00	; 0
+  b8:	08 95       	ret
 
-000000a4 <_exit>:
-  a4:	f8 94       	cli
+000000ba <_Z12receive_modev>:
+// Version:	 1.1
+//////////////////////////////////////////
 
-000000a6 <__stop_program>:
-  a6:	ff cf       	rjmp	.-2      	; 0xa6 <__stop_program>
+void receive_mode(void){
+
+	SPI_tranceive(w_register(0b00000000));
+  ba:	80 e2       	ldi	r24, 0x20	; 32
+  bc:	90 e0       	ldi	r25, 0x00	; 0
+  be:	f7 df       	rcall	.-18     	; 0xae <_Z13SPI_tranceivei>
+	SPI_tranceive(0b0110011);							// Letztes Bit bestimmt RX 1 / 0 TX Mode
+  c0:	83 e3       	ldi	r24, 0x33	; 51
+  c2:	90 e0       	ldi	r25, 0x00	; 0
+  c4:	f4 cf       	rjmp	.-24     	; 0xae <_Z13SPI_tranceivei>
+  c6:	08 95       	ret
+
+000000c8 <_Z10init_radiov>:
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  c8:	8f e2       	ldi	r24, 0x2F	; 47
+  ca:	95 e7       	ldi	r25, 0x75	; 117
+  cc:	01 97       	sbiw	r24, 0x01	; 1
+  ce:	f1 f7       	brne	.-4      	; 0xcc <_Z10init_radiov+0x4>
+  d0:	00 c0       	rjmp	.+0      	; 0xd2 <_Z10init_radiov+0xa>
+  d2:	00 00       	nop
+
+void init_radio(void)	{
+
+	_delay_ms(120);										// POR Delay
+	
+	DDR_SPI = (1 << DD_MOSI)|(1 << DD_SCK);				// SPI Initialisieren
+  d4:	86 e0       	ldi	r24, 0x06	; 6
+  d6:	87 bb       	out	0x17, r24	; 23
+	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);  				// SPI Initialisieren
+  d8:	81 e5       	ldi	r24, 0x51	; 81
+  da:	8d b9       	out	0x0d, r24	; 13
+	
+	SPI_tranceive(w_register(0b00000000));
+  dc:	80 e2       	ldi	r24, 0x20	; 32
+  de:	90 e0       	ldi	r25, 0x00	; 0
+  e0:	e6 df       	rcall	.-52     	; 0xae <_Z13SPI_tranceivei>
+	
+	SPI_tranceive(0b0110010);							// Letztes Bit bestimmt RX 1 / 0 TX Mode
+  e2:	82 e3       	ldi	r24, 0x32	; 50
+  e4:	90 e0       	ldi	r25, 0x00	; 0
+  e6:	e3 df       	rcall	.-58     	; 0xae <_Z13SPI_tranceivei>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  e8:	86 e7       	ldi	r24, 0x76	; 118
+  ea:	91 e0       	ldi	r25, 0x01	; 1
+  ec:	01 97       	sbiw	r24, 0x01	; 1
+  ee:	f1 f7       	brne	.-4      	; 0xec <_Z10init_radiov+0x24>
+  f0:	00 c0       	rjmp	.+0      	; 0xf2 <_Z10init_radiov+0x2a>
+  f2:	00 00       	nop
+	
+	_delay_us(1500);
+	
+	receive_mode();
+  f4:	e2 cf       	rjmp	.-60     	; 0xba <_Z12receive_modev>
+  f6:	08 95       	ret
+
+000000f8 <_Z12receive_datav>:
+// Version:	 1.1
+//////////////////////////////////////////
+
+uint32_t receive_data(void){
+	
+	SPI_tranceive(0b01100001);							// In den lesemodus wechseln	Muss vl. mit receive_mode(void); ersetzt werden
+  f8:	81 e6       	ldi	r24, 0x61	; 97
+  fa:	90 e0       	ldi	r25, 0x00	; 0
+  fc:	d8 df       	rcall	.-80     	; 0xae <_Z13SPI_tranceivei>
+	
+	SPI_tranceive(0xFF);								// Erstes Byte auslesen
+  fe:	8f ef       	ldi	r24, 0xFF	; 255
+ 100:	90 e0       	ldi	r25, 0x00	; 0
+ 102:	d5 df       	rcall	.-86     	; 0xae <_Z13SPI_tranceivei>
+	r_data1 = SPDR;
+ 104:	8f b1       	in	r24, 0x0f	; 15
+ 106:	80 93 0e 01 	sts	0x010E, r24
+	
+	if (r_data1 == 0x77){ transmit = 1; }				// Daten senden wechsel
+ 10a:	87 37       	cpi	r24, 0x77	; 119
+ 10c:	31 f4       	brne	.+12     	; 0x11a <_Z12receive_datav+0x22>
+ 10e:	81 e0       	ldi	r24, 0x01	; 1
+ 110:	90 e0       	ldi	r25, 0x00	; 0
+ 112:	90 93 01 01 	sts	0x0101, r25
+ 116:	80 93 00 01 	sts	0x0100, r24
+	
+	SPI_tranceive(0xFF);								// Zweites Byte auslesen
+ 11a:	8f ef       	ldi	r24, 0xFF	; 255
+ 11c:	90 e0       	ldi	r25, 0x00	; 0
+ 11e:	c7 df       	rcall	.-114    	; 0xae <_Z13SPI_tranceivei>
+	r_data2 = SPDR;
+ 120:	8f b1       	in	r24, 0x0f	; 15
+ 122:	80 93 0d 01 	sts	0x010D, r24
+	
+	SPI_tranceive(0xFF);								// Drites Byte auslesen
+ 126:	8f ef       	ldi	r24, 0xFF	; 255
+ 128:	90 e0       	ldi	r25, 0x00	; 0
+ 12a:	c1 df       	rcall	.-126    	; 0xae <_Z13SPI_tranceivei>
+	r_data3 = SPDR;
+ 12c:	8f b1       	in	r24, 0x0f	; 15
+ 12e:	80 93 0c 01 	sts	0x010C, r24
+	
+	SPI_tranceive(0xFF);								// Viertes Byte auslesen
+ 132:	8f ef       	ldi	r24, 0xFF	; 255
+ 134:	90 e0       	ldi	r25, 0x00	; 0
+ 136:	bb df       	rcall	.-138    	; 0xae <_Z13SPI_tranceivei>
+	r_data4 = SPDR;
+ 138:	8f b1       	in	r24, 0x0f	; 15
+ 13a:	80 93 0b 01 	sts	0x010B, r24
+		
+	SPI_tranceive(0xFF);								// Fünftes Byte auslesen
+ 13e:	8f ef       	ldi	r24, 0xFF	; 255
+ 140:	90 e0       	ldi	r25, 0x00	; 0
+ 142:	b5 df       	rcall	.-150    	; 0xae <_Z13SPI_tranceivei>
+	r_data5 = SPDR;
+ 144:	8f b1       	in	r24, 0x0f	; 15
+ 146:	80 93 0a 01 	sts	0x010A, r24
+	
+	uint32_t result = ((((((((r_data5<<8)+r_data4)<<8)+r_data3)<<8)+r_data2)<<8)+r_data1);
+ 14a:	60 91 0d 01 	lds	r22, 0x010D
+ 14e:	70 e0       	ldi	r23, 0x00	; 0
+ 150:	76 2f       	mov	r23, r22
+ 152:	66 27       	eor	r22, r22
+ 154:	80 91 0e 01 	lds	r24, 0x010E
+ 158:	68 0f       	add	r22, r24
+ 15a:	71 1d       	adc	r23, r1
+ 15c:	88 27       	eor	r24, r24
+ 15e:	77 fd       	sbrc	r23, 7
+ 160:	80 95       	com	r24
+ 162:	98 2f       	mov	r25, r24
+
+	}
+	
+	return(result);
+	
+}
+ 164:	08 95       	ret
+
+00000166 <_Z6decodev>:
+		twi_transmit(MM, 0x02,m_data2);								// Daten für Motor senden
+
+	}
+}
+
+void decode(void){
+ 166:	0f 93       	push	r16
+ 168:	1f 93       	push	r17
+	
+	motordata = receive_data();										// daten lesen
+ 16a:	c6 df       	rcall	.-116    	; 0xf8 <_Z12receive_datav>
+ 16c:	60 93 06 01 	sts	0x0106, r22
+ 170:	70 93 07 01 	sts	0x0107, r23
+ 174:	80 93 08 01 	sts	0x0108, r24
+ 178:	90 93 09 01 	sts	0x0109, r25
+	m_data1 = (motordata >> 8) & 0x00FF;							// entschlüsseln von daten
+ 17c:	07 2f       	mov	r16, r23
+ 17e:	18 2f       	mov	r17, r24
+ 180:	29 2f       	mov	r18, r25
+ 182:	33 27       	eor	r19, r19
+ 184:	11 27       	eor	r17, r17
+ 186:	10 93 05 01 	sts	0x0105, r17
+ 18a:	00 93 04 01 	sts	0x0104, r16
+	m_data2 = motordata >> 24;										// entschlüsseln von daten
+ 18e:	89 2f       	mov	r24, r25
+ 190:	99 27       	eor	r25, r25
+ 192:	aa 27       	eor	r26, r26
+ 194:	bb 27       	eor	r27, r27
+ 196:	90 93 03 01 	sts	0x0103, r25
+ 19a:	80 93 02 01 	sts	0x0102, r24
+	
+}
+ 19e:	1f 91       	pop	r17
+ 1a0:	0f 91       	pop	r16
+ 1a2:	08 95       	ret
+
+000001a4 <_Z13transmit_modeci>:
+// Name:	 Eric Suter, Severin Landolt
+// Datum:	 8.11.2015
+// Version:	 1.1
+//////////////////////////////////////////
+
+void transmit_mode(char mode, int data){
+ 1a4:	1f 93       	push	r17
+ 1a6:	cf 93       	push	r28
+ 1a8:	df 93       	push	r29
+ 1aa:	18 2f       	mov	r17, r24
+ 1ac:	eb 01       	movw	r28, r22
+
+	SPI_tranceive(0b10100000);							// FIFO Beschreiben
+ 1ae:	80 ea       	ldi	r24, 0xA0	; 160
+ 1b0:	90 e0       	ldi	r25, 0x00	; 0
+ 1b2:	7d df       	rcall	.-262    	; 0xae <_Z13SPI_tranceivei>
+
+	SPI_tranceive(mode);								// Daten zum Senden geben
+ 1b4:	81 2f       	mov	r24, r17
+ 1b6:	90 e0       	ldi	r25, 0x00	; 0
+ 1b8:	7a df       	rcall	.-268    	; 0xae <_Z13SPI_tranceivei>
+	SPI_tranceive(data | 0x00FF);
+ 1ba:	ce 01       	movw	r24, r28
+ 1bc:	8f 6f       	ori	r24, 0xFF	; 255
+ 1be:	77 df       	rcall	.-274    	; 0xae <_Z13SPI_tranceivei>
+	SPI_tranceive((data | 0xFF00) >> 8);
+ 1c0:	8f ef       	ldi	r24, 0xFF	; 255
+ 1c2:	90 e0       	ldi	r25, 0x00	; 0
+ 1c4:	74 df       	rcall	.-280    	; 0xae <_Z13SPI_tranceivei>
+
+		SPI_tranceive(0xFF);
+
+	}
+
+	SPI_tranceive(w_register(0b00000000));
+ 1c6:	80 e2       	ldi	r24, 0x20	; 32
+ 1c8:	90 e0       	ldi	r25, 0x00	; 0
+ 1ca:	71 df       	rcall	.-286    	; 0xae <_Z13SPI_tranceivei>
+	SPI_tranceive(0b0110010);							// Letztes Bit bestimmt RX 1 / 0 TX Mode
+ 1cc:	82 e3       	ldi	r24, 0x32	; 50
+ 1ce:	90 e0       	ldi	r25, 0x00	; 0
+ 1d0:	6e df       	rcall	.-292    	; 0xae <_Z13SPI_tranceivei>
+	//ce = 1;
+
+}
+ 1d2:	df 91       	pop	r29
+ 1d4:	cf 91       	pop	r28
+ 1d6:	1f 91       	pop	r17
+ 1d8:	08 95       	ret
+
+000001da <main>:
+int twi_receive(char r_adress, char r_mode);
+void decode(void);
+
+int main (void){
+	
+	DDRF = 0xFF;													// INIT	von Ports
+ 1da:	8f ef       	ldi	r24, 0xFF	; 255
+ 1dc:	80 93 61 00 	sts	0x0061, r24
+	PORTF = 0x01;
+ 1e0:	81 e0       	ldi	r24, 0x01	; 1
+ 1e2:	80 93 62 00 	sts	0x0062, r24
+	
+	init_radio();													// Funkmodul und TWI initialisieren
+ 1e6:	70 df       	rcall	.-288    	; 0xc8 <_Z10init_radiov>
+	twi_init();
+	
+	while(1){
+		
+		decode();													// Daten von Funkmodul laden und verarbeiten
+ 1e8:	be df       	rcall	.-132    	; 0x166 <_Z6decodev>
+		
+		if(transmit == 1){											// Wenn daten von fernbedienung verlangt werden
+ 1ea:	80 91 00 01 	lds	r24, 0x0100
+ 1ee:	90 91 01 01 	lds	r25, 0x0101
+ 1f2:	01 97       	sbiw	r24, 0x01	; 1
+ 1f4:	c9 f7       	brne	.-14     	; 0x1e8 <main+0xe>
+			
+			int ldata = twi_receive(EM, 0x00);						// Akkustand lesen
+			transmit_mode(0xFF, ldata);								// Akkustand übertragen
+ 1f6:	60 e0       	ldi	r22, 0x00	; 0
+ 1f8:	70 e0       	ldi	r23, 0x00	; 0
+ 1fa:	8f ef       	ldi	r24, 0xFF	; 255
+ 1fc:	d3 df       	rcall	.-90     	; 0x1a4 <_Z13transmit_modeci>
+			transmit_mode(0x0F, PORTC);								// Beleuchtungsstand übertragen
+ 1fe:	65 b3       	in	r22, 0x15	; 21
+ 200:	70 e0       	ldi	r23, 0x00	; 0
+ 202:	8f e0       	ldi	r24, 0x0F	; 15
+ 204:	cf df       	rcall	.-98     	; 0x1a4 <_Z13transmit_modeci>
+			
+			transmit = 0;											// in den Empfangsmodus wechseln
+ 206:	10 92 01 01 	sts	0x0101, r1
+ 20a:	10 92 00 01 	sts	0x0100, r1
+			receive_mode();
+ 20e:	55 df       	rcall	.-342    	; 0xba <_Z12receive_modev>
+ 210:	eb cf       	rjmp	.-42     	; 0x1e8 <main+0xe>
+
+00000212 <_exit>:
+ 212:	f8 94       	cli
+
+00000214 <__stop_program>:
+ 214:	ff cf       	rjmp	.-2      	; 0x214 <__stop_program>
