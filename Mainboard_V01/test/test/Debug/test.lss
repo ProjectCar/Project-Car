@@ -15,15 +15,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   5 .debug_abbrev 000001fe  00000000  00000000  00000922  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_line   000002f4  00000000  00000000  00000b20  2**0
+  6 .debug_line   00000302  00000000  00000000  00000b20  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_frame  000000d0  00000000  00000000  00000e14  2**2
+  7 .debug_frame  000000d0  00000000  00000000  00000e24  2**2
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_str    00000305  00000000  00000000  00000ee4  2**0
+  8 .debug_str    00000318  00000000  00000000  00000ef4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_loc    000001b1  00000000  00000000  000011e9  2**0
+  9 .debug_loc    000001b1  00000000  00000000  0000120c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000058  00000000  00000000  0000139a  2**0
+ 10 .debug_ranges 00000058  00000000  00000000  000013bd  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -384,8 +384,8 @@ void transmit_mode(char mode, int data){
  1d8:	08 95       	ret
 
 000001da <main>:
-int twi_receive(char r_adress, char r_mode);
-void decode(void);
+#include "predefines.h"
+#include "interrupts.h"
 
 int main (void){
 	

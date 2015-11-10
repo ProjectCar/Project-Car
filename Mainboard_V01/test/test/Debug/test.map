@@ -427,18 +427,18 @@ END GROUP
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x1fe test.o
 
-.debug_line     0x00000000      0x2f4
+.debug_line     0x00000000      0x302
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x2f4 test.o
+ .debug_line    0x00000000      0x302 test.o
 
 .debug_frame    0x00000000       0xd0
  *(.debug_frame)
  .debug_frame   0x00000000       0xd0 test.o
 
-.debug_str      0x00000000      0x305
+.debug_str      0x00000000      0x318
  *(.debug_str)
- .debug_str     0x00000000      0x305 test.o
-                                0x358 (size before relaxing)
+ .debug_str     0x00000000      0x318 test.o
+                                0x36b (size before relaxing)
 
 .debug_loc      0x00000000      0x1b1
  *(.debug_loc)
