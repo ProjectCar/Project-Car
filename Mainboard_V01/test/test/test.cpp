@@ -5,7 +5,7 @@
 // Version:	 1.1				//
 //////////////////////////////////
 
-#define F_CPU 1000000UL
+#define F_CPU 16000000UL
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -15,17 +15,17 @@
 
 ISR(INT7_vect){														// Wenn Daten vom Funkmodul empfangen worden sind
 
-	PORTF = PORTF | 0x01;											// Interrupt LED einschalten
+	PORTF = PORTF | 0x01;											// Interrupt Status LED einschalten
 	decode();														// Daten von Funkmodul lesen und verarbeiten
 	
-	if ( transmit == 0)	{
+	if ( transmit == 0)	{											// Werden Daten von der Fernbedienung verlangt ?
 		
 		twi_transmit(MM, 0x01,m_data1);								// Daten für Servo senden
 		twi_transmit(MM, 0x02,m_data2);								// Daten für Motor senden
 
 	}
 	
-	PORTF = PORTF & 0xFE;											// Interrupt LED ausschalten
+	PORTF = PORTF & 0xFE;											// Interrupt Status LED ausschalten
 }
 
 int main (void){
@@ -42,20 +42,21 @@ int main (void){
 	sei();															// Interrupts global aktivieren
 	
 	spi_init();
-	radio_init();													// Funkmodul und TWI initialisieren
+	radio_init();													// Funkmodul, TWI und SPI initialisieren
 	twi_init();
 	
 	while(1){
 		
 		if(transmit == 1){											// Wenn daten von fernbedienung verlangt werden
-			
+			PORTF = PORTF | 0x04;									// Sendestatus LED einschalten
 			int ldata = twi_receive(EM, 0x00);						// Akkustand lesen
-			transmit_mode(0xFF, ldata);								// Akkustand übertragen
-			transmit_mode(0x0F, PORTC);								// Beleuchtungsstand übertragen
+			transmit_mode(0xFF, ((ldata << 8) + PORTC));				// Akkustand und Beleuchtungsstand übertragen
 			
 			transmit = 0;											// in den Empfangsmodus wechseln
 			
-			receive_mode();
+			receive_mode();											// wieder in den Empfangsmodus wechseln
+			
+			PORTF = PORTF & 0xFB;									// Sendestatus LED ausschalten
 			
 		}
 		
@@ -64,22 +65,28 @@ int main (void){
 
 void spi_init(void){
 	
-	 /* Set MOSI and SCK output, all others input */
-	 DDRB = (1<<DDRB2)|(1<<DDRB1)|(1<<SS);
-	 /* Enable SPI, Master, set clock rate fck/16 */
-	 SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
-	 PORTB = PORTB | 0x01;
+	 DDRB = (1<<DDRB2)|(1<<DDRB1)|(1<<SS);							// MOSI, SCK und SS als Ausgang definieren alle anderen als Eingang
+	 SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);							// SPI aktivieren und Clockrate auf Clock/16 setzen
+	 PORTB = PORTB | 0x01;											// Chipselect auf High setzen
 	 
-	 _delay_ms(10);
+	 _delay_ms(10);													// Delay zum initialisieren
 	
 	
 }
 
+//////////////////////////////////////////
+// Funktion: Entschlüsseln von erhaltenen Funkdaten
+// Name:	 Eric Suter
+// Datum:	 11.11.2015
+// Version:	 1.1
+//////////////////////////////////////////
+
+
 void decode(void){
 	
-	motordata = receive_data();										// daten lesen
-	m_data1 = (motordata >> 8) & 0x00FF;							// entschlüsseln von daten
-	m_data2 = motordata >> 24;										// entschlüsseln von daten
+	motordata = receive_data();										// Daten lesen
+	m_data1 = (motordata >> 8) & 0x00FF;							// Entschlüsseln von daten
+	m_data2 = motordata >> 24;										// Entschlüsseln von daten
 	
 }
 
@@ -121,9 +128,9 @@ void twi_transmit(char adress, char mode, int data){
 
 int twi_receive(char r_adress, char r_mode){
 	
-	int accu = 0;													// define
+	int accu = 0;													// Define von Akku Variabel
 	
-																	// daten empfangen EF
+																	// Daten empfangen EF
 	
 	return(accu);													// Wert zurückgeben
 }
@@ -171,8 +178,8 @@ int SPI_tranceive(int transmit){									// Sendet Daten per Spi
 
 void receive_mode(void){
 
-	SPI_tranceive(w_register(0b00000000));
-	SPI_tranceive(0b0110011);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
+	SPI_tranceive(w_register(0b00000000));							// Funkmodul auf das Lesen von Registern vorbereiten
+	SPI_tranceive(0b0110011);										// Einstellregister beschreiben. Letztes Bit bestimmt RX 1 / 0 TX Mode
 	PORTE = PORTE | 0x40;											// CE high schalten
 
 }
@@ -189,31 +196,31 @@ uint32_t receive_data(void){
 	SPI_tranceive(0b01100001);										// In den lesemodus wechseln Muss vl. mit receive_mode(void); ersetzt werden
 	
 	SPI_tranceive(0xFF);											// Erstes Byte auslesen
-	r_data1 = SPDR;
+	r_data1 = SPDR;													// Daten zwischenspeichern
 	
 	if (r_data1 == 0x77){ transmit = 1; }							// Wenn gewisse daten kommen in den Sendemodus wechseln.
 	
 	SPI_tranceive(0xFF);											// Zweites Byte auslesen
-	r_data2 = SPDR;
+	r_data2 = SPDR;													// Daten zwischenspeichern
 	
 	SPI_tranceive(0xFF);											// Drites Byte auslesen
-	r_data3 = SPDR;
+	r_data3 = SPDR;													// Daten zwischenspeichern
 	
 	SPI_tranceive(0xFF);											// Viertes Byte auslesen
-	r_data4 = SPDR;
+	r_data4 = SPDR;													// Daten zwischenspeichern
 		
 	SPI_tranceive(0xFF);											// Fünftes Byte auslesen
-	r_data5 = SPDR;
+	r_data5 = SPDR;													// Daten zwischenspeichern
 	
 	uint32_t result = ((((((((r_data5<<8)+r_data4)<<8)+r_data3)<<8)+r_data2)<<8)+r_data1);	// Die ganzen Daten in einen Datentyp zum übergeben wandeln
 	
-	for(int i = 29; i == 0; --i){									// Dummy Daten empfangen
+	for(int i = 29; i > 0; --i){									// Dummy Daten empfangen
 
-		SPI_tranceive(0xFF);
+		SPI_tranceive(0xFF);										// SPI NOP
 
 	}
 	
-	return(result);
+	return(result);													// Resultat zurückgeben
 	
 }
 
@@ -228,10 +235,10 @@ void transmit_mode(char mode, int data){
 
 	SPI_tranceive(0b10100000);										// FIFO Beschreiben
 
-	SPI_tranceive(mode);											// Daten zum Senden geben
-	SPI_tranceive(data | 0x00FF);
-	SPI_tranceive((data | 0xFF00) >> 8);
-	for(int i = 29; i == 0; --i){									// Dummy Daten senden
+	SPI_tranceive(mode);											// Fifo mit dem Modus beschreiben
+	SPI_tranceive(data | 0x00FF);									// FIFO mit 
+	SPI_tranceive((data | 0xFF00) >> 8);						
+	for(int i = 29; i != 0; --i){									// Dummy Daten senden
 
 		SPI_tranceive(0xFF);
 
