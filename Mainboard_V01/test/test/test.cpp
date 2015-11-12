@@ -15,20 +15,21 @@
 
 ISR(INT7_vect){														// Wenn Daten vom Funkmodul empfangen worden sind
 
-	PORTF = 0xFF;											// Interrupt LED einschalten
+	PORTF = PORTF | 0x01;											// Interrupt LED einschalten
 	decode();														// Daten von Funkmodul lesen und verarbeiten
 	
 	if ( transmit == 0)	{
 		
 		twi_transmit(MM, 0x01,m_data1);								// Daten für Servo senden
 		twi_transmit(MM, 0x02,m_data2);								// Daten für Motor senden
-		// Interrupt LED ausschalten
 
 	}
+	
+	PORTF = PORTF & 0xFE;											// Interrupt LED ausschalten
 }
 
 int main (void){
-	
+
 	DDRF = 0xFF;													// INIT	von Ports
 	PORTF = 0x02;
 	DDRE = 0x7F;
@@ -36,17 +37,14 @@ int main (void){
 	DDRC = 0xFF;
 	PORTC = 0x00;
 	
-	
-	init_radio();													// Funkmodul und TWI initialisieren
-	twi_init();
-	
-	
 	EIMSK = 1<<INT7;												// Interrupt auf INT7 aktivieren
 	EICRB = 1<<ISC71 | 1<<ISC70;									// Auslösen auf der Positiven Flanke
 	sei();															// Interrupts global aktivieren
 	
-
-		
+	spi_init();
+	radio_init();													// Funkmodul und TWI initialisieren
+	twi_init();
+	
 	while(1){
 		
 		if(transmit == 1){											// Wenn daten von fernbedienung verlangt werden
@@ -56,13 +54,25 @@ int main (void){
 			transmit_mode(0x0F, PORTC);								// Beleuchtungsstand übertragen
 			
 			transmit = 0;											// in den Empfangsmodus wechseln
+			
 			receive_mode();
 			
 		}
 		
-
-
 	}
+}
+
+void spi_init(void){
+	
+	 /* Set MOSI and SCK output, all others input */
+	 DDRB = (1<<DDRB2)|(1<<DDRB1)|(1<<SS);
+	 /* Enable SPI, Master, set clock rate fck/16 */
+	 SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+	 PORTB = PORTB | 0x01;
+	 
+	 _delay_ms(10);
+	
+	
 }
 
 void decode(void){
@@ -125,17 +135,12 @@ int twi_receive(char r_adress, char r_mode){
 // Version:	 1.1				
 //////////////////////////////////////////
 
-void init_radio(void)	{
+void radio_init(void)	{
 
 	_delay_ms(120);													// POR Delay
-	
-	DDR_SPI = (1 << DD_MOSI)|(1 << DD_SCK);							// SPI Initialisieren
-	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);  							// SPI Initialisieren
-	
 	SPI_tranceive(w_register(0b00000000));
-	
+	_delay_us(50);
 	SPI_tranceive(0b0110010);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
-	
 	_delay_us(1500);
 	
 	receive_mode();
@@ -150,11 +155,9 @@ void init_radio(void)	{
 //////////////////////////////////////////
 
 int SPI_tranceive(int transmit){									// Sendet Daten per Spi
-	
+
 	SPDR = transmit;												// Starte übertragung
-	
 	while(!(SPSR & (1<<SPIF)));										// Warten bis übertragung beendet ist
-	
 	return SPDR;													// Empfangene Daten zurückgeben
 	
 }
