@@ -3,27 +3,27 @@ test.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000033a  00000000  00000000  00000074  2**1
+  0 .text         000003c6  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .bss          0000000f  00800100  00800100  000003ae  2**0
+  1 .bss          0000000f  00800100  00800100  0000043a  2**0
                   ALLOC
-  2 .comment      00000030  00000000  00000000  000003ae  2**0
+  2 .comment      00000030  00000000  00000000  0000043a  2**0
                   CONTENTS, READONLY
-  3 .debug_aranges 00000078  00000000  00000000  000003de  2**0
+  3 .debug_aranges 00000078  00000000  00000000  0000046a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_info   000006ff  00000000  00000000  00000456  2**0
+  4 .debug_info   0000077c  00000000  00000000  000004e2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_abbrev 00000261  00000000  00000000  00000b55  2**0
+  5 .debug_abbrev 00000257  00000000  00000000  00000c5e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_line   000003ce  00000000  00000000  00000db6  2**0
+  6 .debug_line   00000476  00000000  00000000  00000eb5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_frame  0000014c  00000000  00000000  00001184  2**2
+  7 .debug_frame  0000014c  00000000  00000000  0000132c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_str    00000339  00000000  00000000  000012d0  2**0
+  8 .debug_str    00000339  00000000  00000000  00001478  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_loc    000002c9  00000000  00000000  00001609  2**0
+  9 .debug_loc    000002f6  00000000  00000000  000017b1  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000080  00000000  00000000  000018d2  2**0
+ 10 .debug_ranges 00000080  00000000  00000000  00001aa7  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -45,7 +45,7 @@ Disassembly of section .text:
   1a:	00 00       	nop
   1c:	47 c0       	rjmp	.+142    	; 0xac <__bad_interrupt>
   1e:	00 00       	nop
-  20:	fd c0       	rjmp	.+506    	; 0x21c <__vector_8>
+  20:	3c c1       	rjmp	.+632    	; 0x29a <__vector_8>
   22:	00 00       	nop
   24:	43 c0       	rjmp	.+134    	; 0xac <__bad_interrupt>
   26:	00 00       	nop
@@ -121,8 +121,8 @@ Disassembly of section .text:
   a2:	af 30       	cpi	r26, 0x0F	; 15
   a4:	b2 07       	cpc	r27, r18
   a6:	e1 f7       	brne	.-8      	; 0xa0 <.do_clear_bss_loop>
-  a8:	1c d1       	rcall	.+568    	; 0x2e2 <main>
-  aa:	45 c1       	rjmp	.+650    	; 0x336 <_exit>
+  a8:	61 d1       	rcall	.+706    	; 0x36c <main>
+  aa:	8b c1       	rjmp	.+790    	; 0x3c2 <_exit>
 
 000000ac <__bad_interrupt>:
   ac:	a9 cf       	rjmp	.-174    	; 0x0 <__vectors>
@@ -147,476 +147,540 @@ Disassembly of section .text:
   c2:	00 00       	nop
   c4:	08 95       	ret
 
-000000c6 <_Z13SPI_tranceivei>:
+000000c6 <_Z12twi_transmitcci>:
+  c6:	94 ea       	ldi	r25, 0xA4	; 164
+  c8:	90 93 74 00 	sts	0x0074, r25
+  cc:	e4 e7       	ldi	r30, 0x74	; 116
+  ce:	f0 e0       	ldi	r31, 0x00	; 0
+  d0:	90 81       	ld	r25, Z
+  d2:	99 23       	and	r25, r25
+  d4:	ec f7       	brge	.-6      	; 0xd0 <_Z12twi_transmitcci+0xa>
+  d6:	80 93 73 00 	sts	0x0073, r24
+  da:	84 e8       	ldi	r24, 0x84	; 132
+  dc:	80 93 74 00 	sts	0x0074, r24
+  e0:	e4 e7       	ldi	r30, 0x74	; 116
+  e2:	f0 e0       	ldi	r31, 0x00	; 0
+  e4:	80 81       	ld	r24, Z
+  e6:	88 23       	and	r24, r24
+  e8:	ec f7       	brge	.-6      	; 0xe4 <_Z12twi_transmitcci+0x1e>
+  ea:	60 93 73 00 	sts	0x0073, r22
+  ee:	84 e8       	ldi	r24, 0x84	; 132
+  f0:	80 93 74 00 	sts	0x0074, r24
+  f4:	e4 e7       	ldi	r30, 0x74	; 116
+  f6:	f0 e0       	ldi	r31, 0x00	; 0
+  f8:	80 81       	ld	r24, Z
+  fa:	88 23       	and	r24, r24
+  fc:	ec f7       	brge	.-6      	; 0xf8 <_Z12twi_transmitcci+0x32>
+  fe:	50 93 73 00 	sts	0x0073, r21
+ 102:	84 e8       	ldi	r24, 0x84	; 132
+ 104:	80 93 74 00 	sts	0x0074, r24
+ 108:	e4 e7       	ldi	r30, 0x74	; 116
+ 10a:	f0 e0       	ldi	r31, 0x00	; 0
+ 10c:	80 81       	ld	r24, Z
+ 10e:	88 23       	and	r24, r24
+ 110:	ec f7       	brge	.-6      	; 0x10c <_Z12twi_transmitcci+0x46>
+ 112:	40 93 73 00 	sts	0x0073, r20
+ 116:	84 e8       	ldi	r24, 0x84	; 132
+ 118:	80 93 74 00 	sts	0x0074, r24
+ 11c:	e4 e7       	ldi	r30, 0x74	; 116
+ 11e:	f0 e0       	ldi	r31, 0x00	; 0
+ 120:	80 81       	ld	r24, Z
+ 122:	88 23       	and	r24, r24
+ 124:	ec f7       	brge	.-6      	; 0x120 <_Z12twi_transmitcci+0x5a>
+ 126:	84 e9       	ldi	r24, 0x94	; 148
+ 128:	80 93 74 00 	sts	0x0074, r24
+ 12c:	08 95       	ret
+
+0000012e <_Z8twi_initv>:
+ 12e:	40 e0       	ldi	r20, 0x00	; 0
+ 130:	50 e0       	ldi	r21, 0x00	; 0
+ 132:	61 e0       	ldi	r22, 0x01	; 1
+ 134:	8f e0       	ldi	r24, 0x0F	; 15
+ 136:	c7 df       	rcall	.-114    	; 0xc6 <_Z12twi_transmitcci>
+ 138:	40 e0       	ldi	r20, 0x00	; 0
+ 13a:	50 e0       	ldi	r21, 0x00	; 0
+ 13c:	62 e0       	ldi	r22, 0x02	; 2
+ 13e:	8f e0       	ldi	r24, 0x0F	; 15
+ 140:	c2 cf       	rjmp	.-124    	; 0xc6 <_Z12twi_transmitcci>
+ 142:	08 95       	ret
+
+00000144 <_Z13SPI_tranceivei>:
 // Version:	 1.1
 //////////////////////////////////////////
 
 int SPI_tranceive(int transmit){									// Sendet Daten per Spi
 
 	SPDR = transmit;												// Starte übertragung
-  c6:	8f b9       	out	0x0f, r24	; 15
+ 144:	8f b9       	out	0x0f, r24	; 15
 	while(!(SPSR & (1<<SPIF)));										// Warten bis übertragung beendet ist
-  c8:	77 9b       	sbis	0x0e, 7	; 14
-  ca:	fe cf       	rjmp	.-4      	; 0xc8 <_Z13SPI_tranceivei+0x2>
+ 146:	77 9b       	sbis	0x0e, 7	; 14
+ 148:	fe cf       	rjmp	.-4      	; 0x146 <_Z13SPI_tranceivei+0x2>
 	return SPDR;													// Empfangene Daten zurückgeben
-  cc:	8f b1       	in	r24, 0x0f	; 15
+ 14a:	8f b1       	in	r24, 0x0f	; 15
 	
 }
-  ce:	90 e0       	ldi	r25, 0x00	; 0
-  d0:	08 95       	ret
+ 14c:	90 e0       	ldi	r25, 0x00	; 0
+ 14e:	08 95       	ret
 
-000000d2 <_Z12receive_modev>:
+00000150 <_Z12receive_modev>:
 // Version:	 1.1
 //////////////////////////////////////////
 
 void receive_mode(void){
 
 	SPI_tranceive(w_register(0b00000000));							// Funkmodul auf das Lesen von Registern vorbereiten
-  d2:	80 e2       	ldi	r24, 0x20	; 32
-  d4:	90 e0       	ldi	r25, 0x00	; 0
-  d6:	f7 df       	rcall	.-18     	; 0xc6 <_Z13SPI_tranceivei>
+ 150:	80 e2       	ldi	r24, 0x20	; 32
+ 152:	90 e0       	ldi	r25, 0x00	; 0
+ 154:	f7 df       	rcall	.-18     	; 0x144 <_Z13SPI_tranceivei>
 	SPI_tranceive(0b0110011);										// Einstellregister beschreiben. Letztes Bit bestimmt RX 1 / 0 TX Mode
-  d8:	83 e3       	ldi	r24, 0x33	; 51
-  da:	90 e0       	ldi	r25, 0x00	; 0
-  dc:	f4 df       	rcall	.-24     	; 0xc6 <_Z13SPI_tranceivei>
+ 156:	83 e3       	ldi	r24, 0x33	; 51
+ 158:	90 e0       	ldi	r25, 0x00	; 0
+ 15a:	f4 df       	rcall	.-24     	; 0x144 <_Z13SPI_tranceivei>
 	PORTE = PORTE | 0x40;											// CE high schalten
-  de:	1e 9a       	sbi	0x03, 6	; 3
-  e0:	08 95       	ret
+ 15c:	1e 9a       	sbi	0x03, 6	; 3
+ 15e:	08 95       	ret
 
-000000e2 <_Z10radio_initv>:
+00000160 <_Z10radio_initv>:
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  e2:	2f ef       	ldi	r18, 0xFF	; 255
-  e4:	8b ed       	ldi	r24, 0xDB	; 219
-  e6:	95 e0       	ldi	r25, 0x05	; 5
-  e8:	21 50       	subi	r18, 0x01	; 1
-  ea:	80 40       	sbci	r24, 0x00	; 0
-  ec:	90 40       	sbci	r25, 0x00	; 0
-  ee:	e1 f7       	brne	.-8      	; 0xe8 <_Z10radio_initv+0x6>
-  f0:	00 c0       	rjmp	.+0      	; 0xf2 <_Z10radio_initv+0x10>
-  f2:	00 00       	nop
+ 160:	2f ef       	ldi	r18, 0xFF	; 255
+ 162:	8b ed       	ldi	r24, 0xDB	; 219
+ 164:	95 e0       	ldi	r25, 0x05	; 5
+ 166:	21 50       	subi	r18, 0x01	; 1
+ 168:	80 40       	sbci	r24, 0x00	; 0
+ 16a:	90 40       	sbci	r25, 0x00	; 0
+ 16c:	e1 f7       	brne	.-8      	; 0x166 <_Z10radio_initv+0x6>
+ 16e:	00 c0       	rjmp	.+0      	; 0x170 <_Z10radio_initv+0x10>
+ 170:	00 00       	nop
 //////////////////////////////////////////
 
 void radio_init(void)	{
 
 	_delay_ms(120);													// POR Delay
 	SPI_tranceive(w_register(0b00000000));
-  f4:	80 e2       	ldi	r24, 0x20	; 32
-  f6:	90 e0       	ldi	r25, 0x00	; 0
-  f8:	e6 df       	rcall	.-52     	; 0xc6 <_Z13SPI_tranceivei>
+ 172:	80 e2       	ldi	r24, 0x20	; 32
+ 174:	90 e0       	ldi	r25, 0x00	; 0
+ 176:	e6 df       	rcall	.-52     	; 0x144 <_Z13SPI_tranceivei>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  fa:	87 ec       	ldi	r24, 0xC7	; 199
-  fc:	90 e0       	ldi	r25, 0x00	; 0
-  fe:	01 97       	sbiw	r24, 0x01	; 1
- 100:	f1 f7       	brne	.-4      	; 0xfe <_Z10radio_initv+0x1c>
- 102:	00 c0       	rjmp	.+0      	; 0x104 <_Z10radio_initv+0x22>
- 104:	00 00       	nop
+ 178:	87 ec       	ldi	r24, 0xC7	; 199
+ 17a:	90 e0       	ldi	r25, 0x00	; 0
+ 17c:	01 97       	sbiw	r24, 0x01	; 1
+ 17e:	f1 f7       	brne	.-4      	; 0x17c <_Z10radio_initv+0x1c>
+ 180:	00 c0       	rjmp	.+0      	; 0x182 <_Z10radio_initv+0x22>
+ 182:	00 00       	nop
 	_delay_us(50);
 	SPI_tranceive(0b0110010);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
- 106:	82 e3       	ldi	r24, 0x32	; 50
- 108:	90 e0       	ldi	r25, 0x00	; 0
- 10a:	dd df       	rcall	.-70     	; 0xc6 <_Z13SPI_tranceivei>
- 10c:	8f e6       	ldi	r24, 0x6F	; 111
- 10e:	97 e1       	ldi	r25, 0x17	; 23
- 110:	01 97       	sbiw	r24, 0x01	; 1
- 112:	f1 f7       	brne	.-4      	; 0x110 <_Z10radio_initv+0x2e>
- 114:	00 c0       	rjmp	.+0      	; 0x116 <_Z10radio_initv+0x34>
- 116:	00 00       	nop
+ 184:	82 e3       	ldi	r24, 0x32	; 50
+ 186:	90 e0       	ldi	r25, 0x00	; 0
+ 188:	dd df       	rcall	.-70     	; 0x144 <_Z13SPI_tranceivei>
+ 18a:	8f e6       	ldi	r24, 0x6F	; 111
+ 18c:	97 e1       	ldi	r25, 0x17	; 23
+ 18e:	01 97       	sbiw	r24, 0x01	; 1
+ 190:	f1 f7       	brne	.-4      	; 0x18e <_Z10radio_initv+0x2e>
+ 192:	00 c0       	rjmp	.+0      	; 0x194 <_Z10radio_initv+0x34>
+ 194:	00 00       	nop
 	_delay_us(1500);
 	
 	receive_mode();
- 118:	dc cf       	rjmp	.-72     	; 0xd2 <_Z12receive_modev>
- 11a:	08 95       	ret
+ 196:	dc cf       	rjmp	.-72     	; 0x150 <_Z12receive_modev>
+ 198:	08 95       	ret
 
-0000011c <_Z12receive_datav>:
+0000019a <_Z12receive_datav>:
 // Name:	 Eric Suter, Severin Landolt
 // Datum:	 8.11.2015
 // Version:	 1.1
 //////////////////////////////////////////
 
 uint32_t receive_data(void){
- 11c:	cf 92       	push	r12
- 11e:	df 92       	push	r13
- 120:	ef 92       	push	r14
- 122:	ff 92       	push	r15
- 124:	cf 93       	push	r28
- 126:	df 93       	push	r29
+ 19a:	cf 92       	push	r12
+ 19c:	df 92       	push	r13
+ 19e:	ef 92       	push	r14
+ 1a0:	ff 92       	push	r15
+ 1a2:	cf 93       	push	r28
+ 1a4:	df 93       	push	r29
 	
 	SPI_tranceive(0b01100001);										// In den lesemodus wechseln Muss vl. mit receive_mode(void); ersetzt werden
- 128:	81 e6       	ldi	r24, 0x61	; 97
- 12a:	90 e0       	ldi	r25, 0x00	; 0
- 12c:	cc df       	rcall	.-104    	; 0xc6 <_Z13SPI_tranceivei>
+ 1a6:	81 e6       	ldi	r24, 0x61	; 97
+ 1a8:	90 e0       	ldi	r25, 0x00	; 0
+ 1aa:	cc df       	rcall	.-104    	; 0x144 <_Z13SPI_tranceivei>
 	
 	SPI_tranceive(0xFF);											// Erstes Byte auslesen
- 12e:	8f ef       	ldi	r24, 0xFF	; 255
- 130:	90 e0       	ldi	r25, 0x00	; 0
- 132:	c9 df       	rcall	.-110    	; 0xc6 <_Z13SPI_tranceivei>
+ 1ac:	8f ef       	ldi	r24, 0xFF	; 255
+ 1ae:	90 e0       	ldi	r25, 0x00	; 0
+ 1b0:	c9 df       	rcall	.-110    	; 0x144 <_Z13SPI_tranceivei>
 	r_data1 = SPDR;													// Daten zwischenspeichern
- 134:	8f b1       	in	r24, 0x0f	; 15
- 136:	80 93 0e 01 	sts	0x010E, r24
+ 1b2:	8f b1       	in	r24, 0x0f	; 15
+ 1b4:	80 93 0e 01 	sts	0x010E, r24
 	
 	if (r_data1 == 0x77){ transmit = 1; }							// Wenn gewisse daten kommen in den Sendemodus wechseln.
- 13a:	80 91 0e 01 	lds	r24, 0x010E
- 13e:	87 37       	cpi	r24, 0x77	; 119
- 140:	31 f4       	brne	.+12     	; 0x14e <_Z12receive_datav+0x32>
- 142:	81 e0       	ldi	r24, 0x01	; 1
- 144:	90 e0       	ldi	r25, 0x00	; 0
- 146:	90 93 01 01 	sts	0x0101, r25
- 14a:	80 93 00 01 	sts	0x0100, r24
+ 1b8:	80 91 0e 01 	lds	r24, 0x010E
+ 1bc:	87 37       	cpi	r24, 0x77	; 119
+ 1be:	31 f4       	brne	.+12     	; 0x1cc <_Z12receive_datav+0x32>
+ 1c0:	81 e0       	ldi	r24, 0x01	; 1
+ 1c2:	90 e0       	ldi	r25, 0x00	; 0
+ 1c4:	90 93 01 01 	sts	0x0101, r25
+ 1c8:	80 93 00 01 	sts	0x0100, r24
 	
 	SPI_tranceive(0xFF);											// Zweites Byte auslesen
- 14e:	8f ef       	ldi	r24, 0xFF	; 255
- 150:	90 e0       	ldi	r25, 0x00	; 0
- 152:	b9 df       	rcall	.-142    	; 0xc6 <_Z13SPI_tranceivei>
+ 1cc:	8f ef       	ldi	r24, 0xFF	; 255
+ 1ce:	90 e0       	ldi	r25, 0x00	; 0
+ 1d0:	b9 df       	rcall	.-142    	; 0x144 <_Z13SPI_tranceivei>
 	r_data2 = SPDR;													// Daten zwischenspeichern
- 154:	8f b1       	in	r24, 0x0f	; 15
- 156:	80 93 0d 01 	sts	0x010D, r24
+ 1d2:	8f b1       	in	r24, 0x0f	; 15
+ 1d4:	80 93 0d 01 	sts	0x010D, r24
 	
 	SPI_tranceive(0xFF);											// Drites Byte auslesen
- 15a:	8f ef       	ldi	r24, 0xFF	; 255
- 15c:	90 e0       	ldi	r25, 0x00	; 0
- 15e:	b3 df       	rcall	.-154    	; 0xc6 <_Z13SPI_tranceivei>
+ 1d8:	8f ef       	ldi	r24, 0xFF	; 255
+ 1da:	90 e0       	ldi	r25, 0x00	; 0
+ 1dc:	b3 df       	rcall	.-154    	; 0x144 <_Z13SPI_tranceivei>
 	r_data3 = SPDR;													// Daten zwischenspeichern
- 160:	8f b1       	in	r24, 0x0f	; 15
- 162:	80 93 0c 01 	sts	0x010C, r24
+ 1de:	8f b1       	in	r24, 0x0f	; 15
+ 1e0:	80 93 0c 01 	sts	0x010C, r24
 	
 	SPI_tranceive(0xFF);											// Viertes Byte auslesen
- 166:	8f ef       	ldi	r24, 0xFF	; 255
- 168:	90 e0       	ldi	r25, 0x00	; 0
- 16a:	ad df       	rcall	.-166    	; 0xc6 <_Z13SPI_tranceivei>
+ 1e4:	8f ef       	ldi	r24, 0xFF	; 255
+ 1e6:	90 e0       	ldi	r25, 0x00	; 0
+ 1e8:	ad df       	rcall	.-166    	; 0x144 <_Z13SPI_tranceivei>
 	r_data4 = SPDR;													// Daten zwischenspeichern
- 16c:	8f b1       	in	r24, 0x0f	; 15
- 16e:	80 93 0b 01 	sts	0x010B, r24
+ 1ea:	8f b1       	in	r24, 0x0f	; 15
+ 1ec:	80 93 0b 01 	sts	0x010B, r24
 		
 	SPI_tranceive(0xFF);											// Fünftes Byte auslesen
- 172:	8f ef       	ldi	r24, 0xFF	; 255
- 174:	90 e0       	ldi	r25, 0x00	; 0
- 176:	a7 df       	rcall	.-178    	; 0xc6 <_Z13SPI_tranceivei>
+ 1f0:	8f ef       	ldi	r24, 0xFF	; 255
+ 1f2:	90 e0       	ldi	r25, 0x00	; 0
+ 1f4:	a7 df       	rcall	.-178    	; 0x144 <_Z13SPI_tranceivei>
 	r_data5 = SPDR;													// Daten zwischenspeichern
- 178:	8f b1       	in	r24, 0x0f	; 15
- 17a:	80 93 0a 01 	sts	0x010A, r24
+ 1f6:	8f b1       	in	r24, 0x0f	; 15
+ 1f8:	80 93 0a 01 	sts	0x010A, r24
 	
 	uint32_t result = ((((((((r_data5<<8)+r_data4)<<8)+r_data3)<<8)+r_data2)<<8)+r_data1);	// Die ganzen Daten in einen Datentyp zum übergeben wandeln
- 17e:	80 91 0a 01 	lds	r24, 0x010A
- 182:	80 91 0b 01 	lds	r24, 0x010B
- 186:	80 91 0c 01 	lds	r24, 0x010C
- 18a:	c0 90 0d 01 	lds	r12, 0x010D
- 18e:	80 91 0e 01 	lds	r24, 0x010E
- 192:	d1 2c       	mov	r13, r1
- 194:	dc 2c       	mov	r13, r12
- 196:	cc 24       	eor	r12, r12
- 198:	c8 0e       	add	r12, r24
- 19a:	d1 1c       	adc	r13, r1
- 19c:	ee 24       	eor	r14, r14
- 19e:	d7 fc       	sbrc	r13, 7
- 1a0:	e0 94       	com	r14
- 1a2:	fe 2c       	mov	r15, r14
- 1a4:	cd e1       	ldi	r28, 0x1D	; 29
- 1a6:	d0 e0       	ldi	r29, 0x00	; 0
+ 1fc:	80 91 0a 01 	lds	r24, 0x010A
+ 200:	80 91 0b 01 	lds	r24, 0x010B
+ 204:	80 91 0c 01 	lds	r24, 0x010C
+ 208:	c0 90 0d 01 	lds	r12, 0x010D
+ 20c:	80 91 0e 01 	lds	r24, 0x010E
+ 210:	d1 2c       	mov	r13, r1
+ 212:	dc 2c       	mov	r13, r12
+ 214:	cc 24       	eor	r12, r12
+ 216:	c8 0e       	add	r12, r24
+ 218:	d1 1c       	adc	r13, r1
+ 21a:	ee 24       	eor	r14, r14
+ 21c:	d7 fc       	sbrc	r13, 7
+ 21e:	e0 94       	com	r14
+ 220:	fe 2c       	mov	r15, r14
+ 222:	cd e1       	ldi	r28, 0x1D	; 29
+ 224:	d0 e0       	ldi	r29, 0x00	; 0
 	
 	for(int i = 29; i > 0; --i){									// Dummy Daten empfangen
 
 		SPI_tranceive(0xFF);										// SPI NOP
- 1a8:	8f ef       	ldi	r24, 0xFF	; 255
- 1aa:	90 e0       	ldi	r25, 0x00	; 0
- 1ac:	8c df       	rcall	.-232    	; 0xc6 <_Z13SPI_tranceivei>
- 1ae:	21 97       	sbiw	r28, 0x01	; 1
+ 226:	8f ef       	ldi	r24, 0xFF	; 255
+ 228:	90 e0       	ldi	r25, 0x00	; 0
+ 22a:	8c df       	rcall	.-232    	; 0x144 <_Z13SPI_tranceivei>
+ 22c:	21 97       	sbiw	r28, 0x01	; 1
 	SPI_tranceive(0xFF);											// Fünftes Byte auslesen
 	r_data5 = SPDR;													// Daten zwischenspeichern
 	
 	uint32_t result = ((((((((r_data5<<8)+r_data4)<<8)+r_data3)<<8)+r_data2)<<8)+r_data1);	// Die ganzen Daten in einen Datentyp zum übergeben wandeln
 	
 	for(int i = 29; i > 0; --i){									// Dummy Daten empfangen
- 1b0:	20 97       	sbiw	r28, 0x00	; 0
- 1b2:	d1 f7       	brne	.-12     	; 0x1a8 <_Z12receive_datav+0x8c>
+ 22e:	20 97       	sbiw	r28, 0x00	; 0
+ 230:	d1 f7       	brne	.-12     	; 0x226 <_Z12receive_datav+0x8c>
 
 	}
 	
 	return(result);													// Resultat zurückgeben
 	
 }
- 1b4:	c7 01       	movw	r24, r14
- 1b6:	b6 01       	movw	r22, r12
- 1b8:	df 91       	pop	r29
- 1ba:	cf 91       	pop	r28
- 1bc:	ff 90       	pop	r15
- 1be:	ef 90       	pop	r14
- 1c0:	df 90       	pop	r13
- 1c2:	cf 90       	pop	r12
- 1c4:	08 95       	ret
+ 232:	c7 01       	movw	r24, r14
+ 234:	b6 01       	movw	r22, r12
+ 236:	df 91       	pop	r29
+ 238:	cf 91       	pop	r28
+ 23a:	ff 90       	pop	r15
+ 23c:	ef 90       	pop	r14
+ 23e:	df 90       	pop	r13
+ 240:	cf 90       	pop	r12
+ 242:	08 95       	ret
 
-000001c6 <_Z6decodev>:
+00000244 <_Z6decodev>:
 //////////////////////////////////////////
 
 
 void decode(void){
 	
 	motordata = receive_data();										// Daten lesen
- 1c6:	aa df       	rcall	.-172    	; 0x11c <_Z12receive_datav>
- 1c8:	60 93 06 01 	sts	0x0106, r22
- 1cc:	70 93 07 01 	sts	0x0107, r23
- 1d0:	80 93 08 01 	sts	0x0108, r24
- 1d4:	90 93 09 01 	sts	0x0109, r25
+ 244:	aa df       	rcall	.-172    	; 0x19a <_Z12receive_datav>
+ 246:	60 93 06 01 	sts	0x0106, r22
+ 24a:	70 93 07 01 	sts	0x0107, r23
+ 24e:	80 93 08 01 	sts	0x0108, r24
+ 252:	90 93 09 01 	sts	0x0109, r25
 	m_data1 = (motordata >> 8) & 0x00FF;							// Entschlüsseln von daten
- 1d8:	80 91 06 01 	lds	r24, 0x0106
- 1dc:	90 91 07 01 	lds	r25, 0x0107
- 1e0:	a0 91 08 01 	lds	r26, 0x0108
- 1e4:	b0 91 09 01 	lds	r27, 0x0109
- 1e8:	89 2f       	mov	r24, r25
- 1ea:	9a 2f       	mov	r25, r26
- 1ec:	ab 2f       	mov	r26, r27
- 1ee:	bb 27       	eor	r27, r27
- 1f0:	99 27       	eor	r25, r25
- 1f2:	90 93 05 01 	sts	0x0105, r25
- 1f6:	80 93 04 01 	sts	0x0104, r24
+ 256:	80 91 06 01 	lds	r24, 0x0106
+ 25a:	90 91 07 01 	lds	r25, 0x0107
+ 25e:	a0 91 08 01 	lds	r26, 0x0108
+ 262:	b0 91 09 01 	lds	r27, 0x0109
+ 266:	89 2f       	mov	r24, r25
+ 268:	9a 2f       	mov	r25, r26
+ 26a:	ab 2f       	mov	r26, r27
+ 26c:	bb 27       	eor	r27, r27
+ 26e:	99 27       	eor	r25, r25
+ 270:	90 93 05 01 	sts	0x0105, r25
+ 274:	80 93 04 01 	sts	0x0104, r24
 	m_data2 = motordata >> 24;										// Entschlüsseln von daten
- 1fa:	80 91 06 01 	lds	r24, 0x0106
- 1fe:	90 91 07 01 	lds	r25, 0x0107
- 202:	a0 91 08 01 	lds	r26, 0x0108
- 206:	b0 91 09 01 	lds	r27, 0x0109
- 20a:	8b 2f       	mov	r24, r27
- 20c:	99 27       	eor	r25, r25
- 20e:	aa 27       	eor	r26, r26
- 210:	bb 27       	eor	r27, r27
- 212:	90 93 03 01 	sts	0x0103, r25
- 216:	80 93 02 01 	sts	0x0102, r24
- 21a:	08 95       	ret
+ 278:	80 91 06 01 	lds	r24, 0x0106
+ 27c:	90 91 07 01 	lds	r25, 0x0107
+ 280:	a0 91 08 01 	lds	r26, 0x0108
+ 284:	b0 91 09 01 	lds	r27, 0x0109
+ 288:	8b 2f       	mov	r24, r27
+ 28a:	99 27       	eor	r25, r25
+ 28c:	aa 27       	eor	r26, r26
+ 28e:	bb 27       	eor	r27, r27
+ 290:	90 93 03 01 	sts	0x0103, r25
+ 294:	80 93 02 01 	sts	0x0102, r24
+ 298:	08 95       	ret
 
-0000021c <__vector_8>:
+0000029a <__vector_8>:
 #include <util/delay.h>
 #include <stdint.h>
 #include <avr/interrupt.h>
 #include "predefines.h"
 
 ISR(INT7_vect){														// Wenn Daten vom Funkmodul empfangen worden sind
- 21c:	1f 92       	push	r1
- 21e:	0f 92       	push	r0
- 220:	0f b6       	in	r0, 0x3f	; 63
- 222:	0f 92       	push	r0
- 224:	11 24       	eor	r1, r1
- 226:	0b b6       	in	r0, 0x3b	; 59
- 228:	0f 92       	push	r0
- 22a:	2f 93       	push	r18
- 22c:	3f 93       	push	r19
- 22e:	4f 93       	push	r20
- 230:	5f 93       	push	r21
- 232:	6f 93       	push	r22
- 234:	7f 93       	push	r23
- 236:	8f 93       	push	r24
- 238:	9f 93       	push	r25
- 23a:	af 93       	push	r26
- 23c:	bf 93       	push	r27
- 23e:	ef 93       	push	r30
- 240:	ff 93       	push	r31
+ 29a:	1f 92       	push	r1
+ 29c:	0f 92       	push	r0
+ 29e:	0f b6       	in	r0, 0x3f	; 63
+ 2a0:	0f 92       	push	r0
+ 2a2:	11 24       	eor	r1, r1
+ 2a4:	0b b6       	in	r0, 0x3b	; 59
+ 2a6:	0f 92       	push	r0
+ 2a8:	2f 93       	push	r18
+ 2aa:	3f 93       	push	r19
+ 2ac:	4f 93       	push	r20
+ 2ae:	5f 93       	push	r21
+ 2b0:	6f 93       	push	r22
+ 2b2:	7f 93       	push	r23
+ 2b4:	8f 93       	push	r24
+ 2b6:	9f 93       	push	r25
+ 2b8:	af 93       	push	r26
+ 2ba:	bf 93       	push	r27
+ 2bc:	ef 93       	push	r30
+ 2be:	ff 93       	push	r31
 
 	PORTF = PORTF | 0x01;											// Interrupt Status LED einschalten
- 242:	e2 e6       	ldi	r30, 0x62	; 98
- 244:	f0 e0       	ldi	r31, 0x00	; 0
- 246:	80 81       	ld	r24, Z
- 248:	81 60       	ori	r24, 0x01	; 1
- 24a:	80 83       	st	Z, r24
+ 2c0:	e2 e6       	ldi	r30, 0x62	; 98
+ 2c2:	f0 e0       	ldi	r31, 0x00	; 0
+ 2c4:	80 81       	ld	r24, Z
+ 2c6:	81 60       	ori	r24, 0x01	; 1
+ 2c8:	80 83       	st	Z, r24
 	decode();														// Daten von Funkmodul lesen und verarbeiten
- 24c:	bc df       	rcall	.-136    	; 0x1c6 <_Z6decodev>
+ 2ca:	bc df       	rcall	.-136    	; 0x244 <_Z6decodev>
 	
 	if ( transmit == 0)	{											// Werden Daten von der Fernbedienung verlangt ?
- 24e:	80 91 00 01 	lds	r24, 0x0100
- 252:	90 91 01 01 	lds	r25, 0x0101
- 256:	89 2b       	or	r24, r25
- 258:	41 f4       	brne	.+16     	; 0x26a <__vector_8+0x4e>
+ 2cc:	80 91 00 01 	lds	r24, 0x0100
+ 2d0:	90 91 01 01 	lds	r25, 0x0101
+ 2d4:	89 2b       	or	r24, r25
+ 2d6:	71 f4       	brne	.+28     	; 0x2f4 <__vector_8+0x5a>
 		
 		twi_transmit(MM, 0x01,m_data1);								// Daten für Servo senden
- 25a:	80 91 04 01 	lds	r24, 0x0104
- 25e:	90 91 05 01 	lds	r25, 0x0105
+ 2d8:	40 91 04 01 	lds	r20, 0x0104
+ 2dc:	50 91 05 01 	lds	r21, 0x0105
+ 2e0:	61 e0       	ldi	r22, 0x01	; 1
+ 2e2:	8f e0       	ldi	r24, 0x0F	; 15
+ 2e4:	f0 de       	rcall	.-544    	; 0xc6 <_Z12twi_transmitcci>
 		twi_transmit(MM, 0x02,m_data2);								// Daten für Motor senden
- 262:	80 91 02 01 	lds	r24, 0x0102
- 266:	90 91 03 01 	lds	r25, 0x0103
+ 2e6:	40 91 02 01 	lds	r20, 0x0102
+ 2ea:	50 91 03 01 	lds	r21, 0x0103
+ 2ee:	62 e0       	ldi	r22, 0x02	; 2
+ 2f0:	8f e0       	ldi	r24, 0x0F	; 15
+ 2f2:	e9 de       	rcall	.-558    	; 0xc6 <_Z12twi_transmitcci>
 
 	}
 	
 	PORTF = PORTF & 0xFE;											// Interrupt Status LED ausschalten
- 26a:	e2 e6       	ldi	r30, 0x62	; 98
- 26c:	f0 e0       	ldi	r31, 0x00	; 0
- 26e:	80 81       	ld	r24, Z
- 270:	8e 7f       	andi	r24, 0xFE	; 254
- 272:	80 83       	st	Z, r24
+ 2f4:	e2 e6       	ldi	r30, 0x62	; 98
+ 2f6:	f0 e0       	ldi	r31, 0x00	; 0
+ 2f8:	80 81       	ld	r24, Z
+ 2fa:	8e 7f       	andi	r24, 0xFE	; 254
+ 2fc:	80 83       	st	Z, r24
 }
- 274:	ff 91       	pop	r31
- 276:	ef 91       	pop	r30
- 278:	bf 91       	pop	r27
- 27a:	af 91       	pop	r26
- 27c:	9f 91       	pop	r25
- 27e:	8f 91       	pop	r24
- 280:	7f 91       	pop	r23
- 282:	6f 91       	pop	r22
- 284:	5f 91       	pop	r21
- 286:	4f 91       	pop	r20
- 288:	3f 91       	pop	r19
- 28a:	2f 91       	pop	r18
- 28c:	0f 90       	pop	r0
- 28e:	0b be       	out	0x3b, r0	; 59
- 290:	0f 90       	pop	r0
- 292:	0f be       	out	0x3f, r0	; 63
- 294:	0f 90       	pop	r0
- 296:	1f 90       	pop	r1
- 298:	18 95       	reti
+ 2fe:	ff 91       	pop	r31
+ 300:	ef 91       	pop	r30
+ 302:	bf 91       	pop	r27
+ 304:	af 91       	pop	r26
+ 306:	9f 91       	pop	r25
+ 308:	8f 91       	pop	r24
+ 30a:	7f 91       	pop	r23
+ 30c:	6f 91       	pop	r22
+ 30e:	5f 91       	pop	r21
+ 310:	4f 91       	pop	r20
+ 312:	3f 91       	pop	r19
+ 314:	2f 91       	pop	r18
+ 316:	0f 90       	pop	r0
+ 318:	0b be       	out	0x3b, r0	; 59
+ 31a:	0f 90       	pop	r0
+ 31c:	0f be       	out	0x3f, r0	; 63
+ 31e:	0f 90       	pop	r0
+ 320:	1f 90       	pop	r1
+ 322:	18 95       	reti
 
-0000029a <_Z13transmit_modeci>:
+00000324 <_Z13transmit_modeci>:
 // Name:	 Eric Suter, Severin Landolt
 // Datum:	 8.11.2015
 // Version:	 1.1
 //////////////////////////////////////////
 
 void transmit_mode(char mode, int data){
- 29a:	1f 93       	push	r17
- 29c:	cf 93       	push	r28
- 29e:	df 93       	push	r29
- 2a0:	18 2f       	mov	r17, r24
- 2a2:	eb 01       	movw	r28, r22
+ 324:	1f 93       	push	r17
+ 326:	cf 93       	push	r28
+ 328:	df 93       	push	r29
+ 32a:	18 2f       	mov	r17, r24
+ 32c:	eb 01       	movw	r28, r22
 
 	SPI_tranceive(0b10100000);										// FIFO Beschreiben
- 2a4:	80 ea       	ldi	r24, 0xA0	; 160
- 2a6:	90 e0       	ldi	r25, 0x00	; 0
- 2a8:	0e df       	rcall	.-484    	; 0xc6 <_Z13SPI_tranceivei>
+ 32e:	80 ea       	ldi	r24, 0xA0	; 160
+ 330:	90 e0       	ldi	r25, 0x00	; 0
+ 332:	08 df       	rcall	.-496    	; 0x144 <_Z13SPI_tranceivei>
 
 	SPI_tranceive(mode);											// Fifo mit dem Modus beschreiben
- 2aa:	81 2f       	mov	r24, r17
- 2ac:	90 e0       	ldi	r25, 0x00	; 0
- 2ae:	0b df       	rcall	.-490    	; 0xc6 <_Z13SPI_tranceivei>
+ 334:	81 2f       	mov	r24, r17
+ 336:	90 e0       	ldi	r25, 0x00	; 0
+ 338:	05 df       	rcall	.-502    	; 0x144 <_Z13SPI_tranceivei>
 	SPI_tranceive(data | 0x00FF);									// FIFO mit 
- 2b0:	ce 01       	movw	r24, r28
- 2b2:	8f 6f       	ori	r24, 0xFF	; 255
- 2b4:	08 df       	rcall	.-496    	; 0xc6 <_Z13SPI_tranceivei>
+ 33a:	ce 01       	movw	r24, r28
+ 33c:	8f 6f       	ori	r24, 0xFF	; 255
+ 33e:	02 df       	rcall	.-508    	; 0x144 <_Z13SPI_tranceivei>
 	SPI_tranceive((data | 0xFF00) >> 8);						
- 2b6:	8f ef       	ldi	r24, 0xFF	; 255
- 2b8:	90 e0       	ldi	r25, 0x00	; 0
- 2ba:	05 df       	rcall	.-502    	; 0xc6 <_Z13SPI_tranceivei>
- 2bc:	cd e1       	ldi	r28, 0x1D	; 29
- 2be:	d0 e0       	ldi	r29, 0x00	; 0
+ 340:	8f ef       	ldi	r24, 0xFF	; 255
+ 342:	90 e0       	ldi	r25, 0x00	; 0
+ 344:	ff de       	rcall	.-514    	; 0x144 <_Z13SPI_tranceivei>
+ 346:	cd e1       	ldi	r28, 0x1D	; 29
+ 348:	d0 e0       	ldi	r29, 0x00	; 0
 	for(int i = 29; i != 0; --i){									// Dummy Daten senden
 
 		SPI_tranceive(0xFF);
- 2c0:	8f ef       	ldi	r24, 0xFF	; 255
- 2c2:	90 e0       	ldi	r25, 0x00	; 0
- 2c4:	00 df       	rcall	.-512    	; 0xc6 <_Z13SPI_tranceivei>
- 2c6:	21 97       	sbiw	r28, 0x01	; 1
+ 34a:	8f ef       	ldi	r24, 0xFF	; 255
+ 34c:	90 e0       	ldi	r25, 0x00	; 0
+ 34e:	fa de       	rcall	.-524    	; 0x144 <_Z13SPI_tranceivei>
+ 350:	21 97       	sbiw	r28, 0x01	; 1
 	SPI_tranceive(0b10100000);										// FIFO Beschreiben
 
 	SPI_tranceive(mode);											// Fifo mit dem Modus beschreiben
 	SPI_tranceive(data | 0x00FF);									// FIFO mit 
 	SPI_tranceive((data | 0xFF00) >> 8);						
 	for(int i = 29; i != 0; --i){									// Dummy Daten senden
- 2c8:	20 97       	sbiw	r28, 0x00	; 0
- 2ca:	d1 f7       	brne	.-12     	; 0x2c0 <_Z13transmit_modeci+0x26>
+ 352:	20 97       	sbiw	r28, 0x00	; 0
+ 354:	d1 f7       	brne	.-12     	; 0x34a <_Z13transmit_modeci+0x26>
 
 		SPI_tranceive(0xFF);
 
 	}
 
 	SPI_tranceive(w_register(0b00000000));
- 2cc:	80 e2       	ldi	r24, 0x20	; 32
- 2ce:	90 e0       	ldi	r25, 0x00	; 0
- 2d0:	fa de       	rcall	.-524    	; 0xc6 <_Z13SPI_tranceivei>
+ 356:	80 e2       	ldi	r24, 0x20	; 32
+ 358:	90 e0       	ldi	r25, 0x00	; 0
+ 35a:	f4 de       	rcall	.-536    	; 0x144 <_Z13SPI_tranceivei>
 	SPI_tranceive(0b0110010);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
- 2d2:	82 e3       	ldi	r24, 0x32	; 50
- 2d4:	90 e0       	ldi	r25, 0x00	; 0
- 2d6:	f7 de       	rcall	.-530    	; 0xc6 <_Z13SPI_tranceivei>
+ 35c:	82 e3       	ldi	r24, 0x32	; 50
+ 35e:	90 e0       	ldi	r25, 0x00	; 0
+ 360:	f1 de       	rcall	.-542    	; 0x144 <_Z13SPI_tranceivei>
 	PORTE = PORTE | 0x40;											// CE high schalten
- 2d8:	1e 9a       	sbi	0x03, 6	; 3
+ 362:	1e 9a       	sbi	0x03, 6	; 3
 
 }
- 2da:	df 91       	pop	r29
- 2dc:	cf 91       	pop	r28
- 2de:	1f 91       	pop	r17
- 2e0:	08 95       	ret
+ 364:	df 91       	pop	r29
+ 366:	cf 91       	pop	r28
+ 368:	1f 91       	pop	r17
+ 36a:	08 95       	ret
 
-000002e2 <main>:
+0000036c <main>:
 	PORTF = PORTF & 0xFE;											// Interrupt Status LED ausschalten
 }
 
 int main (void){
 
 	DDRF = 0xFF;													// INIT	von Ports
- 2e2:	8f ef       	ldi	r24, 0xFF	; 255
- 2e4:	80 93 61 00 	sts	0x0061, r24
+ 36c:	8f ef       	ldi	r24, 0xFF	; 255
+ 36e:	80 93 61 00 	sts	0x0061, r24
 	PORTF = 0x02;
- 2e8:	92 e0       	ldi	r25, 0x02	; 2
- 2ea:	90 93 62 00 	sts	0x0062, r25
+ 372:	92 e0       	ldi	r25, 0x02	; 2
+ 374:	90 93 62 00 	sts	0x0062, r25
 	DDRE = 0x7F;
- 2ee:	9f e7       	ldi	r25, 0x7F	; 127
- 2f0:	92 b9       	out	0x02, r25	; 2
+ 378:	9f e7       	ldi	r25, 0x7F	; 127
+ 37a:	92 b9       	out	0x02, r25	; 2
 	PORTE = PORTE | 0x80;
- 2f2:	1f 9a       	sbi	0x03, 7	; 3
+ 37c:	1f 9a       	sbi	0x03, 7	; 3
 	DDRC = 0xFF;
- 2f4:	84 bb       	out	0x14, r24	; 20
+ 37e:	84 bb       	out	0x14, r24	; 20
 	PORTC = 0x00;
- 2f6:	15 ba       	out	0x15, r1	; 21
+ 380:	15 ba       	out	0x15, r1	; 21
 	
 	EIMSK = 1<<INT7;												// Interrupt auf INT7 aktivieren
- 2f8:	80 e8       	ldi	r24, 0x80	; 128
- 2fa:	89 bf       	out	0x39, r24	; 57
+ 382:	80 e8       	ldi	r24, 0x80	; 128
+ 384:	89 bf       	out	0x39, r24	; 57
 	EICRB = 1<<ISC71 | 1<<ISC70;									// Auslösen auf der Positiven Flanke
- 2fc:	80 ec       	ldi	r24, 0xC0	; 192
- 2fe:	8a bf       	out	0x3a, r24	; 58
+ 386:	80 ec       	ldi	r24, 0xC0	; 192
+ 388:	8a bf       	out	0x3a, r24	; 58
 	sei();															// Interrupts global aktivieren
- 300:	78 94       	sei
+ 38a:	78 94       	sei
 	
 	spi_init();
- 302:	d5 de       	rcall	.-598    	; 0xae <_Z8spi_initv>
+ 38c:	90 de       	rcall	.-736    	; 0xae <_Z8spi_initv>
 	radio_init();													// Funkmodul, TWI und SPI initialisieren
- 304:	ee de       	rcall	.-548    	; 0xe2 <_Z10radio_initv>
+ 38e:	e8 de       	rcall	.-560    	; 0x160 <_Z10radio_initv>
 	twi_init();
+ 390:	ce de       	rcall	.-612    	; 0x12e <_Z8twi_initv>
 	
 	while(1){
 		
 		if(transmit == 1){											// Wenn daten von fernbedienung verlangt werden
 			PORTF = PORTF | 0x04;									// Sendestatus LED einschalten
- 306:	c2 e6       	ldi	r28, 0x62	; 98
- 308:	d0 e0       	ldi	r29, 0x00	; 0
+ 392:	c2 e6       	ldi	r28, 0x62	; 98
+ 394:	d0 e0       	ldi	r29, 0x00	; 0
 	radio_init();													// Funkmodul, TWI und SPI initialisieren
 	twi_init();
 	
 	while(1){
 		
 		if(transmit == 1){											// Wenn daten von fernbedienung verlangt werden
- 30a:	80 91 00 01 	lds	r24, 0x0100
- 30e:	90 91 01 01 	lds	r25, 0x0101
- 312:	01 97       	sbiw	r24, 0x01	; 1
- 314:	d1 f7       	brne	.-12     	; 0x30a <main+0x28>
+ 396:	80 91 00 01 	lds	r24, 0x0100
+ 39a:	90 91 01 01 	lds	r25, 0x0101
+ 39e:	01 97       	sbiw	r24, 0x01	; 1
+ 3a0:	d1 f7       	brne	.-12     	; 0x396 <main+0x2a>
 			PORTF = PORTF | 0x04;									// Sendestatus LED einschalten
- 316:	88 81       	ld	r24, Y
- 318:	84 60       	ori	r24, 0x04	; 4
- 31a:	88 83       	st	Y, r24
+ 3a2:	88 81       	ld	r24, Y
+ 3a4:	84 60       	ori	r24, 0x04	; 4
+ 3a6:	88 83       	st	Y, r24
 			int ldata = twi_receive(EM, 0x00);						// Akkustand lesen
 			transmit_mode(0xFF, ((ldata << 8) + PORTC));				// Akkustand und Beleuchtungsstand übertragen
- 31c:	65 b3       	in	r22, 0x15	; 21
- 31e:	70 e0       	ldi	r23, 0x00	; 0
- 320:	8f ef       	ldi	r24, 0xFF	; 255
- 322:	bb df       	rcall	.-138    	; 0x29a <_Z13transmit_modeci>
+ 3a8:	65 b3       	in	r22, 0x15	; 21
+ 3aa:	70 e0       	ldi	r23, 0x00	; 0
+ 3ac:	8f ef       	ldi	r24, 0xFF	; 255
+ 3ae:	ba df       	rcall	.-140    	; 0x324 <_Z13transmit_modeci>
 			
 			transmit = 0;											// in den Empfangsmodus wechseln
- 324:	10 92 01 01 	sts	0x0101, r1
- 328:	10 92 00 01 	sts	0x0100, r1
+ 3b0:	10 92 01 01 	sts	0x0101, r1
+ 3b4:	10 92 00 01 	sts	0x0100, r1
 			
 			receive_mode();											// wieder in den Empfangsmodus wechseln
- 32c:	d2 de       	rcall	.-604    	; 0xd2 <_Z12receive_modev>
+ 3b8:	cb de       	rcall	.-618    	; 0x150 <_Z12receive_modev>
 			
 			PORTF = PORTF & 0xFB;									// Sendestatus LED ausschalten
- 32e:	88 81       	ld	r24, Y
- 330:	8b 7f       	andi	r24, 0xFB	; 251
- 332:	88 83       	st	Y, r24
- 334:	ea cf       	rjmp	.-44     	; 0x30a <main+0x28>
+ 3ba:	88 81       	ld	r24, Y
+ 3bc:	8b 7f       	andi	r24, 0xFB	; 251
+ 3be:	88 83       	st	Y, r24
+ 3c0:	ea cf       	rjmp	.-44     	; 0x396 <main+0x2a>
 
-00000336 <_exit>:
- 336:	f8 94       	cli
+000003c2 <_exit>:
+ 3c2:	f8 94       	cli
 
-00000338 <__stop_program>:
- 338:	ff cf       	rjmp	.-2      	; 0x338 <__stop_program>
+000003c4 <__stop_program>:
+ 3c4:	ff cf       	rjmp	.-2      	; 0x3c4 <__stop_program>

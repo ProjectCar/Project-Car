@@ -12,10 +12,6 @@ Discarded input sections
  .text          0x00000000        0x0 test.o
  .data          0x00000000        0x0 test.o
  .bss           0x00000000        0x0 test.o
- .text._Z8twi_initv
-                0x00000000        0x2 test.o
- .text._Z12twi_transmitcci
-                0x00000000        0x2 test.o
  .text._Z11twi_receivecc
                 0x00000000        0x6 test.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
@@ -169,7 +165,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x33a
+.text           0x00000000      0x3c6
  *(.vectors)
  .vectors       0x00000000       0x8c c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr51/crtm128a.o
                 0x00000000                __vector_default
@@ -263,34 +259,40 @@ END GROUP
  .text._Z8spi_initv
                 0x000000ae       0x18 test.o
                 0x000000ae                _Z8spi_initv
+ .text._Z12twi_transmitcci
+                0x000000c6       0x68 test.o
+                0x000000c6                _Z12twi_transmitcci
+ .text._Z8twi_initv
+                0x0000012e       0x16 test.o
+                0x0000012e                _Z8twi_initv
  .text._Z13SPI_tranceivei
-                0x000000c6        0xc test.o
-                0x000000c6                _Z13SPI_tranceivei
+                0x00000144        0xc test.o
+                0x00000144                _Z13SPI_tranceivei
  .text._Z12receive_modev
-                0x000000d2       0x10 test.o
-                0x000000d2                _Z12receive_modev
+                0x00000150       0x10 test.o
+                0x00000150                _Z12receive_modev
  .text._Z10radio_initv
-                0x000000e2       0x3a test.o
-                0x000000e2                _Z10radio_initv
+                0x00000160       0x3a test.o
+                0x00000160                _Z10radio_initv
  .text._Z12receive_datav
-                0x0000011c       0xaa test.o
-                0x0000011c                _Z12receive_datav
+                0x0000019a       0xaa test.o
+                0x0000019a                _Z12receive_datav
  .text._Z6decodev
-                0x000001c6       0x56 test.o
-                0x000001c6                _Z6decodev
+                0x00000244       0x56 test.o
+                0x00000244                _Z6decodev
  .text.__vector_8
-                0x0000021c       0x7e test.o
-                0x0000021c                __vector_8
+                0x0000029a       0x8a test.o
+                0x0000029a                __vector_8
  .text._Z13transmit_modeci
-                0x0000029a       0x48 test.o
-                0x0000029a                _Z13transmit_modeci
- .text.main     0x000002e2       0x54 test.o
-                0x000002e2                main
-                0x00000336                . = ALIGN (0x2)
+                0x00000324       0x48 test.o
+                0x00000324                _Z13transmit_modeci
+ .text.main     0x0000036c       0x56 test.o
+                0x0000036c                main
+                0x000003c2                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000336        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
-                0x00000336                _exit
-                0x00000336                exit
+ .fini9         0x000003c2        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
+                0x000003c2                _exit
+                0x000003c2                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -309,11 +311,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000336        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
+ .fini0         0x000003c2        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000033a                _etext = .
+                0x000003c6                _etext = .
 
-.data           0x00800100        0x0 load address 0x0000033a
+.data           0x00800100        0x0 load address 0x000003c6
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -349,8 +351,8 @@ END GROUP
                 0x0080010e                r_data1
  *(COMMON)
                 0x0080010f                PROVIDE (__bss_end, .)
-                0x0000033a                __data_load_start = LOADADDR (.data)
-                0x0000033a                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000003c6                __data_load_start = LOADADDR (.data)
+                0x000003c6                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0080010f        0x0
                 0x0080010f                PROVIDE (__noinit_start, .)
@@ -424,17 +426,17 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x6ff
+.debug_info     0x00000000      0x77c
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x6ff test.o
+ .debug_info    0x00000000      0x77c test.o
 
-.debug_abbrev   0x00000000      0x261
+.debug_abbrev   0x00000000      0x257
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x261 test.o
+ .debug_abbrev  0x00000000      0x257 test.o
 
-.debug_line     0x00000000      0x3ce
+.debug_line     0x00000000      0x476
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x3ce test.o
+ .debug_line    0x00000000      0x476 test.o
 
 .debug_frame    0x00000000      0x14c
  *(.debug_frame)
@@ -445,9 +447,9 @@ END GROUP
  .debug_str     0x00000000      0x339 test.o
                                 0x38c (size before relaxing)
 
-.debug_loc      0x00000000      0x2c9
+.debug_loc      0x00000000      0x2f6
  *(.debug_loc)
- .debug_loc     0x00000000      0x2c9 test.o
+ .debug_loc     0x00000000      0x2f6 test.o
 
 .debug_macinfo
  *(.debug_macinfo)

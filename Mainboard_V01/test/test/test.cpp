@@ -98,8 +98,7 @@ void decode(void){
 //////////////////////////////////////////
 
 void twi_init(void){
-																
-																	// Init von TWI EF
+	
 	twi_transmit(MM, 0x01,0x0000);									// Init von Motor
 	twi_transmit(MM, 0x02,0x0000);									// Init von Motor
 	twi_receive(EM, 0x01);											// Akkustand laden
@@ -115,7 +114,19 @@ void twi_init(void){
 
 void twi_transmit(char adress, char mode, int data){
 	
-																	// EF
+	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);							// Startcondition senden
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+		TWDR = adress;													// Adresse Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+		TWDR = mode;													// Datenbyte 1 Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet		TWDR = ((data >> 8 )& 0x00FF);									// Datenbyte 2 Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet	TWDR = (data & 0x00FF);											// Datenbyte 3 Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);							// Stopcondition senden
+								
 	
 }
 
