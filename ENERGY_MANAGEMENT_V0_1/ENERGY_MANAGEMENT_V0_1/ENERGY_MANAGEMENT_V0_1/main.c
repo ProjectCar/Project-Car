@@ -11,6 +11,9 @@
 #define F_CPU 8000000UL                                             //Set Clock for delay to 8MHz
 #include "util/delay.h"                                             //Delay Function
 
+#define ON 1
+#define OFF 0
+
 int main(void)
 {
 
@@ -18,6 +21,11 @@ int main(void)
     {        
 
     }
+}
+
+char powermanagement_init()
+{
+	DDRD |= ( (1<<PORTD4) );	//Set Tristate for ENABLE_MCU
 }
 
 char adc_init(char channel)
@@ -38,4 +46,19 @@ int adc_sample()
 	result = ADCL + (ADCH >> 2);	//Get 10bit result from ADC registers. Keep in mind to read ADCH!
 	
 	return result;
+}
+
+char power_control(char state)
+{
+	if(state = ON)
+	{
+		PORTD |= (1<<PORTD4);
+		
+	} 
+	else if(state = OFF) 
+	{
+		PORTD &= ~(1<<PORTD4);
+	}
+	
+	return 1;
 }
