@@ -25,7 +25,8 @@ int main(void)
 
 char powermanagement_init()
 {
-	DDRD |= ( (1<<PORTD4) );	//Set Tristate for ENABLE_MCU
+	DDRD |= (1<<PORTD4);	//Set tristate for ENABLE_MCU
+	DDRB |= (1<<PORTB0);	//Set tristate for CRUISE_CONTROL
 }
 
 char adc_init(char channel)
@@ -58,6 +59,21 @@ char power_control(char state)
 	else if(state = OFF) 
 	{
 		PORTD &= ~(1<<PORTD4);
+	}
+	
+	return 1;
+}
+
+char cc_control(char state)
+{
+	if(state = ON)
+	{
+		PORTB |= (1<<PORTB0);
+		
+	}
+	else if(state = OFF)
+	{
+		PORTB &= ~(1<<PORTB0);
 	}
 	
 	return 1;
