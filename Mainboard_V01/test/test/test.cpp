@@ -23,7 +23,14 @@ ISR(INT7_vect){														// Wenn Daten vom Funkmodul empfangen worden sind
 		twi_transmit(MM, 0x01,m_data1);								// Daten für Servo senden
 		twi_transmit(MM, 0x02,m_data2);								// Daten für Motor senden
 
+	SPI_tranceive(w_register(0x07));
+	_delay_us(50);
+	SPI_tranceive(0b11110000);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
+	_delay_us(1500);
+
 	}
+
+
 	
 	PORTF = PORTF & 0xFE;											// Interrupt Status LED ausschalten
 }
@@ -66,7 +73,8 @@ int main (void){
 void spi_init(void){
 	
 	 DDRB = (1<<DDRB2)|(1<<DDRB1)|(1<<SS);							// MOSI, SCK und SS als Ausgang definieren alle anderen als Eingang
-	 SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);							// SPI aktivieren und Clockrate auf Clock/16 setzen
+	 SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);							// SPI aktivieren und Clockrate auf Clock/16 setzen
+
 	 PORTB = PORTB | 0x01;											// Chipselect auf High setzen
 	 
 	 _delay_ms(10);													// Delay zum initialisieren
@@ -116,16 +124,24 @@ void twi_transmit(char adress, char mode, int data){
 	
 	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);							// Startcondition senden
 	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
-		TWDR = adress;													// Adresse Laden
+	
+	TWDR = adress;													// Adresse Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
-		TWDR = mode;													// Datenbyte 1 Laden
+	
+	TWDR = mode;													// Datenbyte 1 Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet		TWDR = ((data >> 8 )& 0x00FF);									// Datenbyte 2 Laden
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+	
+	TWDR = ((data >> 8 )& 0x00FF);									// Datenbyte 2 Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet	TWDR = (data & 0x00FF);											// Datenbyte 3 Laden
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+
+	TWDR = (data & 0x00FF);											// Datenbyte 3 Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);							// Stopcondition senden
+	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+
+	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);							// Stopcondition senden
 								
 	
 }
@@ -158,9 +174,12 @@ void radio_init(void)	{
 	_delay_ms(120);													// POR Delay
 	SPI_tranceive(w_register(0b00000000));
 	_delay_us(50);
-	SPI_tranceive(0b0110010);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
+	SPI_tranceive(0b00110011);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
 	_delay_us(1500);
-	
+	SPI_tranceive(w_register(0x07));
+	_delay_us(50);
+	SPI_tranceive(0b11110000);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
+	_delay_us(1500);
 	receive_mode();
 	
 }
@@ -190,7 +209,7 @@ int SPI_tranceive(int transmit){									// Sendet Daten per Spi
 void receive_mode(void){
 
 	SPI_tranceive(w_register(0b00000000));							// Funkmodul auf das Lesen von Registern vorbereiten
-	SPI_tranceive(0b0110011);										// Einstellregister beschreiben. Letztes Bit bestimmt RX 1 / 0 TX Mode
+	SPI_tranceive(0b00110011);										// Einstellregister beschreiben. Letztes Bit bestimmt RX 1 / 0 TX Mode
 	PORTE = PORTE | 0x40;											// CE high schalten
 
 }
@@ -256,7 +275,7 @@ void transmit_mode(char mode, int data){
 	}
 
 	SPI_tranceive(w_register(0b00000000));
-	SPI_tranceive(0b0110010);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
+	SPI_tranceive(0b00110010);										// Letztes Bit bestimmt RX 1 / 0 TX Mode
 	PORTE = PORTE | 0x40;											// CE high schalten
 
 }
