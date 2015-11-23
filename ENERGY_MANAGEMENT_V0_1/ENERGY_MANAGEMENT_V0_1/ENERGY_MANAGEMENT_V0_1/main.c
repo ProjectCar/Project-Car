@@ -27,8 +27,8 @@
  */
 void powermanagement_init()
 {
-	DDRD |= (1<<PORTD4);                 //Set tristate for ENABLE_MCU
-	DDRB |= (1<<PORTB0);                 //Set tristate for CRUISE_CONTROL
+   DDRD |= (1<<PORTD4);                 //Set tristate for ENABLE_MCU
+   DDRB |= (1<<PORTB0);                 //Set tristate for CRUISE_CONTROL
 }
 
 /**
@@ -38,19 +38,19 @@ void powermanagement_init()
  */
 void adc_init(int channel)
 {
-	ADMUX = 0x00;                        //Reset ADMUX register to 0
-	ADCSRA = 0x00;                       //Reset ADCSRA register to 0
-	
-	ADMUX |= (1<<REFS0);                 //Set ref to AVCC
-	int channel_bit = (channel);
-	//ADMUX |= (channel << 4);             //Set channel
-	
-	ADMUX |= channel_bit;
-	
-	ADCSRA |= ( (1<<ADEN) | (1<<ADPS1) | (1<<ADPS0) | (1<<ADATE) );   //Enable ADC, Star ADC, Set Clock Prescaler to 8
-	ADCSRA |= (1<<ADSC);
-	
-	//return 1;
+   ADMUX = 0x00;                        //Reset ADMUX register to 0
+   ADCSRA = 0x00;                       //Reset ADCSRA register to 0
+   
+   ADMUX |= (1<<REFS0);                 //Set ref to AVCC
+   int channel_bit = (channel);
+   //ADMUX |= (channel << 4);           //Set channel
+   
+   ADMUX |= channel_bit;
+   
+   ADCSRA |= ( (1<<ADEN) | (1<<ADPS1) | (1<<ADPS0) | (1<<ADATE) );   //Enable ADC, Star ADC, Set Clock Prescaler to 8
+   ADCSRA |= (1<<ADSC);
+   
+   //return 1;
 }
 
 /**
@@ -60,11 +60,11 @@ void adc_init(int channel)
  */
 int adc_sample()
 {
-	int result = 0;                      //Setup space for ADC result
-	
-	result = ADCL + (ADCH << 8);         //Get 10bit result from ADC registers. Keep in mind to read ADCH!
-	
-	return result;
+   int result = 0;                      //Setup space for ADC result
+   
+   result = ADCL + (ADCH << 8);         //Get 10bit result from ADC registers. Keep in mind to read ADCH!
+   
+   return result;
 }
 
 /**
@@ -74,14 +74,14 @@ int adc_sample()
  */
 float get_five_rail()
 {
-	adc_init(0);
-	_delay_ms(100);
-	
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*5.2;
+   adc_init(0);
+   _delay_ms(100);
+   
+   float meassurement = (((float)adc_sample()/1023)*3.3);
+   
+   meassurement = (meassurement/2.5)*5.2;
 
-	return meassurement;
+   return meassurement;
 }
 
 /**
@@ -91,14 +91,14 @@ float get_five_rail()
  */
 float get_three_rail()
 {
-	adc_init(1);
-	_delay_ms(100);
+   adc_init(1);
+   _delay_ms(100);
 
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*3.4;
+   float meassurement = (((float)adc_sample()/1023)*3.3);
+   
+   meassurement = (meassurement/2.5)*3.4;
 
-	return meassurement;
+   return meassurement;
 }
 
 /**
@@ -108,14 +108,14 @@ float get_three_rail()
  */
 float get_current()
 {
-	adc_init(2);
-	_delay_ms(100);
+   adc_init(2);
+   _delay_ms(100);
 
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*0;
+   float meassurement = (((float)adc_sample()/1023)*3.3);
+   
+   meassurement = (meassurement/2.5)*0;
 
-	return meassurement;
+   return meassurement;
 }
 
 /**
@@ -125,14 +125,14 @@ float get_current()
  */
 float get_lipo()
 {
-	adc_init(3);
-	_delay_ms(100);
-	
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*12.4;
+   adc_init(3);
+   _delay_ms(100);
+   
+   float meassurement = (((float)adc_sample()/1023)*3.3);
+   
+   meassurement = (meassurement/2.5)*12.4;
 
-	return meassurement;
+   return meassurement;
 }
 
 /**
@@ -142,14 +142,14 @@ float get_lipo()
 char usart_init( unsigned int ubrr)
 {
 
-	UBRR0H = (unsigned char)(ubrr>>8);  //Set baud rate
-	UBRR0L = (unsigned char)ubrr;
+   UBRR0H = (unsigned char)(ubrr>>8);   //Set baud rate
+   UBRR0L = (unsigned char)ubrr;
 
-	UCSR0B = (1<<RXEN0)|(1<<TXEN0);     //Enable receiver and transmitter
+   UCSR0B = (1<<RXEN0)|(1<<TXEN0);      //Enable receiver and transmitter
 
-	UCSR0C = (1<<USBS0)|(3<<UCSZ00);    //Set frame format: 8data, 2stop bit
+   UCSR0C = (1<<USBS0)|(3<<UCSZ00);     //Set frame format: 8data, 2stop bit
 
-	return 1;
+   return 1;
 }
 
 /**
@@ -160,12 +160,12 @@ char usart_init( unsigned int ubrr)
 void USART_Transmit( unsigned char data )
 {
 
-	while ( !( UCSR0A & (1<<UDRE0)) );  //Wait for empty transmit buffer
-	
-	
-	UDR0 = data;                        //Put data into buffer, sends the data
-	
-	//return 1;
+   while ( !( UCSR0A & (1<<UDRE0)) );   //Wait for empty transmit buffer
+   
+   
+   UDR0 = data;                         //Put data into buffer, sends the data
+   
+   //return 1;
 }
 
 /**
@@ -175,17 +175,17 @@ void USART_Transmit( unsigned char data )
  */
 void power_control(char state)
 {
-	if(state == ON)
-	{
-		PORTD &= ~(1<<PORTD4);
-		
-	}
-	else if(state == OFF)
-	{
-		PORTD |= (1<<PORTD4);
-	}
-	
-	//return 1;
+   if(state == ON)
+   {
+      PORTD &= ~(1<<PORTD4);
+      
+   }
+   else if(state == OFF)
+   {
+      PORTD |= (1<<PORTD4);
+   }
+   
+   //return 1;
 }
 
 /**
@@ -195,41 +195,41 @@ void power_control(char state)
  */
 void cc_control(char state)
 {
-	if(state == ON)
-	{
-		PORTB |= (1<<PORTB0);
-		
-	}
-	else if(state == OFF)
-	{
-		PORTB &= ~(1<<PORTB0);
-	}
-	
-	//return 1;
+   if(state == ON)
+   {
+      PORTB |= (1<<PORTB0);
+      
+   }
+   else if(state == OFF)
+   {
+      PORTB &= ~(1<<PORTB0);
+   }
+   
+   //return 1;
 }
 
 
 int main(void)
 {
-	powermanagement_init();
-	
-	char power_status = 1;
-	char cc_status = 1;	
-	
-	float five_rail = 0;
-	float three_rail = 0;
-	float current = 0;
-	float lipo = 0;
-	
+   powermanagement_init();
+   
+   char power_status = 1;
+   char cc_status = 1;   
+   
+   float five_rail = 0;
+   float three_rail = 0;
+   float current = 0;
+   float lipo = 0;
+   
     while(1)
     {
-		power_control(power_status);
-		cc_control(cc_status);
-		
-		five_rail = get_five_rail();
-		three_rail = get_three_rail();
-		current = get_current();
-		lipo = get_lipo();
+      power_control(power_status);
+      cc_control(cc_status);
+      
+      five_rail = get_five_rail();
+      three_rail = get_three_rail();
+      current = get_current();
+      lipo = get_lipo();
     }
 }
 
