@@ -20,61 +20,22 @@
 #define OFF 0
 
 
-float get_five_rail()
-{
-	adc_init(0);
-	_delay_ms(100);
-	
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*5.2;
-
-	return meassurement;
-}
-
-float get_three_rail()
-{
-	adc_init(1);
-	_delay_ms(100);
-
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*3.4;
-
-	return meassurement;
-}
-
-float get_current()
-{
-	adc_init(2);
-	_delay_ms(100);
-
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*0;
-
-	return meassurement;
-}
-
-float get_lipo()
-{
-	adc_init(3);
-	_delay_ms(100);
-	
-	float meassurement = (((float)adc_sample()/1023)*3.3);
-	
-	meassurement = (meassurement/2.5)*12.4;
-
-	return meassurement;
-}
-
-
+/**
+ * inits the general powermanagement
+ * 
+ * @return Voltage
+ */
 void powermanagement_init()
 {
 	DDRD |= (1<<PORTD4);                 //Set tristate for ENABLE_MCU
 	DDRB |= (1<<PORTB0);                 //Set tristate for CRUISE_CONTROL
 }
 
+/**
+ * inits the adc with the corresponding channel
+ * 
+ * @param Channel
+ */
 void adc_init(int channel)
 {
 	ADMUX = 0x00;                        //Reset ADMUX register to 0
@@ -92,6 +53,11 @@ void adc_init(int channel)
 	//return 1;
 }
 
+/**
+ * make a sample on the adc
+ * 
+ * @return ADC-Value
+ */
 int adc_sample()
 {
 	int result = 0;                      //Setup space for ADC result
@@ -101,6 +67,78 @@ int adc_sample()
 	return result;
 }
 
+/**
+ * Returns the actual voltage on the five Volt rail
+ * 
+ * @return Voltage
+ */
+float get_five_rail()
+{
+	adc_init(0);
+	_delay_ms(100);
+	
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*5.2;
+
+	return meassurement;
+}
+
+/**
+ * Returns the actual voltage on the three point three Volt rail
+ * 
+ * @return Voltage
+ */
+float get_three_rail()
+{
+	adc_init(1);
+	_delay_ms(100);
+
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*3.4;
+
+	return meassurement;
+}
+
+/**
+ * Returns the actual current consumption (Not yet implemented!!)
+ * 
+ * @return Current
+ */
+float get_current()
+{
+	adc_init(2);
+	_delay_ms(100);
+
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*0;
+
+	return meassurement;
+}
+
+/**
+ * Returns the actual lipo voltage
+ * 
+ * @return Voltage
+ */
+float get_lipo()
+{
+	adc_init(3);
+	_delay_ms(100);
+	
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*12.4;
+
+	return meassurement;
+}
+
+/**
+ * Init USART interface
+ * 
+ */
 char usart_init( unsigned int ubrr)
 {
 
@@ -114,6 +152,11 @@ char usart_init( unsigned int ubrr)
 	return 1;
 }
 
+/**
+ * Transmits given data over USART
+ * 
+ * @param Data
+ */
 void USART_Transmit( unsigned char data )
 {
 
@@ -125,6 +168,11 @@ void USART_Transmit( unsigned char data )
 	//return 1;
 }
 
+/**
+ * Power control
+ * 
+ * @param on or off
+ */
 void power_control(char state)
 {
 	if(state == ON)
@@ -140,6 +188,11 @@ void power_control(char state)
 	//return 1;
 }
 
+/**
+ * CruiseControl control
+ * 
+ * @param on or off
+ */
 void cc_control(char state)
 {
 	if(state == ON)
