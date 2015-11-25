@@ -137,16 +137,5 @@
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include=".DS_Store">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="Makefile">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="README.md">
-      <SubType>compile</SubType>
-    </None>
-  </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

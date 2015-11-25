@@ -19,11 +19,12 @@
 #define akku 0x12
 #define motor 0x55
 #define servo 0x66
-#define empfangen 0x98
+#define empfangen 0x00
 #define senden 0x77
+#define sback 0x00
+#define sfwd 0x01
 
-volatile int backstop = 0;
-volatile int forwardstop = 0;
+
 volatile uint32_t motordata = 0;
 volatile int m_data1 = 0;
 volatile int m_data2 = 0;
@@ -35,6 +36,8 @@ int twi_receive(char r_adress, char r_mode);
 void decode(void);
 void rf_transimit(void);
 int rf_receive(void);
+void forwardsecure(void);
+void backwardsecure(void);
 
 uint8_t temp;
 uint8_t q = 0;
@@ -46,13 +49,14 @@ uint8_t rx_address[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
 
 ISR(INT2_vect){
 	
-	forwardstop = 1;
+	forwardsecure();
 	
 }
 
 ISR(INT3_vect){
 	
-	backstop = 1;
+	backwardsecure();
+	
 	
 }
 
@@ -64,9 +68,12 @@ int main(){
 	PORTF = 0x01;
 	DDRC = 0xFF;
 	PORTC = 0x00;
+	DDRA = 0x00;
+	PORTA = 0x00;
 	
 	EIMSK = (1<<INT2) | (1<<INT3);												// Interrupt auf INT2 und 3 aktivieren
 	EICRA = (1<<ISC21) | (0<<ISC20) | (1<<ISC31) | (0<<ISC30);	
+	sei();
 	
 	nrf24_init();																// Funkmodul Initialisieren
 	nrf24_config(2,4);															// Den Chanel vom Funkmodul wählen und Anzahl der Byte zum übertragen angeben
@@ -81,7 +88,18 @@ int main(){
 			case 2:
 				//	twi_transmit(MM, motor, data_array[2]);
 				//	twi_transmit(MM, servo, data_array[3]);
-			
+				
+				if ( data_array[1] == 0xAA)  {
+							
+				PORTF |= 0x02;
+				_delay_ms(250);
+				PORTF &= ~(0x02);
+							
+				}
+				
+				
+				
+					break;
 			
 			case 3: break;
 			
@@ -171,6 +189,13 @@ int twi_receive(char r_adress, char r_mode){
 	return(accu);													// Wert zurückgeben
 }
 
+//////////////////////////////////////////
+// Funktion: Daten an die Fernbedienung senden
+// Name:	 Eric Suter
+// Datum:	 8.11.2015
+// Version:	 1.1
+//////////////////////////////////////////
+
 void rf_transimit(){
 	
 	data_array[0] = 0x77;
@@ -202,18 +227,17 @@ void rf_transimit(){
 	
 }
 
+//////////////////////////////////////////
+// Funktion: Daten aus funkmodul laden und Funktion zuweisen
+// Name:	 Eric Suter
+// Datum:	 8.11.2015
+// Version:	 1.1
+//////////////////////////////////////////
 
 int rf_receive(void){
 	
 	if(nrf24_dataReady()){
 		nrf24_getData(data_array);
-		if ( data_array[1] == 0xAA)  {
-			
-			PORTF |= 0x04;
-			_delay_ms(250);
-			PORTF &= ~(0x04);
-			
-		}
 		
 		if(data_array[0] == senden){
 			
@@ -229,4 +253,43 @@ int rf_receive(void){
 	}
 	else{ return 3; }
 	
+}
+
+//////////////////////////////////////////
+// Funktion: Daten aus funkmodul laden und Funktion zuweisen
+// Name:	 Eric Suter
+// Datum:	 8.11.2015
+// Version:	 1.1
+//////////////////////////////////////////
+
+void backwardsecure(){
+
+	while ((PINA & 0x01) == 0){
+	
+		//twi_transmit(MM, motor, sback);
+		PORTF |= 0x08;
+	
+	}
+	_delay_ms(500);
+	PORTF &= ~(0x08);
+}
+
+//////////////////////////////////////////
+// Funktion: Daten aus funkmodul laden und Funktion zuweisen
+// Name:	 Eric Suter
+// Datum:	 8.11.2015
+// Version:	 1.1
+//////////////////////////////////////////
+
+
+void forwardsecure(){
+	
+		while ((PINA & 0x02) == 0){
+			
+			//twi_transmit(MM, motor, sfwd);
+			PORTF |= 0x04;
+			
+		}
+		_delay_ms(500);
+		PORTF &= ~(0x04);
 }
