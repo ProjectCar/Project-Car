@@ -24,12 +24,6 @@
 #define sback 0x00
 #define sfwd 0x01
 
-
-volatile uint32_t motordata = 0;
-volatile int m_data1 = 0;
-volatile int m_data2 = 0;
-volatile int transmit = 0;
-
 void twi_init(void);
 void twi_transmit(char adress, char mode, int data);
 int twi_receive(char r_adress, char r_mode);
@@ -41,10 +35,37 @@ void backwardsecure(void);
 
 uint8_t temp;
 uint8_t q = 0;
-uint8_t data_array[4];
+uint8_t data_array[6];
 uint8_t tx_address[5] = {0xD7,0xD7,0xD7,0xD7,0xD7};
 uint8_t rx_address[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
+extern volatile int tombler = 0;
 	
+/* ------------------------------------------------------------------------- */
+ISR (TIMER0_OVF_vect){
+
+	tombler = tombler + 1;
+	if(tombler == 300){
+		
+		if ( (data_array[5] & 0x80) == 1 ){
+	
+			PORTB |= ~PORTB4;
+	
+		}
+		else{ PORTB &= ~(1<<PORTB4);}
+
+		if ( (data_array[5] & 0x40) == 1 ){
+	
+			PORTB |= ~PORTB5;
+	
+		}
+		else{ PORTB &= ~(1<<PORTB5);}
+		
+		tombler = 0;
+		
+	}
+	
+}
+
 /* ------------------------------------------------------------------------- */
 
 ISR(INT2_vect){
@@ -53,10 +74,11 @@ ISR(INT2_vect){
 	
 }
 
+/* ------------------------------------------------------------------------- */
+
 ISR(INT3_vect){
 	
 	backwardsecure();
-	
 	
 }
 
@@ -70,10 +92,14 @@ int main(){
 	PORTC = 0x00;
 	DDRA = 0x00;
 	PORTA = 0x00;
+	DDRB = 0xFF;
+	PORTB = 0x00;
 	
+	TCCR0 |= (1<<CS00) | (1<<CS02);												// Taktteiler um den Faktor 1024
 	EIMSK = (1<<INT2) | (1<<INT3);												// Interrupt auf INT2 und 3 aktivieren
-	EICRA = (1<<ISC21) | (0<<ISC20) | (1<<ISC31) | (0<<ISC30);	
-	sei();
+	EICRA = (1<<ISC21) | (0<<ISC20) | (1<<ISC31) | (0<<ISC30);					// Auf negative flanke triggern beim interrupt
+	TIMSK |= (1<<TOIE0);														// Timer interrupt aktivieren
+	sei();																		// Globale Interrupts beim Atmega128a aktivieren
 	
 	nrf24_init();																// Funkmodul Initialisieren
 	nrf24_config(2,4);															// Den Chanel vom Funkmodul wählen und Anzahl der Byte zum übertragen angeben
@@ -82,48 +108,33 @@ int main(){
 
 	while(1) {
 
-		switch(rf_receive()) {
+		switch(rf_receive()) {													// Schauen was rf_receive fuer eine aktion weitergibt
 			
-			case 1: rf_transimit(); break;
-			case 2:
-				//	twi_transmit(MM, motor, data_array[2]);
-				//	twi_transmit(MM, servo, data_array[3]);
+			case 1: rf_transimit(); break;										// Wenn 1 dann sende Daten an die Fernedienung
+			case 2:																// Wenn 2
+				//	twi_transmit(MM, motor, data_array[2]);						// Motorgeschwindigketi schicken
+				//	twi_transmit(MM, servo, data_array[3]);						// Lenkung schicken
+				PORTC = data_array[5];											// Beleuchtung den Daten anpassen
 				
-				if ( data_array[1] == 0xAA)  {
+				if ( data_array[1] == 0xAA)  {									// Wenn 2Byte AA ist
 							
 				PORTF |= 0x02;
-				_delay_ms(250);
+				_delay_ms(250);													// LED 2 blinken lassen
 				PORTF &= ~(0x02);
 							
 				}
 				
-				
-				
-					break;
+			break;
 			
-			case 3: break;
+			case 3: break;														// keine Daten erhalten
 			
 		}
 	
 		
 	}
 }
-/* -------------------------------------------------------*/
 
-
-//////////////////////////////////////////
-// Funktion: Entschlüsseln von erhaltenen Funkdaten
-// Name:	 Eric Suter
-// Datum:	 11.11.2015
-// Version:	 1.1
-//////////////////////////////////////////
-
-void decode(void){
-	
-	
-	
-}
-
+/* ------------------------------------------------------------------------- */
 
 //////////////////////////////////////////
 // Funktion: TWI Initialisieren
@@ -134,11 +145,13 @@ void decode(void){
 
 void twi_init(void){
 	
-	twi_transmit(MM, 0x01,0x0000);									// Init von Motor
-	twi_transmit(MM, 0x02,0x0000);									// Init von Motor
-	twi_receive(EM, 0x01);											// Akkustand laden
-	
+	twi_transmit(MM, 0x01,0x0000);												// Init von Motor
+	twi_transmit(MM, 0x02,0x0000);												// Init von Motor
+	twi_receive(EM, 0x01);														// Akkustand laden
+			
 }
+
+/* ------------------------------------------------------------------------- */
 
 //////////////////////////////////////////
 // Funktion: TWI Daten senden
@@ -149,29 +162,30 @@ void twi_init(void){
 
 void twi_transmit(char adress, char mode, int data){
 	
-	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);							// Startcondition senden
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);										// Startcondition senden
+	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	
-	TWDR = adress;													// Adresse Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+	TWDR = adress;																// Adresse Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	
-	TWDR = mode;													// Datenbyte 1 Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+	TWDR = mode;																// Datenbyte 1 Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	
-	TWDR = ((data >> 8 )& 0x00FF);									// Datenbyte 2 Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+	TWDR = ((data >> 8 )& 0x00FF);												// Datenbyte 2 Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
-	TWDR = (data & 0x00FF);											// Datenbyte 3 Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);									// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));									// Warten bis gesendet
+	TWDR = (data & 0x00FF);														// Datenbyte 3 Laden
+	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
-	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);							// Stopcondition senden
-	
+	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);										// Stopcondition senden
 	
 }
+
+/* ------------------------------------------------------------------------- */
 
 //////////////////////////////////////////
 // Funktion: TWI Daten anfordern
@@ -182,12 +196,14 @@ void twi_transmit(char adress, char mode, int data){
 
 int twi_receive(char r_adress, char r_mode){
 	
-	int accu = 0;													// Define von Akku Variabel
+	int accu = 0;																// Define von Akku Variabel
 	
-	// Daten empfangen EF
+																				// Daten empfangen EF
 	
-	return(accu);													// Wert zurückgeben
+	return(accu);																// Wert zurückgeben
 }
+
+/* ------------------------------------------------------------------------- */
 
 //////////////////////////////////////////
 // Funktion: Daten an die Fernbedienung senden
@@ -227,6 +243,8 @@ void rf_transimit(){
 	
 }
 
+/* ------------------------------------------------------------------------- */
+
 //////////////////////////////////////////
 // Funktion: Daten aus funkmodul laden und Funktion zuweisen
 // Name:	 Eric Suter
@@ -255,6 +273,8 @@ int rf_receive(void){
 	
 }
 
+/* ------------------------------------------------------------------------- */
+
 //////////////////////////////////////////
 // Funktion: Daten aus funkmodul laden und Funktion zuweisen
 // Name:	 Eric Suter
@@ -273,6 +293,8 @@ void backwardsecure(){
 	_delay_ms(500);
 	PORTF &= ~(0x08);
 }
+
+/* ------------------------------------------------------------------------- */
 
 //////////////////////////////////////////
 // Funktion: Daten aus funkmodul laden und Funktion zuweisen
@@ -293,3 +315,5 @@ void forwardsecure(){
 		_delay_ms(500);
 		PORTF &= ~(0x04);
 }
+
+/* ------------------------------------------------------------------------- */
