@@ -221,6 +221,15 @@ int main(void)
    float current = 0;
    float lipo = 0;
    
+   TWAR = ( 0x04 << 1);
+   TWCR = ( (1<<TWEN) | (1<<TWEA) );
+   TWCR &= ~( (1<<TWSTA) | (1<<TWSTO) );
+	   
+   int data;
+   int status;
+	     
+	int counter = 0;
+		     
     while(1)
     {
       power_control(power_status);
@@ -230,6 +239,46 @@ int main(void)
       three_rail = get_three_rail();
       current = get_current();
       lipo = get_lipo();
+	  
+
+	  
+
+	  //data = TWDR;
+	  //status = TWSR;
+      if ( (TWCR & (1<<TWINT)) == (1<<TWINT) )			  /* If it got Data via TWI for me */
+	  {	  
+		  switch(TWSR)
+		  {
+			  case 0x60:
+				 TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+				 break;
+		
+			  case 0x80:
+				 data = TWDR;
+				 if(counter == 0)
+				 {
+					 TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+									 counter++;
+									 break;
+				 }
+				 
+				 if(counter == 1)
+				 {
+					 TWCR |= ( (1<<TWINT) );
+				 }
+				 counter++;
+				 break;
+				 
+				case 0xA0:            /* Received Stop or Repeated Start while still addressed */
+					TWCR |= ( (1<<TWINT) );			                /* Switch to not Addressed */	
+					counter = 0;
+					break;		
+							 
+			  default:
+			  status = TWDR;
+			    break;
+		  }
+	  }
     }
 }
 
