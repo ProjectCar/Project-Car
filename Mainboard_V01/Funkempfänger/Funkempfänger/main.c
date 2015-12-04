@@ -106,14 +106,20 @@ int main(){
 	nrf24_tx_address(tx_address);												// Sendeadresse festlegen ( Muss mit empfängeradresse(rx) des anden geräts übereinstimmen)
 	nrf24_rx_address(rx_address);												// Empfangsadresse festlegen ( Muss mit sendeadresse(tx) des anden geräts übereinstimmen)
 
-	while(1) {
+	TWBR |= 0xFF;
 
+	while(1) {
+		
+
+		
 		switch(rf_receive()) {													// Schauen was rf_receive fuer eine aktion weitergibt
 			
 			case 1: rf_transimit(); break;										// Wenn 1 dann sende Daten an die Fernedienung
 			case 2:																// Wenn 2
 				//	twi_transmit(MM, motor, data_array[1]);						// Motorgeschwindigketi schicken
 				//	twi_transmit(MM, servo, data_array[2]);						// Lenkung schicken
+				twi_transmit(0x00, data_array[2], 0x00);
+				
 				
 				PORTF = (data_array[2]);
 				
@@ -158,23 +164,26 @@ void twi_init(void){
 void twi_transmit(char adress, char mode, int data){
 	
 	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);										// Startcondition senden
+	//PORTF |= (1<<PORTD0);
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
-	
+	//PORTF &= ~(1<<PORTD0);
+
+		
 	TWDR = adress;																// Adresse Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
-	
+		
 	TWDR = mode;																// Datenbyte 1 Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	
-	TWDR = ((data >> 8 )& 0x00FF);												// Datenbyte 2 Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
+	//TWDR = ((data >> 8 )& 0x00FF);												// Datenbyte 2 Laden
+	//TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	//while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
-	TWDR = (data & 0x00FF);														// Datenbyte 3 Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
+	//TWDR = (data & 0x00FF);														// Datenbyte 3 Laden
+	//TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	//while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
 	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);										// Stopcondition senden
 	

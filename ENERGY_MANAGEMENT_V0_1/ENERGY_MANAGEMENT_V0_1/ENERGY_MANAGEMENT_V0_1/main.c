@@ -221,7 +221,9 @@ int main(void)
    float current = 0;
    float lipo = 0;
    
+   //TWI Init
    TWAR = ( 0x04 << 1);
+   TWAR |= 0x01;
    TWCR = ( (1<<TWEN) | (1<<TWEA) );
    TWCR &= ~( (1<<TWSTA) | (1<<TWSTO) );
 	   
@@ -243,12 +245,19 @@ int main(void)
 
 	  
 
-	  //data = TWDR;
-	  //status = TWSR;
-      if ( (TWCR & (1<<TWINT)) == (1<<TWINT) )			  /* If it got Data via TWI for me */
-	  {	  
-		  switch(TWSR)
+	  data = TWDR;
+	  status = TWSR;
+	  data = TWDR;
+      //if ( (TWCR & (1<<TWINT)) == (1<<TWINT) )			  /* If it got Data via TWI for me */
+	  //{	  
+		  switch(TWSR)		//TWDR	Unknown identifier	Error
+
 		  {
+
+			  case 0x70:
+			  TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+			  break;
+	  
 			  case 0x60:
 				 TWCR |= ( (1<<TWINT) | (1<<TWEA) );
 				 break;
@@ -279,6 +288,14 @@ int main(void)
 			    break;
 		  }
 	  }
-    }
+	  //else
+	  //{
+		  //if(1)
+		  //{
+			       //current = get_current();
+			       //lipo = get_lipo(); 
+		  //}
+	  //}
+    //}
 }
 
