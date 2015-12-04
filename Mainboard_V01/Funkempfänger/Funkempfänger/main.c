@@ -107,6 +107,8 @@ int main(){
 	nrf24_rx_address(rx_address);												// Empfangsadresse festlegen ( Muss mit sendeadresse(tx) des anden geräts übereinstimmen)
 
 	while(1) {
+		
+		//twi_transmit(MM, 0xFF, 0);
 
 		switch(rf_receive()) {													// Schauen was rf_receive fuer eine aktion weitergibt
 			
@@ -173,13 +175,13 @@ void twi_transmit(char adress, char mode, int data){
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	
-	TWDR = ((data >> 8 )& 0x00FF);												// Datenbyte 2 Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
+	//TWDR = ((data >> 8 )& 0x00FF);												// Datenbyte 2 Laden
+	//TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	//while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
-	TWDR = (data & 0x00FF);														// Datenbyte 3 Laden
-	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
-	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
+	//TWDR = (data & 0x00FF);														// Datenbyte 3 Laden
+	//TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
+	//while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
 	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);										// Stopcondition senden
 	

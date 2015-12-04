@@ -1,5 +1,5 @@
 
-Funkempf+ñnger.elf:     file format elf32-avr
+Funkempfaenger.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -13,19 +13,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 00000188  00000000  00000000  00000746  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000130f  00000000  00000000  000008ce  2**0
+  5 .debug_info   00001310  00000000  00000000  000008ce  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000051e  00000000  00000000  00001bdd  2**0
+  6 .debug_abbrev 0000051e  00000000  00000000  00001bde  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000ac2  00000000  00000000  000020fb  2**0
+  7 .debug_line   00000a86  00000000  00000000  000020fc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  0000044c  00000000  00000000  00002bc0  2**2
+  8 .debug_frame  0000044c  00000000  00000000  00002b84  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000051a  00000000  00000000  0000300c  2**0
+  9 .debug_str    000004c3  00000000  00000000  00002fd0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000b42  00000000  00000000  00003526  2**0
+ 10 .debug_loc    00000b42  00000000  00000000  00003493  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000158  00000000  00000000  00004068  2**0
+ 11 .debug_ranges 00000158  00000000  00000000  00003fd5  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -145,6 +145,12 @@ Disassembly of section .text:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
 
 000000c8 <__vector_16>:
+	int accu = 0;																// Define von Akku Variabel
+	
+																				// Daten empfangen EF
+	
+	return(accu);																// Wert zurückgeben
+}
   c8:	1f 92       	push	r1
   ca:	0f 92       	push	r0
   cc:	0f b6       	in	r0, 0x3f	; 63
@@ -177,22 +183,40 @@ Disassembly of section .text:
  112:	18 95       	reti
 
 00000114 <rf_transimit>:
+// Version:	 1.1
+//////////////////////////////////////////
+
+void rf_transimit(){
+	
+	data_array[0] = 0x77;
  114:	87 e7       	ldi	r24, 0x77	; 119
  116:	80 93 0d 01 	sts	0x010D, r24
+	data_array[1] = twi_receive(EM, akku);
  11a:	10 92 0e 01 	sts	0x010E, r1
+	data_array[2] = PORTC;
  11e:	85 b3       	in	r24, 0x15	; 21
  120:	80 93 0f 01 	sts	0x010F, r24
+	data_array[3] = 0x00;
  124:	10 92 10 01 	sts	0x0110, r1
+	
+	
+	nrf24_send(data_array);											// Datenarray versenden
  128:	8d e0       	ldi	r24, 0x0D	; 13
  12a:	91 e0       	ldi	r25, 0x01	; 1
  12c:	00 d2       	rcall	.+1024   	; 0x52e <nrf24_send>
+	while(nrf24_isSending());										// Warten bis senden beendet ist
  12e:	53 d1       	rcall	.+678    	; 0x3d6 <nrf24_isSending>
  130:	81 11       	cpse	r24, r1
  132:	fd cf       	rjmp	.-6      	; 0x12e <rf_transimit+0x1a>
+	temp = nrf24_lastMessageStatus();								// Schaut ob alle Daten angekommen sind
  134:	57 d1       	rcall	.+686    	; 0x3e4 <nrf24_lastMessageStatus>
  136:	80 93 0c 01 	sts	0x010C, r24
+
+	if(temp == NRF24_TRANSMISSON_OK){
  13a:	81 11       	cpse	r24, r1
  13c:	12 c0       	rjmp	.+36     	; 0x162 <rf_transimit+0x4e>
+		
+		PORTF |= 0x02;
  13e:	e2 e6       	ldi	r30, 0x62	; 98
  140:	f0 e0       	ldi	r31, 0x00	; 0
  142:	80 81       	ld	r24, Z
@@ -213,12 +237,19 @@ Disassembly of section .text:
  154:	e1 f7       	brne	.-8      	; 0x14e <rf_transimit+0x3a>
  156:	00 c0       	rjmp	.+0      	; 0x158 <rf_transimit+0x44>
  158:	00 00       	nop
+		_delay_ms(25);
+		PORTF |= ~(0x02);
  15a:	80 81       	ld	r24, Z
  15c:	8d 6f       	ori	r24, 0xFD	; 253
  15e:	80 83       	st	Z, r24
  160:	13 c0       	rjmp	.+38     	; 0x188 <rf_transimit+0x74>
+		
+	}
+	else if(temp == NRF24_MESSAGE_LOST){
  162:	81 30       	cpi	r24, 0x01	; 1
  164:	89 f4       	brne	.+34     	; 0x188 <rf_transimit+0x74>
+		
+		PORTF |= 0x08;
  166:	e2 e6       	ldi	r30, 0x62	; 98
  168:	f0 e0       	ldi	r31, 0x00	; 0
  16a:	80 81       	ld	r24, Z
@@ -233,9 +264,14 @@ Disassembly of section .text:
  17c:	e1 f7       	brne	.-8      	; 0x176 <rf_transimit+0x62>
  17e:	00 c0       	rjmp	.+0      	; 0x180 <rf_transimit+0x6c>
  180:	00 00       	nop
+		_delay_ms(25);
+		PORTF |= ~(0x08);
  182:	80 81       	ld	r24, Z
  184:	87 6f       	ori	r24, 0xF7	; 247
  186:	80 83       	st	Z, r24
+		
+	}
+	nrf24_powerUpRx();
  188:	8e d1       	rcall	.+796    	; 0x4a6 <nrf24_powerUpRx>
  18a:	8f e3       	ldi	r24, 0x3F	; 63
  18c:	9c e9       	ldi	r25, 0x9C	; 156
@@ -246,69 +282,146 @@ Disassembly of section .text:
  196:	08 95       	ret
 
 00000198 <rf_receive>:
+// Version:	 1.1
+//////////////////////////////////////////
+
+int rf_receive(void){
+	
+	if(nrf24_dataReady()){
  198:	0d d2       	rcall	.+1050   	; 0x5b4 <nrf24_dataReady>
  19a:	88 23       	and	r24, r24
  19c:	51 f0       	breq	.+20     	; 0x1b2 <rf_receive+0x1a>
+		nrf24_getData(data_array);
  19e:	8d e0       	ldi	r24, 0x0D	; 13
  1a0:	91 e0       	ldi	r25, 0x01	; 1
  1a2:	6d d1       	rcall	.+730    	; 0x47e <nrf24_getData>
+		
+		if(data_array[0] == senden){
  1a4:	80 91 0d 01 	lds	r24, 0x010D
  1a8:	87 37       	cpi	r24, 0x77	; 119
  1aa:	31 f0       	breq	.+12     	; 0x1b8 <rf_receive+0x20>
+			
+			return 1;
+			
+		}
+		if(data_array[0] == empfangen){
  1ac:	88 23       	and	r24, r24
  1ae:	39 f0       	breq	.+14     	; 0x1be <rf_receive+0x26>
  1b0:	08 95       	ret
+			return 2;
+			
+		}
+		
+	}
+	else{ return 3; }
  1b2:	83 e0       	ldi	r24, 0x03	; 3
  1b4:	90 e0       	ldi	r25, 0x00	; 0
  1b6:	08 95       	ret
+	if(nrf24_dataReady()){
+		nrf24_getData(data_array);
+		
+		if(data_array[0] == senden){
+			
+			return 1;
  1b8:	81 e0       	ldi	r24, 0x01	; 1
  1ba:	90 e0       	ldi	r25, 0x00	; 0
  1bc:	08 95       	ret
+			
+		}
+		if(data_array[0] == empfangen){
+			
+			return 2;
  1be:	82 e0       	ldi	r24, 0x02	; 2
  1c0:	90 e0       	ldi	r25, 0x00	; 0
+		}
+		
+	}
+	else{ return 3; }
+	
+}
  1c2:	08 95       	ret
 
 000001c4 <main>:
+
+/* ------------------------------------------------------------------------- */
+
+int main(){
+	
+	DDRF = 0xFF;
  1c4:	8f ef       	ldi	r24, 0xFF	; 255
  1c6:	80 93 61 00 	sts	0x0061, r24
+	PORTF = 0x01;
  1ca:	91 e0       	ldi	r25, 0x01	; 1
  1cc:	90 93 62 00 	sts	0x0062, r25
+	DDRC = 0xFF;
  1d0:	84 bb       	out	0x14, r24	; 20
+	PORTC = 0x00;
  1d2:	15 ba       	out	0x15, r1	; 21
+	DDRA = 0x00;
  1d4:	1a ba       	out	0x1a, r1	; 26
+	PORTA = 0x00;
  1d6:	1b ba       	out	0x1b, r1	; 27
+	DDRB = 0xFF;
  1d8:	87 bb       	out	0x17, r24	; 23
+	PORTB = 0x00;
  1da:	18 ba       	out	0x18, r1	; 24
+	
+	TCCR0 |= (1<<CS00) | (1<<CS02);												// Taktteiler um den Faktor 1024
  1dc:	83 b7       	in	r24, 0x33	; 51
  1de:	85 60       	ori	r24, 0x05	; 5
  1e0:	83 bf       	out	0x33, r24	; 51
+	EIMSK = (1<<INT2) | (1<<INT3);												// Interrupt auf INT2 und 3 aktivieren
  1e2:	8c e0       	ldi	r24, 0x0C	; 12
  1e4:	89 bf       	out	0x39, r24	; 57
+	EICRA = (1<<ISC21) | (0<<ISC20) | (1<<ISC31) | (0<<ISC30);					// Auf negative flanke triggern beim interrupt
  1e6:	80 ea       	ldi	r24, 0xA0	; 160
  1e8:	80 93 6a 00 	sts	0x006A, r24
+	TIMSK |= (1<<TOIE0);														// Timer interrupt aktivieren
  1ec:	87 b7       	in	r24, 0x37	; 55
  1ee:	81 60       	ori	r24, 0x01	; 1
  1f0:	87 bf       	out	0x37, r24	; 55
+	sei();																		// Globale Interrupts beim Atmega128a aktivieren
  1f2:	78 94       	sei
+	
+	nrf24_init();																// Funkmodul Initialisieren
  1f4:	b1 d0       	rcall	.+354    	; 0x358 <nrf24_init>
+	nrf24_config(2,4);															// Den Chanel vom Funkmodul wählen und Anzahl der Byte zum übertragen angeben
  1f6:	64 e0       	ldi	r22, 0x04	; 4
  1f8:	82 e0       	ldi	r24, 0x02	; 2
  1fa:	66 d1       	rcall	.+716    	; 0x4c8 <nrf24_config>
+	nrf24_tx_address(tx_address);												// Sendeadresse festlegen ( Muss mit empfängeradresse(rx) des anden geräts übereinstimmen)
  1fc:	85 e0       	ldi	r24, 0x05	; 5
  1fe:	91 e0       	ldi	r25, 0x01	; 1
  200:	0a d2       	rcall	.+1044   	; 0x616 <nrf24_tx_address>
+	nrf24_rx_address(rx_address);												// Empfangsadresse festlegen ( Muss mit sendeadresse(tx) des anden geräts übereinstimmen)
  202:	80 e0       	ldi	r24, 0x00	; 0
  204:	91 e0       	ldi	r25, 0x01	; 1
  206:	f9 d1       	rcall	.+1010   	; 0x5fa <nrf24_rx_address>
+			
+			case 1: rf_transimit(); break;										// Wenn 1 dann sende Daten an die Fernedienung
+			case 2:																// Wenn 2
+				//	twi_transmit(MM, motor, data_array[2]);						// Motorgeschwindigketi schicken
+				//	twi_transmit(MM, servo, data_array[3]);						// Lenkung schicken
+				PORTC = data_array[5];											// Beleuchtung den Daten anpassen
  208:	02 e1       	ldi	r16, 0x12	; 18
  20a:	11 e0       	ldi	r17, 0x01	; 1
+				
+				if ( data_array[1] == 0xAA)  {									// Wenn 2Byte AA ist
  20c:	ce e0       	ldi	r28, 0x0E	; 14
  20e:	d1 e0       	ldi	r29, 0x01	; 1
+							
+				PORTF |= 0x02;
  210:	0f 2e       	mov	r0, r31
  212:	f2 e6       	ldi	r31, 0x62	; 98
  214:	ef 2e       	mov	r14, r31
  216:	f1 2c       	mov	r15, r1
  218:	f0 2d       	mov	r31, r0
+
+	while(1) {
+		
+		//twi_transmit(MM, 0xFF, 0);
+
+		switch(rf_receive()) {													// Schauen was rf_receive fuer eine aktion weitergibt
  21a:	be df       	rcall	.-132    	; 0x198 <rf_receive>
  21c:	81 30       	cpi	r24, 0x01	; 1
  21e:	91 05       	cpc	r25, r1
@@ -316,14 +429,24 @@ Disassembly of section .text:
  222:	02 97       	sbiw	r24, 0x02	; 2
  224:	19 f0       	breq	.+6      	; 0x22c <main+0x68>
  226:	f9 cf       	rjmp	.-14     	; 0x21a <main+0x56>
+			
+			case 1: rf_transimit(); break;										// Wenn 1 dann sende Daten an die Fernedienung
  228:	75 df       	rcall	.-278    	; 0x114 <rf_transimit>
  22a:	f7 cf       	rjmp	.-18     	; 0x21a <main+0x56>
+			case 2:																// Wenn 2
+				//	twi_transmit(MM, motor, data_array[2]);						// Motorgeschwindigketi schicken
+				//	twi_transmit(MM, servo, data_array[3]);						// Lenkung schicken
+				PORTC = data_array[5];											// Beleuchtung den Daten anpassen
  22c:	f8 01       	movw	r30, r16
  22e:	80 81       	ld	r24, Z
  230:	85 bb       	out	0x15, r24	; 21
+				
+				if ( data_array[1] == 0xAA)  {									// Wenn 2Byte AA ist
  232:	88 81       	ld	r24, Y
  234:	8a 3a       	cpi	r24, 0xAA	; 170
  236:	89 f7       	brne	.-30     	; 0x21a <main+0x56>
+							
+				PORTF |= 0x02;
  238:	f7 01       	movw	r30, r14
  23a:	80 81       	ld	r24, Z
  23c:	82 60       	ori	r24, 0x02	; 2
@@ -337,6 +460,8 @@ Disassembly of section .text:
  24c:	e1 f7       	brne	.-8      	; 0x246 <main+0x82>
  24e:	00 c0       	rjmp	.+0      	; 0x250 <main+0x8c>
  250:	00 00       	nop
+				_delay_ms(250);													// LED 2 blinken lassen
+				PORTF &= ~(0x02);
  252:	f7 01       	movw	r30, r14
  254:	80 81       	ld	r24, Z
  256:	8d 7f       	andi	r24, 0xFD	; 253
@@ -344,13 +469,28 @@ Disassembly of section .text:
  25a:	df cf       	rjmp	.-66     	; 0x21a <main+0x56>
 
 0000025c <backwardsecure>:
+// Version:	 1.1
+//////////////////////////////////////////
+
+void backwardsecure(){
+
+	while ((PINA & 0x01) == 0){
  25c:	c8 99       	sbic	0x19, 0	; 25
  25e:	07 c0       	rjmp	.+14     	; 0x26e <backwardsecure+0x12>
+	
+		//twi_transmit(MM, motor, sback);
+		PORTF |= 0x08;
  260:	e2 e6       	ldi	r30, 0x62	; 98
  262:	f0 e0       	ldi	r31, 0x00	; 0
  264:	80 81       	ld	r24, Z
  266:	88 60       	ori	r24, 0x08	; 8
  268:	80 83       	st	Z, r24
+// Version:	 1.1
+//////////////////////////////////////////
+
+void backwardsecure(){
+
+	while ((PINA & 0x01) == 0){
  26a:	c8 9b       	sbis	0x19, 0	; 25
  26c:	fb cf       	rjmp	.-10     	; 0x264 <backwardsecure+0x8>
  26e:	2f ef       	ldi	r18, 0xFF	; 255
@@ -362,6 +502,12 @@ Disassembly of section .text:
  27a:	e1 f7       	brne	.-8      	; 0x274 <backwardsecure+0x18>
  27c:	00 c0       	rjmp	.+0      	; 0x27e <backwardsecure+0x22>
  27e:	00 00       	nop
+		//twi_transmit(MM, motor, sback);
+		PORTF |= 0x08;
+	
+	}
+	_delay_ms(500);
+	PORTF &= ~(0x08);
  280:	e2 e6       	ldi	r30, 0x62	; 98
  282:	f0 e0       	ldi	r31, 0x00	; 0
  284:	80 81       	ld	r24, Z
@@ -370,6 +516,12 @@ Disassembly of section .text:
  28a:	08 95       	ret
 
 0000028c <__vector_4>:
+	
+}
+
+/* ------------------------------------------------------------------------- */
+
+ISR(INT3_vect){
  28c:	1f 92       	push	r1
  28e:	0f 92       	push	r0
  290:	0f b6       	in	r0, 0x3f	; 63
@@ -389,7 +541,11 @@ Disassembly of section .text:
  2ac:	bf 93       	push	r27
  2ae:	ef 93       	push	r30
  2b0:	ff 93       	push	r31
+	
+	backwardsecure();
  2b2:	d4 df       	rcall	.-88     	; 0x25c <backwardsecure>
+	
+}
  2b4:	ff 91       	pop	r31
  2b6:	ef 91       	pop	r30
  2b8:	bf 91       	pop	r27
@@ -411,13 +567,28 @@ Disassembly of section .text:
  2d8:	18 95       	reti
 
 000002da <forwardsecure>:
+//////////////////////////////////////////
+
+
+void forwardsecure(){
+	
+		while ((PINA & 0x02) == 0){
  2da:	c9 99       	sbic	0x19, 1	; 25
  2dc:	07 c0       	rjmp	.+14     	; 0x2ec <forwardsecure+0x12>
+			
+			//twi_transmit(MM, motor, sfwd);
+			PORTF |= 0x04;
  2de:	e2 e6       	ldi	r30, 0x62	; 98
  2e0:	f0 e0       	ldi	r31, 0x00	; 0
  2e2:	80 81       	ld	r24, Z
  2e4:	84 60       	ori	r24, 0x04	; 4
  2e6:	80 83       	st	Z, r24
+//////////////////////////////////////////
+
+
+void forwardsecure(){
+	
+		while ((PINA & 0x02) == 0){
  2e8:	c9 9b       	sbis	0x19, 1	; 25
  2ea:	fb cf       	rjmp	.-10     	; 0x2e2 <forwardsecure+0x8>
  2ec:	2f ef       	ldi	r18, 0xFF	; 255
@@ -429,6 +600,12 @@ Disassembly of section .text:
  2f8:	e1 f7       	brne	.-8      	; 0x2f2 <forwardsecure+0x18>
  2fa:	00 c0       	rjmp	.+0      	; 0x2fc <forwardsecure+0x22>
  2fc:	00 00       	nop
+			//twi_transmit(MM, motor, sfwd);
+			PORTF |= 0x04;
+			
+		}
+		_delay_ms(500);
+		PORTF &= ~(0x04);
  2fe:	e2 e6       	ldi	r30, 0x62	; 98
  300:	f0 e0       	ldi	r31, 0x00	; 0
  302:	80 81       	ld	r24, Z
@@ -437,6 +614,12 @@ Disassembly of section .text:
  308:	08 95       	ret
 
 0000030a <__vector_3>:
+	
+}
+
+/* ------------------------------------------------------------------------- */
+
+ISR(INT2_vect){
  30a:	1f 92       	push	r1
  30c:	0f 92       	push	r0
  30e:	0f b6       	in	r0, 0x3f	; 63
@@ -456,7 +639,11 @@ Disassembly of section .text:
  32a:	bf 93       	push	r27
  32c:	ef 93       	push	r30
  32e:	ff 93       	push	r31
+	
+	forwardsecure();
  330:	d4 df       	rcall	.-88     	; 0x2da <forwardsecure>
+	
+}
  332:	ff 91       	pop	r31
  334:	ef 91       	pop	r30
  336:	bf 91       	pop	r27
@@ -478,6 +665,12 @@ Disassembly of section .text:
  356:	18 95       	reti
 
 00000358 <nrf24_init>:
+{
+    uint8_t rv;
+    nrf24_readRegister(OBSERVE_TX,&rv,1);
+    rv = rv & 0x0F;
+    return rv;
+}
  358:	6c d1       	rcall	.+728    	; 0x632 <nrf24_setupPins>
  35a:	80 e0       	ldi	r24, 0x00	; 0
  35c:	70 d1       	rcall	.+736    	; 0x63e <nrf24_ce_digitalWrite>
@@ -820,6 +1013,12 @@ Disassembly of section .text:
  5ca:	08 95       	ret
 
 000005cc <nrf24_writeRegister>:
+    nrf24_csn_digitalWrite(HIGH);
+}
+
+/* Write to a single register of nrf24 */
+void nrf24_writeRegister(uint8_t reg, uint8_t* value, uint8_t len) 
+{
  5cc:	0f 93       	push	r16
  5ce:	1f 93       	push	r17
  5d0:	cf 93       	push	r28
@@ -827,17 +1026,22 @@ Disassembly of section .text:
  5d4:	08 2f       	mov	r16, r24
  5d6:	eb 01       	movw	r28, r22
  5d8:	14 2f       	mov	r17, r20
+    nrf24_csn_digitalWrite(LOW);
  5da:	80 e0       	ldi	r24, 0x00	; 0
  5dc:	36 d0       	rcall	.+108    	; 0x64a <nrf24_csn_digitalWrite>
+    spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
  5de:	80 2f       	mov	r24, r16
  5e0:	8f 71       	andi	r24, 0x1F	; 31
  5e2:	80 62       	ori	r24, 0x20	; 32
  5e4:	bf de       	rcall	.-642    	; 0x364 <spi_transfer>
+    nrf24_transmitSync(value,len);
  5e6:	61 2f       	mov	r22, r17
  5e8:	ce 01       	movw	r24, r28
  5ea:	24 df       	rcall	.-440    	; 0x434 <nrf24_transmitSync>
+    nrf24_csn_digitalWrite(HIGH);
  5ec:	81 e0       	ldi	r24, 0x01	; 1
  5ee:	2d d0       	rcall	.+90     	; 0x64a <nrf24_csn_digitalWrite>
+}
  5f0:	df 91       	pop	r29
  5f2:	cf 91       	pop	r28
  5f4:	1f 91       	pop	r17
@@ -845,79 +1049,163 @@ Disassembly of section .text:
  5f8:	08 95       	ret
 
 000005fa <nrf24_rx_address>:
+    nrf24_powerUpRx();
+}
+
+/* Set the RX address */
+void nrf24_rx_address(uint8_t * adr) 
+{
  5fa:	cf 93       	push	r28
  5fc:	df 93       	push	r29
  5fe:	ec 01       	movw	r28, r24
+    nrf24_ce_digitalWrite(LOW);
  600:	80 e0       	ldi	r24, 0x00	; 0
  602:	1d d0       	rcall	.+58     	; 0x63e <nrf24_ce_digitalWrite>
+    nrf24_writeRegister(RX_ADDR_P1,adr,nrf24_ADDR_LEN);
  604:	45 e0       	ldi	r20, 0x05	; 5
  606:	be 01       	movw	r22, r28
  608:	8b e0       	ldi	r24, 0x0B	; 11
  60a:	e0 df       	rcall	.-64     	; 0x5cc <nrf24_writeRegister>
+    nrf24_ce_digitalWrite(HIGH);
  60c:	81 e0       	ldi	r24, 0x01	; 1
  60e:	17 d0       	rcall	.+46     	; 0x63e <nrf24_ce_digitalWrite>
+}
  610:	df 91       	pop	r29
  612:	cf 91       	pop	r28
  614:	08 95       	ret
 
 00000616 <nrf24_tx_address>:
+    return payload_len;
+}
+
+/* Set the TX address */
+void nrf24_tx_address(uint8_t* adr)
+{
  616:	cf 93       	push	r28
  618:	df 93       	push	r29
  61a:	ec 01       	movw	r28, r24
+    /* RX_ADDR_P0 must be set to the sending addr for auto ack to work. */
+    nrf24_writeRegister(RX_ADDR_P0,adr,nrf24_ADDR_LEN);
  61c:	45 e0       	ldi	r20, 0x05	; 5
  61e:	bc 01       	movw	r22, r24
  620:	8a e0       	ldi	r24, 0x0A	; 10
  622:	d4 df       	rcall	.-88     	; 0x5cc <nrf24_writeRegister>
+    nrf24_writeRegister(TX_ADDR,adr,nrf24_ADDR_LEN);
  624:	45 e0       	ldi	r20, 0x05	; 5
  626:	be 01       	movw	r22, r28
  628:	80 e1       	ldi	r24, 0x10	; 16
  62a:	d0 df       	rcall	.-96     	; 0x5cc <nrf24_writeRegister>
+}
  62c:	df 91       	pop	r29
  62e:	cf 91       	pop	r28
  630:	08 95       	ret
 
 00000632 <nrf24_setupPins>:
+#define check_bit(reg,bit) (reg&(1<<bit))
+
+/* ------------------------------------------------------------------------- */
+void nrf24_setupPins()
+{
+    set_bit(DDRE,6); // CE output
  632:	16 9a       	sbi	0x02, 6	; 2
+    set_bit(DDRB,0); // CSN output
  634:	b8 9a       	sbi	0x17, 0	; 23
+    set_bit(DDRB,1); // SCK output
  636:	b9 9a       	sbi	0x17, 1	; 23
+    set_bit(DDRB,2); // MOSI output
  638:	ba 9a       	sbi	0x17, 2	; 23
+    clr_bit(DDRB,3); // MISO input
  63a:	bb 98       	cbi	0x17, 3	; 23
  63c:	08 95       	ret
 
 0000063e <nrf24_ce_digitalWrite>:
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_ce_digitalWrite(uint8_t state)
+{
+    if(state)
  63e:	88 23       	and	r24, r24
  640:	11 f0       	breq	.+4      	; 0x646 <nrf24_ce_digitalWrite+0x8>
+    {
+        set_bit(PORTE,6);
  642:	1e 9a       	sbi	0x03, 6	; 3
  644:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTE,6);
  646:	1e 98       	cbi	0x03, 6	; 3
  648:	08 95       	ret
 
 0000064a <nrf24_csn_digitalWrite>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_csn_digitalWrite(uint8_t state)
+{
+    if(state)
  64a:	88 23       	and	r24, r24
  64c:	11 f0       	breq	.+4      	; 0x652 <nrf24_csn_digitalWrite+0x8>
+    {
+        set_bit(PORTB,0);
  64e:	c0 9a       	sbi	0x18, 0	; 24
  650:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTB,0);
  652:	c0 98       	cbi	0x18, 0	; 24
  654:	08 95       	ret
 
 00000656 <nrf24_sck_digitalWrite>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_sck_digitalWrite(uint8_t state)
+{
+    if(state)
  656:	88 23       	and	r24, r24
  658:	11 f0       	breq	.+4      	; 0x65e <nrf24_sck_digitalWrite+0x8>
+    {
+        set_bit(PORTB,1);
  65a:	c1 9a       	sbi	0x18, 1	; 24
  65c:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTB,1);
  65e:	c1 98       	cbi	0x18, 1	; 24
  660:	08 95       	ret
 
 00000662 <nrf24_mosi_digitalWrite>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_mosi_digitalWrite(uint8_t state)
+{
+    if(state)
  662:	88 23       	and	r24, r24
  664:	11 f0       	breq	.+4      	; 0x66a <nrf24_mosi_digitalWrite+0x8>
+    {
+        set_bit(PORTB,2);
  666:	c2 9a       	sbi	0x18, 2	; 24
  668:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTB,2);
  66a:	c2 98       	cbi	0x18, 2	; 24
  66c:	08 95       	ret
 
 0000066e <nrf24_miso_digitalRead>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+uint8_t nrf24_miso_digitalRead()
+{
+    return check_bit(PINB,3);
  66e:	86 b3       	in	r24, 0x16	; 22
+}
  670:	88 70       	andi	r24, 0x08	; 8
  672:	08 95       	ret
 
