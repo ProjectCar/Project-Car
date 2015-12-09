@@ -107,18 +107,21 @@ int main(){
 	nrf24_rx_address(rx_address);												// Empfangsadresse festlegen ( Muss mit sendeadresse(tx) des anden geräts übereinstimmen)
 
 	TWBR |= 0xFF;
+	
+
 
 	while(1) {
 		
-
+	twi_transmit(0x00, data_array[2], 0x00);
 		
+		/*
 		switch(rf_receive()) {													// Schauen was rf_receive fuer eine aktion weitergibt
 			
 			case 1: rf_transimit(); break;										// Wenn 1 dann sende Daten an die Fernedienung
 			case 2:																// Wenn 2
 				//	twi_transmit(MM, motor, data_array[1]);						// Motorgeschwindigketi schicken
 				//	twi_transmit(MM, servo, data_array[2]);						// Lenkung schicken
-				twi_transmit(0x00, data_array[2], 0x00);
+
 				
 				
 				PORTF = (data_array[2]);
@@ -130,6 +133,7 @@ int main(){
 			case 3: break;														// keine Daten erhalten
 			
 		}
+		*/
 	
 		
 	}

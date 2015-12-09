@@ -25,6 +25,10 @@ Discarded input sections
                 0x00000000       0x1a main.o
  .text.twi_receive
                 0x00000000        0x6 main.o
+ .text.rf_transimit
+                0x00000000       0x8c main.o
+ .text.rf_receive
+                0x00000000       0x30 main.o
  .bss.q         0x00000000        0x1 main.o
  .text          0x00000000        0x0 nrf24.o
  .data          0x00000000        0x0 nrf24.o
@@ -33,8 +37,28 @@ Discarded input sections
                 0x00000000        0x6 nrf24.o
  .text.nrf24_payloadLength
                 0x00000000       0x22 nrf24.o
+ .text.nrf24_getStatus
+                0x00000000       0x1c nrf24.o
+ .text.nrf24_isSending
+                0x00000000       0x10 nrf24.o
+ .text.nrf24_lastMessageStatus
+                0x00000000       0x18 nrf24.o
+ .text.nrf24_transferSync
+                0x00000000       0x3c nrf24.o
+ .text.nrf24_getData
+                0x00000000       0x32 nrf24.o
+ .text.nrf24_powerUpTx
+                0x00000000       0x12 nrf24.o
+ .text.nrf24_send
+                0x00000000       0x4a nrf24.o
  .text.nrf24_powerDown
                 0x00000000       0x10 nrf24.o
+ .text.nrf24_readRegister
+                0x00000000       0x36 nrf24.o
+ .text.nrf24_rxFifoEmpty
+                0x00000000       0x24 nrf24.o
+ .text.nrf24_dataReady
+                0x00000000       0x1c nrf24.o
  .text.nrf24_retransmissionCount
                 0x00000000       0x24 nrf24.o
  .text          0x00000000        0x0 radioPinFunctions.o
@@ -209,7 +233,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x6aa
+.text           0x00000000      0x486
  *(.vectors)
  .vectors       0x00000000       0x8c c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr51/crtm128.o
                 0x00000000                __vector_default
@@ -306,106 +330,70 @@ END GROUP
  .text.twi_transmit
                 0x00000114       0x40 main.o
                 0x00000114                twi_transmit
- .text.rf_transimit
-                0x00000154       0x84 main.o
-                0x00000154                rf_transimit
- .text.rf_receive
-                0x000001d8       0x2c main.o
-                0x000001d8                rf_receive
- .text.main     0x00000204       0x8a main.o
-                0x00000204                main
+ .text.main     0x00000154       0x5e main.o
+                0x00000154                main
  .text.backwardsecure
-                0x0000028e       0x30 main.o
-                0x0000028e                backwardsecure
+                0x000001b2       0x30 main.o
+                0x000001b2                backwardsecure
  .text.__vector_4
-                0x000002be       0x4e main.o
-                0x000002be                __vector_4
+                0x000001e2       0x4e main.o
+                0x000001e2                __vector_4
  .text.forwardsecure
-                0x0000030c       0x30 main.o
-                0x0000030c                forwardsecure
+                0x00000230       0x30 main.o
+                0x00000230                forwardsecure
  .text.__vector_3
-                0x0000033c       0x4e main.o
-                0x0000033c                __vector_3
+                0x00000260       0x4e main.o
+                0x00000260                __vector_3
  .text.nrf24_init
-                0x0000038a        0xc nrf24.o
-                0x0000038a                nrf24_init
+                0x000002ae        0xc nrf24.o
+                0x000002ae                nrf24_init
  .text.spi_transfer
-                0x00000396       0x5c nrf24.o
-                0x00000396                spi_transfer
- .text.nrf24_getStatus
-                0x000003f2       0x16 nrf24.o
-                0x000003f2                nrf24_getStatus
- .text.nrf24_isSending
-                0x00000408        0xe nrf24.o
-                0x00000408                nrf24_isSending
- .text.nrf24_lastMessageStatus
-                0x00000416       0x16 nrf24.o
-                0x00000416                nrf24_lastMessageStatus
- .text.nrf24_transferSync
-                0x0000042c       0x3a nrf24.o
-                0x0000042c                nrf24_transferSync
+                0x000002ba       0x5c nrf24.o
+                0x000002ba                spi_transfer
  .text.nrf24_transmitSync
-                0x00000466       0x28 nrf24.o
-                0x00000466                nrf24_transmitSync
+                0x00000316       0x28 nrf24.o
+                0x00000316                nrf24_transmitSync
  .text.nrf24_configRegister
-                0x0000048e       0x22 nrf24.o
-                0x0000048e                nrf24_configRegister
- .text.nrf24_getData
-                0x000004b0       0x28 nrf24.o
-                0x000004b0                nrf24_getData
+                0x0000033e       0x22 nrf24.o
+                0x0000033e                nrf24_configRegister
  .text.nrf24_powerUpRx
-                0x000004d8       0x22 nrf24.o
-                0x000004d8                nrf24_powerUpRx
+                0x00000360       0x22 nrf24.o
+                0x00000360                nrf24_powerUpRx
  .text.nrf24_config
-                0x000004fa       0x58 nrf24.o
-                0x000004fa                nrf24_config
- .text.nrf24_powerUpTx
-                0x00000552        0xe nrf24.o
-                0x00000552                nrf24_powerUpTx
- .text.nrf24_send
-                0x00000560       0x36 nrf24.o
-                0x00000560                nrf24_send
- .text.nrf24_readRegister
-                0x00000596       0x2e nrf24.o
-                0x00000596                nrf24_readRegister
- .text.nrf24_rxFifoEmpty
-                0x000005c4       0x22 nrf24.o
-                0x000005c4                nrf24_rxFifoEmpty
- .text.nrf24_dataReady
-                0x000005e6       0x18 nrf24.o
-                0x000005e6                nrf24_dataReady
+                0x00000382       0x58 nrf24.o
+                0x00000382                nrf24_config
  .text.nrf24_writeRegister
-                0x000005fe       0x2e nrf24.o
-                0x000005fe                nrf24_writeRegister
+                0x000003da       0x2e nrf24.o
+                0x000003da                nrf24_writeRegister
  .text.nrf24_rx_address
-                0x0000062c       0x1c nrf24.o
-                0x0000062c                nrf24_rx_address
+                0x00000408       0x1c nrf24.o
+                0x00000408                nrf24_rx_address
  .text.nrf24_tx_address
-                0x00000648       0x1c nrf24.o
-                0x00000648                nrf24_tx_address
+                0x00000424       0x1c nrf24.o
+                0x00000424                nrf24_tx_address
  .text.nrf24_setupPins
-                0x00000664        0xc radioPinFunctions.o
-                0x00000664                nrf24_setupPins
+                0x00000440        0xc radioPinFunctions.o
+                0x00000440                nrf24_setupPins
  .text.nrf24_ce_digitalWrite
-                0x00000670        0xc radioPinFunctions.o
-                0x00000670                nrf24_ce_digitalWrite
+                0x0000044c        0xc radioPinFunctions.o
+                0x0000044c                nrf24_ce_digitalWrite
  .text.nrf24_csn_digitalWrite
-                0x0000067c        0xc radioPinFunctions.o
-                0x0000067c                nrf24_csn_digitalWrite
+                0x00000458        0xc radioPinFunctions.o
+                0x00000458                nrf24_csn_digitalWrite
  .text.nrf24_sck_digitalWrite
-                0x00000688        0xc radioPinFunctions.o
-                0x00000688                nrf24_sck_digitalWrite
+                0x00000464        0xc radioPinFunctions.o
+                0x00000464                nrf24_sck_digitalWrite
  .text.nrf24_mosi_digitalWrite
-                0x00000694        0xc radioPinFunctions.o
-                0x00000694                nrf24_mosi_digitalWrite
+                0x00000470        0xc radioPinFunctions.o
+                0x00000470                nrf24_mosi_digitalWrite
  .text.nrf24_miso_digitalRead
-                0x000006a0        0x6 radioPinFunctions.o
-                0x000006a0                nrf24_miso_digitalRead
-                0x000006a6                . = ALIGN (0x2)
+                0x0000047c        0x6 radioPinFunctions.o
+                0x0000047c                nrf24_miso_digitalRead
+                0x00000482                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000006a6        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
-                0x000006a6                _exit
-                0x000006a6                exit
+ .fini9         0x00000482        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
+                0x00000482                _exit
+                0x00000482                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -424,11 +412,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000006a6        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
+ .fini0         0x00000482        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x000006aa                _etext = .
+                0x00000486                _etext = .
 
-.data           0x00800100        0xa load address 0x000006aa
+.data           0x00800100        0xa load address 0x00000486
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -458,8 +446,8 @@ END GROUP
  COMMON         0x00800113        0x1 nrf24.o
                 0x00800113                payload_len
                 0x00800114                PROVIDE (__bss_end, .)
-                0x000006aa                __data_load_start = LOADADDR (.data)
-                0x000006b4                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000486                __data_load_start = LOADADDR (.data)
+                0x00000490                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800114        0x0
                 0x00800114                PROVIDE (__noinit_start, .)
@@ -539,11 +527,11 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x12ee
+.debug_info     0x00000000     0x12dc
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x604 main.o
- .debug_info    0x00000604      0xbaf nrf24.o
- .debug_info    0x000011b3      0x13b radioPinFunctions.o
+ .debug_info    0x00000000      0x5f2 main.o
+ .debug_info    0x000005f2      0xbaf nrf24.o
+ .debug_info    0x000011a1      0x13b radioPinFunctions.o
 
 .debug_abbrev   0x00000000      0x51e
  *(.debug_abbrev)
@@ -551,11 +539,11 @@ END GROUP
  .debug_abbrev  0x00000285      0x209 nrf24.o
  .debug_abbrev  0x0000048e       0x90 radioPinFunctions.o
 
-.debug_line     0x00000000      0xa82
+.debug_line     0x00000000      0xa5d
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x40f main.o
- .debug_line    0x0000040f      0x4fb nrf24.o
- .debug_line    0x0000090a      0x178 radioPinFunctions.o
+ .debug_line    0x00000000      0x3ea main.o
+ .debug_line    0x000003ea      0x4fb nrf24.o
+ .debug_line    0x000008e5      0x178 radioPinFunctions.o
 
 .debug_frame    0x00000000      0x44c
  *(.debug_frame)
