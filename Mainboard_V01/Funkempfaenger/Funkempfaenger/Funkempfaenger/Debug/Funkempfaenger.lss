@@ -1,5 +1,5 @@
 
-Funkempf+ñnger.elf:     file format elf32-avr
+Funkempfaenger.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -21,11 +21,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_frame  0000044c  00000000  00000000  00002b90  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000051a  00000000  00000000  00002fdc  2**0
+  9 .debug_str    000004d3  00000000  00000000  00002fdc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000b42  00000000  00000000  000034f6  2**0
+ 10 .debug_loc    00000b42  00000000  00000000  000034af  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000158  00000000  00000000  00004038  2**0
+ 11 .debug_ranges 00000158  00000000  00000000  00003ff1  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -690,6 +690,12 @@ ISR(INT2_vect){
  388:	18 95       	reti
 
 0000038a <nrf24_init>:
+{
+    uint8_t rv;
+    nrf24_readRegister(OBSERVE_TX,&rv,1);
+    rv = rv & 0x0F;
+    return rv;
+}
  38a:	6c d1       	rcall	.+728    	; 0x664 <nrf24_setupPins>
  38c:	80 e0       	ldi	r24, 0x00	; 0
  38e:	70 d1       	rcall	.+736    	; 0x670 <nrf24_ce_digitalWrite>
@@ -1032,6 +1038,12 @@ ISR(INT2_vect){
  5fc:	08 95       	ret
 
 000005fe <nrf24_writeRegister>:
+    nrf24_csn_digitalWrite(HIGH);
+}
+
+/* Write to a single register of nrf24 */
+void nrf24_writeRegister(uint8_t reg, uint8_t* value, uint8_t len) 
+{
  5fe:	0f 93       	push	r16
  600:	1f 93       	push	r17
  602:	cf 93       	push	r28
@@ -1039,17 +1051,22 @@ ISR(INT2_vect){
  606:	08 2f       	mov	r16, r24
  608:	eb 01       	movw	r28, r22
  60a:	14 2f       	mov	r17, r20
+    nrf24_csn_digitalWrite(LOW);
  60c:	80 e0       	ldi	r24, 0x00	; 0
  60e:	36 d0       	rcall	.+108    	; 0x67c <nrf24_csn_digitalWrite>
+    spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
  610:	80 2f       	mov	r24, r16
  612:	8f 71       	andi	r24, 0x1F	; 31
  614:	80 62       	ori	r24, 0x20	; 32
  616:	bf de       	rcall	.-642    	; 0x396 <spi_transfer>
+    nrf24_transmitSync(value,len);
  618:	61 2f       	mov	r22, r17
  61a:	ce 01       	movw	r24, r28
  61c:	24 df       	rcall	.-440    	; 0x466 <nrf24_transmitSync>
+    nrf24_csn_digitalWrite(HIGH);
  61e:	81 e0       	ldi	r24, 0x01	; 1
  620:	2d d0       	rcall	.+90     	; 0x67c <nrf24_csn_digitalWrite>
+}
  622:	df 91       	pop	r29
  624:	cf 91       	pop	r28
  626:	1f 91       	pop	r17
@@ -1057,79 +1074,163 @@ ISR(INT2_vect){
  62a:	08 95       	ret
 
 0000062c <nrf24_rx_address>:
+    nrf24_powerUpRx();
+}
+
+/* Set the RX address */
+void nrf24_rx_address(uint8_t * adr) 
+{
  62c:	cf 93       	push	r28
  62e:	df 93       	push	r29
  630:	ec 01       	movw	r28, r24
+    nrf24_ce_digitalWrite(LOW);
  632:	80 e0       	ldi	r24, 0x00	; 0
  634:	1d d0       	rcall	.+58     	; 0x670 <nrf24_ce_digitalWrite>
+    nrf24_writeRegister(RX_ADDR_P1,adr,nrf24_ADDR_LEN);
  636:	45 e0       	ldi	r20, 0x05	; 5
  638:	be 01       	movw	r22, r28
  63a:	8b e0       	ldi	r24, 0x0B	; 11
  63c:	e0 df       	rcall	.-64     	; 0x5fe <nrf24_writeRegister>
+    nrf24_ce_digitalWrite(HIGH);
  63e:	81 e0       	ldi	r24, 0x01	; 1
  640:	17 d0       	rcall	.+46     	; 0x670 <nrf24_ce_digitalWrite>
+}
  642:	df 91       	pop	r29
  644:	cf 91       	pop	r28
  646:	08 95       	ret
 
 00000648 <nrf24_tx_address>:
+    return payload_len;
+}
+
+/* Set the TX address */
+void nrf24_tx_address(uint8_t* adr)
+{
  648:	cf 93       	push	r28
  64a:	df 93       	push	r29
  64c:	ec 01       	movw	r28, r24
+    /* RX_ADDR_P0 must be set to the sending addr for auto ack to work. */
+    nrf24_writeRegister(RX_ADDR_P0,adr,nrf24_ADDR_LEN);
  64e:	45 e0       	ldi	r20, 0x05	; 5
  650:	bc 01       	movw	r22, r24
  652:	8a e0       	ldi	r24, 0x0A	; 10
  654:	d4 df       	rcall	.-88     	; 0x5fe <nrf24_writeRegister>
+    nrf24_writeRegister(TX_ADDR,adr,nrf24_ADDR_LEN);
  656:	45 e0       	ldi	r20, 0x05	; 5
  658:	be 01       	movw	r22, r28
  65a:	80 e1       	ldi	r24, 0x10	; 16
  65c:	d0 df       	rcall	.-96     	; 0x5fe <nrf24_writeRegister>
+}
  65e:	df 91       	pop	r29
  660:	cf 91       	pop	r28
  662:	08 95       	ret
 
 00000664 <nrf24_setupPins>:
+#define check_bit(reg,bit) (reg&(1<<bit))
+
+/* ------------------------------------------------------------------------- */
+void nrf24_setupPins()
+{
+    set_bit(DDRE,6); // CE output
  664:	16 9a       	sbi	0x02, 6	; 2
+    set_bit(DDRB,0); // CSN output
  666:	b8 9a       	sbi	0x17, 0	; 23
+    set_bit(DDRB,1); // SCK output
  668:	b9 9a       	sbi	0x17, 1	; 23
+    set_bit(DDRB,2); // MOSI output
  66a:	ba 9a       	sbi	0x17, 2	; 23
+    clr_bit(DDRB,3); // MISO input
  66c:	bb 98       	cbi	0x17, 3	; 23
  66e:	08 95       	ret
 
 00000670 <nrf24_ce_digitalWrite>:
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_ce_digitalWrite(uint8_t state)
+{
+    if(state)
  670:	88 23       	and	r24, r24
  672:	11 f0       	breq	.+4      	; 0x678 <nrf24_ce_digitalWrite+0x8>
+    {
+        set_bit(PORTE,6);
  674:	1e 9a       	sbi	0x03, 6	; 3
  676:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTE,6);
  678:	1e 98       	cbi	0x03, 6	; 3
  67a:	08 95       	ret
 
 0000067c <nrf24_csn_digitalWrite>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_csn_digitalWrite(uint8_t state)
+{
+    if(state)
  67c:	88 23       	and	r24, r24
  67e:	11 f0       	breq	.+4      	; 0x684 <nrf24_csn_digitalWrite+0x8>
+    {
+        set_bit(PORTB,0);
  680:	c0 9a       	sbi	0x18, 0	; 24
  682:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTB,0);
  684:	c0 98       	cbi	0x18, 0	; 24
  686:	08 95       	ret
 
 00000688 <nrf24_sck_digitalWrite>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_sck_digitalWrite(uint8_t state)
+{
+    if(state)
  688:	88 23       	and	r24, r24
  68a:	11 f0       	breq	.+4      	; 0x690 <nrf24_sck_digitalWrite+0x8>
+    {
+        set_bit(PORTB,1);
  68c:	c1 9a       	sbi	0x18, 1	; 24
  68e:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTB,1);
  690:	c1 98       	cbi	0x18, 1	; 24
  692:	08 95       	ret
 
 00000694 <nrf24_mosi_digitalWrite>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+void nrf24_mosi_digitalWrite(uint8_t state)
+{
+    if(state)
  694:	88 23       	and	r24, r24
  696:	11 f0       	breq	.+4      	; 0x69c <nrf24_mosi_digitalWrite+0x8>
+    {
+        set_bit(PORTB,2);
  698:	c2 9a       	sbi	0x18, 2	; 24
  69a:	08 95       	ret
+    }
+    else
+    {
+        clr_bit(PORTB,2);
  69c:	c2 98       	cbi	0x18, 2	; 24
  69e:	08 95       	ret
 
 000006a0 <nrf24_miso_digitalRead>:
+    }
+}
+/* ------------------------------------------------------------------------- */
+uint8_t nrf24_miso_digitalRead()
+{
+    return check_bit(PINB,3);
  6a0:	86 b3       	in	r24, 0x16	; 22
+}
  6a2:	88 70       	andi	r24, 0x08	; 8
  6a4:	08 95       	ret
 
