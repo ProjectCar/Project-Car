@@ -516,26 +516,26 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x4d6
+.debug_info     0x00000000      0x4fc
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x4d6 main.o
+ .debug_info    0x00000000      0x4fc main.o
 
 .debug_abbrev   0x00000000      0x157
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x157 main.o
 
-.debug_line     0x00000000      0x2e3
+.debug_line     0x00000000      0x2e2
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x2e3 main.o
+ .debug_line    0x00000000      0x2e2 main.o
 
 .debug_frame    0x00000000      0x194
  *(.debug_frame)
  .debug_frame   0x00000000      0x194 main.o
 
-.debug_str      0x00000000      0x281
+.debug_str      0x00000000      0x287
  *(.debug_str)
- .debug_str     0x00000000      0x281 main.o
-                                0x2e3 (size before relaxing)
+ .debug_str     0x00000000      0x287 main.o
+                                0x2e9 (size before relaxing)
 
 .debug_loc      0x00000000      0x34e
  *(.debug_loc)

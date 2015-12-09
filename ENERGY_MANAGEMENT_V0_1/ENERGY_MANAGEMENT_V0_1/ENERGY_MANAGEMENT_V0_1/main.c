@@ -1,8 +1,8 @@
 /**
-* \file     main.c
-* \ingroup  g_applspec
-* \brief    Main file for Energy Management.
-* \author   Benjamin Marty
+* file     main.c
+* ingroup  g_applspec
+* brief    Main file for Energy Management.
+* author   Benjamin Marty
 *
 * This file is the place where the basic structure of the application/module is defined.
 */
@@ -21,281 +21,249 @@
 
 
 /**
- * inits the general powermanagement
- * 
- * @return Voltage
- */
+* inits the general powermanagement
+*
+* @return Voltage
+*/
 void powermanagement_init()
 {
-   DDRD |= (1<<PORTD4);                 //Set tristate for ENABLE_MCU
-   DDRB |= (1<<PORTB0);                 //Set tristate for CRUISE_CONTROL
+	DDRD |= (1<<PORTD4);                 //Set tristate for ENABLE_MCU
+	DDRB |= (1<<PORTB0);                 //Set tristate for CRUISE_CONTROL
 }
 
 /**
- * inits the adc with the corresponding channel
- * 
- * @param Channel
- */
+* inits the adc with the corresponding channel
+*
+* @param Channel
+*/
 void adc_init(int channel)
 {
-   ADMUX = 0x00;                        //Reset ADMUX register to 0
-   ADCSRA = 0x00;                       //Reset ADCSRA register to 0
-   
-   ADMUX |= (1<<REFS0);                 //Set ref to AVCC
-   int channel_bit = (channel);
-   //ADMUX |= (channel << 4);           //Set channel
-   
-   ADMUX |= channel_bit;
-   
-   ADCSRA |= ( (1<<ADEN) | (1<<ADPS1) | (1<<ADPS0) | (1<<ADATE) );   //Enable ADC, Star ADC, Set Clock Prescaler to 8
-   ADCSRA |= (1<<ADSC);
-   
-   //return 1;
+	ADMUX = 0x00;                        //Reset ADMUX register to 0
+	ADCSRA = 0x00;                       //Reset ADCSRA register to 0
+	
+	ADMUX |= (1<<REFS0);                 //Set ref to AVCC
+	int channel_bit = (channel);
+	//ADMUX |= (channel << 4);           //Set channel
+	
+	ADMUX |= channel_bit;
+	
+	ADCSRA |= ( (1<<ADEN) | (1<<ADPS1) | (1<<ADPS0) | (1<<ADATE) );   //Enable ADC, Star ADC, Set Clock Prescaler to 8
+	ADCSRA |= (1<<ADSC);
+	
+	//return 1;
 }
 
 /**
- * make a sample on the adc
- * 
- * @return ADC-Value
- */
+* make a sample on the adc
+*
+* @return ADC-Value
+*/
 int adc_sample()
 {
-   int result = 0;                      //Setup space for ADC result
-   
-   result = ADCL + (ADCH << 8);         //Get 10bit result from ADC registers. Keep in mind to read ADCH!
-   
-   return result;
+	int result = 0;                      //Setup space for ADC result
+	
+	result = ADCL + (ADCH << 8);         //Get 10bit result from ADC registers. Keep in mind to read ADCH!
+	
+	return result;
 }
 
 /**
- * Returns the actual voltage on the five Volt rail
- * 
- * @return Voltage
- */
+* Returns the actual voltage on the five Volt rail
+*
+* @return Voltage
+*/
 float get_five_rail()
 {
-   adc_init(0);
-   _delay_ms(100);
-   
-   float meassurement = (((float)adc_sample()/1023)*3.3);
-   
-   meassurement = (meassurement/2.5)*5.2;
-
-   return meassurement;
+	adc_init(0);
+	_delay_ms(100);
+	
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*5.2;
+	
+	return meassurement;
 }
 
 /**
- * Returns the actual voltage on the three point three Volt rail
- * 
- * @return Voltage
- */
+* Returns the actual voltage on the three point three Volt rail
+*
+* @return Voltage
+*/
 float get_three_rail()
 {
-   adc_init(1);
-   _delay_ms(100);
-
-   float meassurement = (((float)adc_sample()/1023)*3.3);
-   
-   meassurement = (meassurement/2.5)*3.4;
-
-   return meassurement;
+	adc_init(1);
+	_delay_ms(100);
+	
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*3.4;
+	
+	return meassurement;
 }
 
 /**
- * Returns the actual current consumption (Not yet implemented!!)
- * 
- * @return Current
- */
+* Returns the actual current consumption (Not yet implemented!!)
+*
+* @return Current
+*/
 float get_current()
 {
-   adc_init(2);
-   _delay_ms(100);
-
-   float meassurement = (((float)adc_sample()/1023)*3.3);
-   
-   meassurement = (meassurement/2.5)*0;
-
-   return meassurement;
+	adc_init(2);
+	_delay_ms(100);
+	
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*0;
+	
+	return meassurement;
 }
 
 /**
- * Returns the actual lipo voltage
- * 
- * @return Voltage
- */
+* Returns the actual lipo voltage
+*
+* @return Voltage
+*/
 float get_lipo()
 {
-   adc_init(3);
-   _delay_ms(100);
-   
-   float meassurement = (((float)adc_sample()/1023)*3.3);
-   
-   meassurement = (meassurement/2.5)*12.4;
-
-   return meassurement;
+	adc_init(3);
+	_delay_ms(100);
+	
+	float meassurement = (((float)adc_sample()/1023)*3.3);
+	
+	meassurement = (meassurement/2.5)*12.4;
+	
+	return meassurement;
 }
 
 /**
- * Init USART interface
- * 
- */
+* Init USART interface
+*
+*/
 char usart_init( unsigned int ubrr)
 {
-
-   UBRR0H = (unsigned char)(ubrr>>8);   //Set baud rate
-   UBRR0L = (unsigned char)ubrr;
-
-   UCSR0B = (1<<RXEN0)|(1<<TXEN0);      //Enable receiver and transmitter
-
-   UCSR0C = (1<<USBS0)|(3<<UCSZ00);     //Set frame format: 8data, 2stop bit
-
-   return 1;
+	
+	UBRR0H = (unsigned char)(ubrr>>8);   //Set baud rate
+	UBRR0L = (unsigned char)ubrr;
+	
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0);      //Enable receiver and transmitter
+	
+	UCSR0C = (1<<USBS0)|(3<<UCSZ00);     //Set frame format: 8data, 2stop bit
+	
+	return 1;
 }
 
 /**
- * Transmits given data over USART
- * 
- * @param Data
- */
+* Transmits given data over USART
+*
+* @param Data
+*/
 void USART_Transmit( unsigned char data )
 {
-
-   while ( !( UCSR0A & (1<<UDRE0)) );   //Wait for empty transmit buffer
-   
-   
-   UDR0 = data;                         //Put data into buffer, sends the data
-   
-   //return 1;
+	
+	while ( !( UCSR0A & (1<<UDRE0)) );   //Wait for empty transmit buffer
+	
+	
+	UDR0 = data;                         //Put data into buffer, sends the data
+	
+	//return 1;
 }
 
 /**
- * Power control
- * 
- * @param on or off
- */
+* Power control
+*
+* @param on or off
+*/
 void power_control(char state)
 {
-   if(state == ON)
-   {
-      PORTD &= ~(1<<PORTD4);
-      
-   }
-   else if(state == OFF)
-   {
-      PORTD |= (1<<PORTD4);
-   }
-   
-   //return 1;
+	if(state == ON)
+	{
+		PORTD &= ~(1<<PORTD4);
+		
+	}
+	else if(state == OFF)
+	{
+		PORTD |= (1<<PORTD4);
+	}
+	
+	//return 1;
 }
 
 /**
- * CruiseControl control
- * 
- * @param on or off
- */
+* CruiseControl control
+*
+* @param on or off
+*/
 void cc_control(char state)
 {
-   if(state == ON)
-   {
-      PORTB |= (1<<PORTB0);
-      
-   }
-   else if(state == OFF)
-   {
-      PORTB &= ~(1<<PORTB0);
-   }
-   
-   //return 1;
+	if(state == ON)
+	{
+		PORTB |= (1<<PORTB0);
+		
+	}
+	else if(state == OFF)
+	{
+		PORTB &= ~(1<<PORTB0);
+	}
+	
+	//return 1;
 }
 
+/**
+* TWI Init
+*
+*/
+void twi_init(void)
+{
+	//TWI Init
+	TWAR = ( 0x0A << 1 );
+	//TWAR |= 0x01;
+	TWCR = ( (1<<TWEN) | (1<<TWEA) );
+	slave = TWAR;
+}
 
 int main(void)
 {
-   powermanagement_init();
-   
-   char power_status = 1;
-   char cc_status = 1;   
-   
-   float five_rail = 0;
-   float three_rail = 0;
-   float current = 0;
-   float lipo = 0;
-   
-   //TWI Init
-   TWAR = ( 0x04 << 1);
-   TWAR |= 0x01;
-   TWCR = ( (1<<TWEN) | (1<<TWEA) );
-   TWCR &= ~( (1<<TWSTA) | (1<<TWSTO) );
-	   
-   int data;
-   int status;
-	     
-	int counter = 0;
-		     
-    while(1)
-    {
-      power_control(power_status);
-      cc_control(cc_status);
-      
-      five_rail = get_five_rail();
-      three_rail = get_three_rail();
-      current = get_current();
-      lipo = get_lipo();
-	  
-
-	  
-
-	  data = TWDR;
-	  status = TWSR;
-	  data = TWDR;
-      //if ( (TWCR & (1<<TWINT)) == (1<<TWINT) )			  /* If it got Data via TWI for me */
-	  //{	  
-		  switch(TWSR)		//TWDR	Unknown identifier	Error
-
-		  {
-
-			  case 0x70:
-			  TWCR |= ( (1<<TWINT) | (1<<TWEA) );
-			  break;
-	  
-			  case 0x60:
-				 TWCR |= ( (1<<TWINT) | (1<<TWEA) );
-				 break;
+	powermanagement_init();
+	
+	char power_status = 1;
+	char cc_status = 1;
+	
+	float five_rail = 0;
+	float three_rail = 0;
+	float current = 0;
+	float lipo = 0;
+	
+	int slave = 0;
+	
+	while(1)
+	{
+		power_control(power_status);
+		cc_control(cc_status);
 		
-			  case 0x80:
-				 data = TWDR;
-				 if(counter == 0)
-				 {
-					 TWCR |= ( (1<<TWINT) | (1<<TWEA) );
-									 counter++;
-									 break;
-				 }
-				 
-				 if(counter == 1)
-				 {
-					 TWCR |= ( (1<<TWINT) );
-				 }
-				 counter++;
-				 break;
-				 
-				case 0xA0:            /* Received Stop or Repeated Start while still addressed */
-					TWCR |= ( (1<<TWINT) );			                /* Switch to not Addressed */	
-					counter = 0;
-					break;		
-							 
-			  default:
-			  status = TWDR;
-			    break;
-		  }
-	  }
-	  //else
-	  //{
-		  //if(1)
-		  //{
-			       //current = get_current();
-			       //lipo = get_lipo(); 
-		  //}
-	  //}
-    //}
-}
+		five_rail = get_five_rail();
+		three_rail = get_three_rail();
+		current = get_current();
+		lipo = get_lipo();
 
+      twi_init();
+		
+		switch(TWSR)        //TWDR    Unknown identifier    Error
+		{
+			case 0x60:
+				TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+				break;
+			
+			case 0x80:
+				data = TWDR;
+				TWCR |= ( (1<<TWINT) );
+				break;
+			
+			case 0xA0:            /* Received Stop or Repeated Start while still addressed */
+				TWCR |= ( (1<<TWINT) );                            /* Switch to not Addressed */
+				break;
+			
+			default:
+				break;
+		}
+	}
+}

@@ -9,19 +9,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   2 .debug_aranges 00000078  00000000  00000000  00000e2a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   000004d6  00000000  00000000  00000ea2  2**0
+  3 .debug_info   000004fc  00000000  00000000  00000ea2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 00000157  00000000  00000000  00001378  2**0
+  4 .debug_abbrev 00000157  00000000  00000000  0000139e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   000002e3  00000000  00000000  000014cf  2**0
+  5 .debug_line   000002e2  00000000  00000000  000014f5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  00000194  00000000  00000000  000017b4  2**2
+  6 .debug_frame  00000194  00000000  00000000  000017d8  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    00000281  00000000  00000000  00001948  2**0
+  7 .debug_str    00000287  00000000  00000000  0000196c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    0000034e  00000000  00000000  00001bc9  2**0
+  8 .debug_loc    0000034e  00000000  00000000  00001bf3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_ranges 00000068  00000000  00000000  00001f17  2**0
+  9 .debug_ranges 00000068  00000000  00000000  00001f41  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1312,7 +1312,7 @@ int main(void)
  868:	df 93       	push	r29
  86a:	cd b7       	in	r28, 0x3d	; 61
  86c:	de b7       	in	r29, 0x3e	; 62
- 86e:	68 97       	sbiw	r28, 0x18	; 24
+ 86e:	6c 97       	sbiw	r28, 0x1c	; 28
  870:	0f b6       	in	r0, 0x3f	; 63
  872:	f8 94       	cli
  874:	de bf       	out	0x3e, r29	; 62
@@ -1323,129 +1323,132 @@ int main(void)
    
    char power_status = 1;
  87e:	81 e0       	ldi	r24, 0x01	; 1
- 880:	8b 83       	std	Y+3, r24	; 0x03
+ 880:	89 83       	std	Y+1, r24	; 0x01
    char cc_status = 1;   
  882:	81 e0       	ldi	r24, 0x01	; 1
- 884:	8c 83       	std	Y+4, r24	; 0x04
+ 884:	8a 83       	std	Y+2, r24	; 0x02
    
    float five_rail = 0;
- 886:	1d 82       	std	Y+5, r1	; 0x05
- 888:	1e 82       	std	Y+6, r1	; 0x06
- 88a:	1f 82       	std	Y+7, r1	; 0x07
- 88c:	18 86       	std	Y+8, r1	; 0x08
+ 886:	1b 82       	std	Y+3, r1	; 0x03
+ 888:	1c 82       	std	Y+4, r1	; 0x04
+ 88a:	1d 82       	std	Y+5, r1	; 0x05
+ 88c:	1e 82       	std	Y+6, r1	; 0x06
    float three_rail = 0;
- 88e:	19 86       	std	Y+9, r1	; 0x09
- 890:	1a 86       	std	Y+10, r1	; 0x0a
- 892:	1b 86       	std	Y+11, r1	; 0x0b
- 894:	1c 86       	std	Y+12, r1	; 0x0c
+ 88e:	1f 82       	std	Y+7, r1	; 0x07
+ 890:	18 86       	std	Y+8, r1	; 0x08
+ 892:	19 86       	std	Y+9, r1	; 0x09
+ 894:	1a 86       	std	Y+10, r1	; 0x0a
    float current = 0;
- 896:	1d 86       	std	Y+13, r1	; 0x0d
- 898:	1e 86       	std	Y+14, r1	; 0x0e
- 89a:	1f 86       	std	Y+15, r1	; 0x0f
- 89c:	18 8a       	std	Y+16, r1	; 0x10
+ 896:	1b 86       	std	Y+11, r1	; 0x0b
+ 898:	1c 86       	std	Y+12, r1	; 0x0c
+ 89a:	1d 86       	std	Y+13, r1	; 0x0d
+ 89c:	1e 86       	std	Y+14, r1	; 0x0e
    float lipo = 0;
- 89e:	19 8a       	std	Y+17, r1	; 0x11
- 8a0:	1a 8a       	std	Y+18, r1	; 0x12
- 8a2:	1b 8a       	std	Y+19, r1	; 0x13
- 8a4:	1c 8a       	std	Y+20, r1	; 0x14
+ 89e:	1f 86       	std	Y+15, r1	; 0x0f
+ 8a0:	18 8a       	std	Y+16, r1	; 0x10
+ 8a2:	19 8a       	std	Y+17, r1	; 0x11
+ 8a4:	1a 8a       	std	Y+18, r1	; 0x12
+   
+   int slave = 0;
+ 8a6:	1c 8a       	std	Y+20, r1	; 0x14
+ 8a8:	1b 8a       	std	Y+19, r1	; 0x13
    
    //TWI Init
-   TWAR = ( 0x04 << 1);
- 8a6:	8a eb       	ldi	r24, 0xBA	; 186
- 8a8:	90 e0       	ldi	r25, 0x00	; 0
- 8aa:	28 e0       	ldi	r18, 0x08	; 8
- 8ac:	fc 01       	movw	r30, r24
- 8ae:	20 83       	st	Z, r18
-   TWAR |= 0x01;
- 8b0:	8a eb       	ldi	r24, 0xBA	; 186
- 8b2:	90 e0       	ldi	r25, 0x00	; 0
- 8b4:	2a eb       	ldi	r18, 0xBA	; 186
- 8b6:	30 e0       	ldi	r19, 0x00	; 0
- 8b8:	f9 01       	movw	r30, r18
- 8ba:	20 81       	ld	r18, Z
- 8bc:	21 60       	ori	r18, 0x01	; 1
- 8be:	fc 01       	movw	r30, r24
- 8c0:	20 83       	st	Z, r18
+   TWAR = ( 0x0A << 1);
+ 8aa:	8a eb       	ldi	r24, 0xBA	; 186
+ 8ac:	90 e0       	ldi	r25, 0x00	; 0
+ 8ae:	24 e1       	ldi	r18, 0x14	; 20
+ 8b0:	fc 01       	movw	r30, r24
+ 8b2:	20 83       	st	Z, r18
+   //TWAR |= 0x01;
    TWCR = ( (1<<TWEN) | (1<<TWEA) );
- 8c2:	8c eb       	ldi	r24, 0xBC	; 188
- 8c4:	90 e0       	ldi	r25, 0x00	; 0
- 8c6:	24 e4       	ldi	r18, 0x44	; 68
- 8c8:	fc 01       	movw	r30, r24
- 8ca:	20 83       	st	Z, r18
-   TWCR &= ~( (1<<TWSTA) | (1<<TWSTO) );
- 8cc:	8c eb       	ldi	r24, 0xBC	; 188
- 8ce:	90 e0       	ldi	r25, 0x00	; 0
- 8d0:	2c eb       	ldi	r18, 0xBC	; 188
- 8d2:	30 e0       	ldi	r19, 0x00	; 0
- 8d4:	f9 01       	movw	r30, r18
- 8d6:	20 81       	ld	r18, Z
- 8d8:	2f 7c       	andi	r18, 0xCF	; 207
- 8da:	fc 01       	movw	r30, r24
- 8dc:	20 83       	st	Z, r18
+ 8b4:	8c eb       	ldi	r24, 0xBC	; 188
+ 8b6:	90 e0       	ldi	r25, 0x00	; 0
+ 8b8:	24 e4       	ldi	r18, 0x44	; 68
+ 8ba:	fc 01       	movw	r30, r24
+ 8bc:	20 83       	st	Z, r18
+   slave = TWAR;
+ 8be:	8a eb       	ldi	r24, 0xBA	; 186
+ 8c0:	90 e0       	ldi	r25, 0x00	; 0
+ 8c2:	fc 01       	movw	r30, r24
+ 8c4:	80 81       	ld	r24, Z
+ 8c6:	88 2f       	mov	r24, r24
+ 8c8:	90 e0       	ldi	r25, 0x00	; 0
+ 8ca:	9c 8b       	std	Y+20, r25	; 0x14
+ 8cc:	8b 8b       	std	Y+19, r24	; 0x13
 	   
    int data;
    int status;
 	     
 	int counter = 0;
- 8de:	1a 82       	std	Y+2, r1	; 0x02
- 8e0:	19 82       	std	Y+1, r1	; 0x01
+ 8ce:	1e 8a       	std	Y+22, r1	; 0x16
+ 8d0:	1d 8a       	std	Y+21, r1	; 0x15
 		     
     while(1)
     {
       power_control(power_status);
- 8e2:	8b 81       	ldd	r24, Y+3	; 0x03
- 8e4:	0e 94 ed 03 	call	0x7da	; 0x7da <power_control>
+ 8d2:	89 81       	ldd	r24, Y+1	; 0x01
+ 8d4:	0e 94 ed 03 	call	0x7da	; 0x7da <power_control>
       cc_control(cc_status);
- 8e8:	8c 81       	ldd	r24, Y+4	; 0x04
- 8ea:	0e 94 10 04 	call	0x820	; 0x820 <cc_control>
+ 8d8:	8a 81       	ldd	r24, Y+2	; 0x02
+ 8da:	0e 94 10 04 	call	0x820	; 0x820 <cc_control>
       
       five_rail = get_five_rail();
- 8ee:	0e 94 ba 00 	call	0x174	; 0x174 <get_five_rail>
+ 8de:	0e 94 ba 00 	call	0x174	; 0x174 <get_five_rail>
+ 8e2:	dc 01       	movw	r26, r24
+ 8e4:	cb 01       	movw	r24, r22
+ 8e6:	8b 83       	std	Y+3, r24	; 0x03
+ 8e8:	9c 83       	std	Y+4, r25	; 0x04
+ 8ea:	ad 83       	std	Y+5, r26	; 0x05
+ 8ec:	be 83       	std	Y+6, r27	; 0x06
+      three_rail = get_three_rail();
+ 8ee:	0e 94 87 01 	call	0x30e	; 0x30e <get_three_rail>
  8f2:	dc 01       	movw	r26, r24
  8f4:	cb 01       	movw	r24, r22
- 8f6:	8d 83       	std	Y+5, r24	; 0x05
- 8f8:	9e 83       	std	Y+6, r25	; 0x06
- 8fa:	af 83       	std	Y+7, r26	; 0x07
- 8fc:	b8 87       	std	Y+8, r27	; 0x08
-      three_rail = get_three_rail();
- 8fe:	0e 94 87 01 	call	0x30e	; 0x30e <get_three_rail>
+ 8f6:	8f 83       	std	Y+7, r24	; 0x07
+ 8f8:	98 87       	std	Y+8, r25	; 0x08
+ 8fa:	a9 87       	std	Y+9, r26	; 0x09
+ 8fc:	ba 87       	std	Y+10, r27	; 0x0a
+      current = get_current();
+ 8fe:	0e 94 54 02 	call	0x4a8	; 0x4a8 <get_current>
  902:	dc 01       	movw	r26, r24
  904:	cb 01       	movw	r24, r22
- 906:	89 87       	std	Y+9, r24	; 0x09
- 908:	9a 87       	std	Y+10, r25	; 0x0a
- 90a:	ab 87       	std	Y+11, r26	; 0x0b
- 90c:	bc 87       	std	Y+12, r27	; 0x0c
-      current = get_current();
- 90e:	0e 94 54 02 	call	0x4a8	; 0x4a8 <get_current>
+ 906:	8b 87       	std	Y+11, r24	; 0x0b
+ 908:	9c 87       	std	Y+12, r25	; 0x0c
+ 90a:	ad 87       	std	Y+13, r26	; 0x0d
+ 90c:	be 87       	std	Y+14, r27	; 0x0e
+      lipo = get_lipo();
+ 90e:	0e 94 20 03 	call	0x640	; 0x640 <get_lipo>
  912:	dc 01       	movw	r26, r24
  914:	cb 01       	movw	r24, r22
- 916:	8d 87       	std	Y+13, r24	; 0x0d
- 918:	9e 87       	std	Y+14, r25	; 0x0e
- 91a:	af 87       	std	Y+15, r26	; 0x0f
- 91c:	b8 8b       	std	Y+16, r27	; 0x10
-      lipo = get_lipo();
- 91e:	0e 94 20 03 	call	0x640	; 0x640 <get_lipo>
- 922:	dc 01       	movw	r26, r24
- 924:	cb 01       	movw	r24, r22
- 926:	89 8b       	std	Y+17, r24	; 0x11
- 928:	9a 8b       	std	Y+18, r25	; 0x12
- 92a:	ab 8b       	std	Y+19, r26	; 0x13
- 92c:	bc 8b       	std	Y+20, r27	; 0x14
+ 916:	8f 87       	std	Y+15, r24	; 0x0f
+ 918:	98 8b       	std	Y+16, r25	; 0x10
+ 91a:	a9 8b       	std	Y+17, r26	; 0x11
+ 91c:	ba 8b       	std	Y+18, r27	; 0x12
 	  
 
 	  
 
 	  data = TWDR;
- 92e:	8b eb       	ldi	r24, 0xBB	; 187
+ 91e:	8b eb       	ldi	r24, 0xBB	; 187
+ 920:	90 e0       	ldi	r25, 0x00	; 0
+ 922:	fc 01       	movw	r30, r24
+ 924:	80 81       	ld	r24, Z
+ 926:	88 2f       	mov	r24, r24
+ 928:	90 e0       	ldi	r25, 0x00	; 0
+ 92a:	98 8f       	std	Y+24, r25	; 0x18
+ 92c:	8f 8b       	std	Y+23, r24	; 0x17
+	  status = TWSR;
+ 92e:	89 eb       	ldi	r24, 0xB9	; 185
  930:	90 e0       	ldi	r25, 0x00	; 0
  932:	fc 01       	movw	r30, r24
  934:	80 81       	ld	r24, Z
  936:	88 2f       	mov	r24, r24
  938:	90 e0       	ldi	r25, 0x00	; 0
- 93a:	9e 8b       	std	Y+22, r25	; 0x16
- 93c:	8d 8b       	std	Y+21, r24	; 0x15
-	  status = TWSR;
- 93e:	89 eb       	ldi	r24, 0xB9	; 185
+ 93a:	9a 8f       	std	Y+26, r25	; 0x1a
+ 93c:	89 8f       	std	Y+25, r24	; 0x19
+	  data = TWDR;
+ 93e:	8b eb       	ldi	r24, 0xBB	; 187
  940:	90 e0       	ldi	r25, 0x00	; 0
  942:	fc 01       	movw	r30, r24
  944:	80 81       	ld	r24, Z
@@ -1453,168 +1456,166 @@ int main(void)
  948:	90 e0       	ldi	r25, 0x00	; 0
  94a:	98 8f       	std	Y+24, r25	; 0x18
  94c:	8f 8b       	std	Y+23, r24	; 0x17
-	  data = TWDR;
- 94e:	8b eb       	ldi	r24, 0xBB	; 187
+	  int slave = TWAR;
+ 94e:	8a eb       	ldi	r24, 0xBA	; 186
  950:	90 e0       	ldi	r25, 0x00	; 0
  952:	fc 01       	movw	r30, r24
  954:	80 81       	ld	r24, Z
  956:	88 2f       	mov	r24, r24
  958:	90 e0       	ldi	r25, 0x00	; 0
- 95a:	9e 8b       	std	Y+22, r25	; 0x16
- 95c:	8d 8b       	std	Y+21, r24	; 0x15
-      //if ( (TWCR & (1<<TWINT)) == (1<<TWINT) )			  /* If it got Data via TWI for me */
-	  //{	  
-		  switch(TWSR)		//TWDR	Unknown identifier	Error
- 95e:	89 eb       	ldi	r24, 0xB9	; 185
+ 95a:	9c 8f       	std	Y+28, r25	; 0x1c
+ 95c:	8b 8f       	std	Y+27, r24	; 0x1b
+	  slave = TWAR;
+ 95e:	8a eb       	ldi	r24, 0xBA	; 186
  960:	90 e0       	ldi	r25, 0x00	; 0
  962:	fc 01       	movw	r30, r24
  964:	80 81       	ld	r24, Z
  966:	88 2f       	mov	r24, r24
  968:	90 e0       	ldi	r25, 0x00	; 0
- 96a:	80 37       	cpi	r24, 0x70	; 112
- 96c:	91 05       	cpc	r25, r1
- 96e:	79 f0       	breq	.+30     	; 0x98e <__stack+0x8f>
- 970:	81 37       	cpi	r24, 0x71	; 113
- 972:	91 05       	cpc	r25, r1
- 974:	24 f4       	brge	.+8      	; 0x97e <__stack+0x7f>
- 976:	80 36       	cpi	r24, 0x60	; 96
- 978:	91 05       	cpc	r25, r1
- 97a:	99 f0       	breq	.+38     	; 0x9a2 <__stack+0xa3>
- 97c:	57 c0       	rjmp	.+174    	; 0xa2c <__stack+0x12d>
- 97e:	80 38       	cpi	r24, 0x80	; 128
- 980:	91 05       	cpc	r25, r1
- 982:	c9 f0       	breq	.+50     	; 0x9b6 <__stack+0xb7>
- 984:	80 3a       	cpi	r24, 0xA0	; 160
- 986:	91 05       	cpc	r25, r1
- 988:	09 f4       	brne	.+2      	; 0x98c <__stack+0x8d>
- 98a:	44 c0       	rjmp	.+136    	; 0xa14 <__stack+0x115>
- 98c:	4f c0       	rjmp	.+158    	; 0xa2c <__stack+0x12d>
+ 96a:	9c 8f       	std	Y+28, r25	; 0x1c
+ 96c:	8b 8f       	std	Y+27, r24	; 0x1b
+      //if ( (TWCR & (1<<TWINT)) == (1<<TWINT) )			  /* If it got Data via TWI for me */
+	  //{	  
+		  switch(TWSR)		//TWDR	Unknown identifier	Error
+ 96e:	89 eb       	ldi	r24, 0xB9	; 185
+ 970:	90 e0       	ldi	r25, 0x00	; 0
+ 972:	fc 01       	movw	r30, r24
+ 974:	80 81       	ld	r24, Z
+ 976:	88 2f       	mov	r24, r24
+ 978:	90 e0       	ldi	r25, 0x00	; 0
+ 97a:	80 38       	cpi	r24, 0x80	; 128
+ 97c:	91 05       	cpc	r25, r1
+ 97e:	41 f1       	breq	.+80     	; 0x9d0 <__stack+0xd1>
+ 980:	81 38       	cpi	r24, 0x81	; 129
+ 982:	91 05       	cpc	r25, r1
+ 984:	3c f4       	brge	.+14     	; 0x994 <__stack+0x95>
+ 986:	80 36       	cpi	r24, 0x60	; 96
+ 988:	91 05       	cpc	r25, r1
+ 98a:	c1 f0       	breq	.+48     	; 0x9bc <__stack+0xbd>
+ 98c:	80 37       	cpi	r24, 0x70	; 112
+ 98e:	91 05       	cpc	r25, r1
+ 990:	59 f0       	breq	.+22     	; 0x9a8 <__stack+0xa9>
+ 992:	4c c0       	rjmp	.+152    	; 0xa2c <__stack+0x12d>
+ 994:	89 3b       	cpi	r24, 0xB9	; 185
+ 996:	91 05       	cpc	r25, r1
+ 998:	b9 f1       	breq	.+110    	; 0xa08 <__stack+0x109>
+ 99a:	8f 3f       	cpi	r24, 0xFF	; 255
+ 99c:	91 05       	cpc	r25, r1
+ 99e:	e9 f1       	breq	.+122    	; 0xa1a <__stack+0x11b>
+ 9a0:	80 3a       	cpi	r24, 0xA0	; 160
+ 9a2:	91 05       	cpc	r25, r1
+ 9a4:	39 f1       	breq	.+78     	; 0x9f4 <__stack+0xf5>
+ 9a6:	42 c0       	rjmp	.+132    	; 0xa2c <__stack+0x12d>
 
 		  {
 
 			  case 0x70:
-			  TWCR |= ( (1<<TWINT) | (1<<TWEA) );
- 98e:	8c eb       	ldi	r24, 0xBC	; 188
- 990:	90 e0       	ldi	r25, 0x00	; 0
- 992:	2c eb       	ldi	r18, 0xBC	; 188
- 994:	30 e0       	ldi	r19, 0x00	; 0
- 996:	f9 01       	movw	r30, r18
- 998:	20 81       	ld	r18, Z
- 99a:	20 6c       	ori	r18, 0xC0	; 192
- 99c:	fc 01       	movw	r30, r24
- 99e:	20 83       	st	Z, r18
+			  TWCR |= ( (1<<TWINT) );
+ 9a8:	8c eb       	ldi	r24, 0xBC	; 188
+ 9aa:	90 e0       	ldi	r25, 0x00	; 0
+ 9ac:	2c eb       	ldi	r18, 0xBC	; 188
+ 9ae:	30 e0       	ldi	r19, 0x00	; 0
+ 9b0:	f9 01       	movw	r30, r18
+ 9b2:	20 81       	ld	r18, Z
+ 9b4:	20 68       	ori	r18, 0x80	; 128
+ 9b6:	fc 01       	movw	r30, r24
+ 9b8:	20 83       	st	Z, r18
 			  break;
- 9a0:	4e c0       	rjmp	.+156    	; 0xa3e <__stack+0x13f>
+ 9ba:	41 c0       	rjmp	.+130    	; 0xa3e <__stack+0x13f>
 	  
 			  case 0x60:
 				 TWCR |= ( (1<<TWINT) | (1<<TWEA) );
- 9a2:	8c eb       	ldi	r24, 0xBC	; 188
- 9a4:	90 e0       	ldi	r25, 0x00	; 0
- 9a6:	2c eb       	ldi	r18, 0xBC	; 188
- 9a8:	30 e0       	ldi	r19, 0x00	; 0
- 9aa:	f9 01       	movw	r30, r18
- 9ac:	20 81       	ld	r18, Z
- 9ae:	20 6c       	ori	r18, 0xC0	; 192
- 9b0:	fc 01       	movw	r30, r24
- 9b2:	20 83       	st	Z, r18
+ 9bc:	8c eb       	ldi	r24, 0xBC	; 188
+ 9be:	90 e0       	ldi	r25, 0x00	; 0
+ 9c0:	2c eb       	ldi	r18, 0xBC	; 188
+ 9c2:	30 e0       	ldi	r19, 0x00	; 0
+ 9c4:	f9 01       	movw	r30, r18
+ 9c6:	20 81       	ld	r18, Z
+ 9c8:	20 6c       	ori	r18, 0xC0	; 192
+ 9ca:	fc 01       	movw	r30, r24
+ 9cc:	20 83       	st	Z, r18
 				 break;
- 9b4:	44 c0       	rjmp	.+136    	; 0xa3e <__stack+0x13f>
+ 9ce:	37 c0       	rjmp	.+110    	; 0xa3e <__stack+0x13f>
 		
 			  case 0x80:
-				 data = TWDR;
- 9b6:	8b eb       	ldi	r24, 0xBB	; 187
- 9b8:	90 e0       	ldi	r25, 0x00	; 0
- 9ba:	fc 01       	movw	r30, r24
- 9bc:	80 81       	ld	r24, Z
- 9be:	88 2f       	mov	r24, r24
- 9c0:	90 e0       	ldi	r25, 0x00	; 0
- 9c2:	9e 8b       	std	Y+22, r25	; 0x16
- 9c4:	8d 8b       	std	Y+21, r24	; 0x15
-				 if(counter == 0)
- 9c6:	89 81       	ldd	r24, Y+1	; 0x01
- 9c8:	9a 81       	ldd	r25, Y+2	; 0x02
- 9ca:	00 97       	sbiw	r24, 0x00	; 0
- 9cc:	79 f4       	brne	.+30     	; 0x9ec <__stack+0xed>
-				 {
-					 TWCR |= ( (1<<TWINT) | (1<<TWEA) );
- 9ce:	8c eb       	ldi	r24, 0xBC	; 188
- 9d0:	90 e0       	ldi	r25, 0x00	; 0
- 9d2:	2c eb       	ldi	r18, 0xBC	; 188
- 9d4:	30 e0       	ldi	r19, 0x00	; 0
- 9d6:	f9 01       	movw	r30, r18
- 9d8:	20 81       	ld	r18, Z
- 9da:	20 6c       	ori	r18, 0xC0	; 192
- 9dc:	fc 01       	movw	r30, r24
- 9de:	20 83       	st	Z, r18
-									 counter++;
- 9e0:	89 81       	ldd	r24, Y+1	; 0x01
- 9e2:	9a 81       	ldd	r25, Y+2	; 0x02
- 9e4:	01 96       	adiw	r24, 0x01	; 1
- 9e6:	9a 83       	std	Y+2, r25	; 0x02
- 9e8:	89 83       	std	Y+1, r24	; 0x01
-									 break;
- 9ea:	29 c0       	rjmp	.+82     	; 0xa3e <__stack+0x13f>
-				 }
-				 
-				 if(counter == 1)
- 9ec:	89 81       	ldd	r24, Y+1	; 0x01
- 9ee:	9a 81       	ldd	r25, Y+2	; 0x02
- 9f0:	81 30       	cpi	r24, 0x01	; 1
- 9f2:	91 05       	cpc	r25, r1
- 9f4:	49 f4       	brne	.+18     	; 0xa08 <__stack+0x109>
-				 {
-					 TWCR |= ( (1<<TWINT) );
- 9f6:	8c eb       	ldi	r24, 0xBC	; 188
- 9f8:	90 e0       	ldi	r25, 0x00	; 0
- 9fa:	2c eb       	ldi	r18, 0xBC	; 188
- 9fc:	30 e0       	ldi	r19, 0x00	; 0
- 9fe:	f9 01       	movw	r30, r18
- a00:	20 81       	ld	r18, Z
- a02:	20 68       	ori	r18, 0x80	; 128
- a04:	fc 01       	movw	r30, r24
- a06:	20 83       	st	Z, r18
-				 }
-				 counter++;
- a08:	89 81       	ldd	r24, Y+1	; 0x01
- a0a:	9a 81       	ldd	r25, Y+2	; 0x02
- a0c:	01 96       	adiw	r24, 0x01	; 1
- a0e:	9a 83       	std	Y+2, r25	; 0x02
- a10:	89 83       	std	Y+1, r24	; 0x01
-				 break;
- a12:	15 c0       	rjmp	.+42     	; 0xa3e <__stack+0x13f>
+				data = TWDR;
+ 9d0:	8b eb       	ldi	r24, 0xBB	; 187
+ 9d2:	90 e0       	ldi	r25, 0x00	; 0
+ 9d4:	fc 01       	movw	r30, r24
+ 9d6:	80 81       	ld	r24, Z
+ 9d8:	88 2f       	mov	r24, r24
+ 9da:	90 e0       	ldi	r25, 0x00	; 0
+ 9dc:	98 8f       	std	Y+24, r25	; 0x18
+ 9de:	8f 8b       	std	Y+23, r24	; 0x17
+				TWCR |= ( (1<<TWINT) );
+ 9e0:	8c eb       	ldi	r24, 0xBC	; 188
+ 9e2:	90 e0       	ldi	r25, 0x00	; 0
+ 9e4:	2c eb       	ldi	r18, 0xBC	; 188
+ 9e6:	30 e0       	ldi	r19, 0x00	; 0
+ 9e8:	f9 01       	movw	r30, r18
+ 9ea:	20 81       	ld	r18, Z
+ 9ec:	20 68       	ori	r18, 0x80	; 128
+ 9ee:	fc 01       	movw	r30, r24
+ 9f0:	20 83       	st	Z, r18
+					break;
+ 9f2:	25 c0       	rjmp	.+74     	; 0xa3e <__stack+0x13f>
 				 
 				case 0xA0:            /* Received Stop or Repeated Start while still addressed */
 					TWCR |= ( (1<<TWINT) );			                /* Switch to not Addressed */	
- a14:	8c eb       	ldi	r24, 0xBC	; 188
- a16:	90 e0       	ldi	r25, 0x00	; 0
- a18:	2c eb       	ldi	r18, 0xBC	; 188
- a1a:	30 e0       	ldi	r19, 0x00	; 0
- a1c:	f9 01       	movw	r30, r18
- a1e:	20 81       	ld	r18, Z
- a20:	20 68       	ori	r18, 0x80	; 128
- a22:	fc 01       	movw	r30, r24
- a24:	20 83       	st	Z, r18
-					counter = 0;
- a26:	1a 82       	std	Y+2, r1	; 0x02
- a28:	19 82       	std	Y+1, r1	; 0x01
+ 9f4:	8c eb       	ldi	r24, 0xBC	; 188
+ 9f6:	90 e0       	ldi	r25, 0x00	; 0
+ 9f8:	2c eb       	ldi	r18, 0xBC	; 188
+ 9fa:	30 e0       	ldi	r19, 0x00	; 0
+ 9fc:	f9 01       	movw	r30, r18
+ 9fe:	20 81       	ld	r18, Z
+ a00:	20 68       	ori	r18, 0x80	; 128
+ a02:	fc 01       	movw	r30, r24
+ a04:	20 83       	st	Z, r18
 					break;		
- a2a:	09 c0       	rjmp	.+18     	; 0xa3e <__stack+0x13f>
+ a06:	1b c0       	rjmp	.+54     	; 0xa3e <__stack+0x13f>
 							 
-			  default:
+				case 0xB9:
+					status = TWDR;
+ a08:	8b eb       	ldi	r24, 0xBB	; 187
+ a0a:	90 e0       	ldi	r25, 0x00	; 0
+ a0c:	fc 01       	movw	r30, r24
+ a0e:	80 81       	ld	r24, Z
+ a10:	88 2f       	mov	r24, r24
+ a12:	90 e0       	ldi	r25, 0x00	; 0
+ a14:	9a 8f       	std	Y+26, r25	; 0x1a
+ a16:	89 8f       	std	Y+25, r24	; 0x19
+					break;
+ a18:	12 c0       	rjmp	.+36     	; 0xa3e <__stack+0x13f>
+			  
+			  
+			  case 0xFF:
 			  status = TWDR;
+ a1a:	8b eb       	ldi	r24, 0xBB	; 187
+ a1c:	90 e0       	ldi	r25, 0x00	; 0
+ a1e:	fc 01       	movw	r30, r24
+ a20:	80 81       	ld	r24, Z
+ a22:	88 2f       	mov	r24, r24
+ a24:	90 e0       	ldi	r25, 0x00	; 0
+ a26:	9a 8f       	std	Y+26, r25	; 0x1a
+ a28:	89 8f       	std	Y+25, r24	; 0x19
+			    break;
+ a2a:	09 c0       	rjmp	.+18     	; 0xa3e <__stack+0x13f>
+				
+			  default:
+				status = TWDR;
  a2c:	8b eb       	ldi	r24, 0xBB	; 187
  a2e:	90 e0       	ldi	r25, 0x00	; 0
  a30:	fc 01       	movw	r30, r24
  a32:	80 81       	ld	r24, Z
  a34:	88 2f       	mov	r24, r24
  a36:	90 e0       	ldi	r25, 0x00	; 0
- a38:	98 8f       	std	Y+24, r25	; 0x18
- a3a:	8f 8b       	std	Y+23, r24	; 0x17
-			    break;
+ a38:	9a 8f       	std	Y+26, r25	; 0x1a
+ a3a:	89 8f       	std	Y+25, r24	; 0x19
+				break;
  a3c:	00 00       	nop
 		  }
 	  }
- a3e:	51 cf       	rjmp	.-350    	; 0x8e2 <main+0x7c>
+ a3e:	49 cf       	rjmp	.-366    	; 0x8d2 <main+0x6c>
 
 00000a40 <__cmpsf2>:
  a40:	d4 d0       	rcall	.+424    	; 0xbea <__fp_cmp>
