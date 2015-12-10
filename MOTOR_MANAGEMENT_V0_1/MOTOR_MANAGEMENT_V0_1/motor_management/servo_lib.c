@@ -23,9 +23,8 @@ void init_servo_1( void )
     ICR1 = 0x5000;													//Top of Counter
 
     PORTC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );                 //Signalize successfull bootup with all LED's
-    _delay_ms(300);
+    _delay_ms(50);
     PORTC &= ~( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
-    _delay_ms(300);
 }
 
 void control_servo_1( char grad )

@@ -70,7 +70,7 @@ ISR (TIMER0_OVF_vect){
 
 ISR(INT2_vect){
 	
-	forwardsecure();
+	//forwardsecure();
 	
 }
 
@@ -78,7 +78,7 @@ ISR(INT2_vect){
 
 ISR(INT3_vect){
 	
-	backwardsecure();
+	//backwardsecure();
 	
 }
 
@@ -110,8 +110,9 @@ int main(){
 
 	while(1) {
 		
-	twi_transmit(0x0B, data_array[2], 0xF0);		
-	_delay_ms(500);
+	twi_transmit(0x0A, data_array[2], 0xF0);		
+	twi_transmit(0x0B, data_array[2], 0xF0);
+	_delay_ms(100);
 		
 		/*
 		switch(rf_receive()) {													// Schauen was rf_receive fuer eine aktion weitergibt

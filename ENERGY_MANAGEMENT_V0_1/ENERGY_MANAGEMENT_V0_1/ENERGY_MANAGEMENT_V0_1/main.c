@@ -218,7 +218,6 @@ void twi_init(void)
 	TWAR = ( 0x0A << 1 );
 	//TWAR |= 0x01;
 	TWCR = ( (1<<TWEN) | (1<<TWEA) );
-	slave = TWAR;
 }
 
 int main(void)
@@ -233,10 +232,11 @@ int main(void)
 	float current = 0;
 	float lipo = 0;
 	
-	int slave = 0;
+	int data = 0;
 	
 	while(1)
 	{
+		DDRD |= ( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
 		power_control(power_status);
 		cc_control(cc_status);
 		
@@ -255,7 +255,10 @@ int main(void)
 			
 			case 0x80:
 				data = TWDR;
-				TWCR |= ( (1<<TWINT) );
+				TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+				PORTD |= ( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
+				_delay_ms(50);
+				PORTD &= ~( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
 				break;
 			
 			case 0xA0:            /* Received Stop or Repeated Start while still addressed */

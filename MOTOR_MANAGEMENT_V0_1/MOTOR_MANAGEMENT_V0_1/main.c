@@ -38,17 +38,17 @@ int main(void)
     init_servo_1();                                                 //Initalize our Servo1
     init_motor_1();                                                 //Initalize our Motor1
 
-    init_uart(MYUBRR);
+    //init_uart(MYUBRR);
 
-    int motor = 0;                                                  //variabel
+    //int motor = 0;                                                  //variabel
     
-    unsigned char value_uart = 0;
+    //unsigned char value_uart = 0;
     
-    char str[10];
+    //char str[10];
 
-    transmit_uart_string("Motor Controller V0.1 Ready!!");
-    transmit_uart('\r');
-    transmit_uart('\n');    
+    //transmit_uart_string("Motor Controller V0.1 Ready!!");
+    //transmit_uart('\r');
+    //transmit_uart('\n');    
 
 	twi_init();
 
@@ -64,7 +64,13 @@ int main(void)
 			case 0x80:
 			data = TWDR;
 			control_motor_1(data);
-			TWCR |= ( (1<<TWINT) );
+			TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+			
+			PORTC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
+			_delay_ms(50);
+			
+			PORTC &= ~( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
+			_delay_ms(50);
 			break;
 			
 			case 0xA0:            /* Received Stop or Repeated Start while still addressed */
