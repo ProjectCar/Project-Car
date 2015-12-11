@@ -4,6 +4,7 @@
 // Datum:	 8.11.2015			//
 // Version:	 1.1				//
 //////////////////////////////////
+
 #include <avr/io.h>
 #include <stdint.h>
 #include "nrf24.h"
@@ -14,8 +15,8 @@
 /* ------------------------------------------------------------------------- */
 
 
-#define EM 0xFF
-#define MM 0x0F
+#define EM 0x0A
+#define MM 0x0B
 #define akku 0x12
 #define motor 0x55
 #define servo 0x66
@@ -70,7 +71,7 @@ ISR (TIMER0_OVF_vect){
 
 ISR(INT2_vect){
 	
-	//forwardsecure();
+	forwardsecure();
 	
 }
 
@@ -78,7 +79,7 @@ ISR(INT2_vect){
 
 ISR(INT3_vect){
 	
-	//backwardsecure();
+	backwardsecure();
 	
 }
 
@@ -110,19 +111,13 @@ int main(){
 
 	while(1) {
 		
-	twi_transmit(0x0A, data_array[2], 0xF0);		
-	twi_transmit(0x0B, data_array[2], 0xF0);
-	_delay_ms(100);
-		
-		/*
 		switch(rf_receive()) {													// Schauen was rf_receive fuer eine aktion weitergibt
 			
 			case 1: rf_transimit(); break;										// Wenn 1 dann sende Daten an die Fernedienung
 			case 2:																// Wenn 2
-				//	twi_transmit(MM, motor, data_array[1]);						// Motorgeschwindigketi schicken
-				//	twi_transmit(MM, servo, data_array[2]);						// Lenkung schicken
-
-				
+				twi_transmit(MM, motor, data_array[1]);							// Motorgeschwindigketi schicken
+				twi_transmit(MM, servo, data_array[2]);							// Lenkung schicken
+				_delay_ms(10);
 				
 				PORTF = (data_array[2]);
 				
@@ -133,8 +128,6 @@ int main(){
 			case 3: break;														// keine Daten erhalten
 			
 		}
-		*/
-		
 	}
 }
 
@@ -149,8 +142,8 @@ int main(){
 
 void twi_init(void){
 	
-	twi_transmit(MM, 0x01,0x0000);												// Init von Motor
-	twi_transmit(MM, 0x02,0x0000);												// Init von Motor
+	twi_transmit(MM, Motor,0x0000);												// Init von Motor
+	twi_transmit(MM, servo,0x0000);												// Init von Motor
 	twi_receive(EM, 0x01);														// Akkustand laden
 			
 }
@@ -168,14 +161,14 @@ void twi_transmit(int twi_adress, char mode, int data){
 	//Shift to left due to 7Bit Adress Format. Right Bit -> R/W Bit
 	twi_adress = (twi_adress << 0x01);
 	
-	//TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);										// Startcondition senden
+	//TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);									// Startcondition senden
 	TWCR = (1<<TWSTA)|(1<<TWEN)|(1<<TWEA);										// Startcondition senden
 	//PORTF |= (1<<PORTD0);
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	//PORTF &= ~(1<<PORTD0);
 
 		
-	TWDR = twi_adress;																// Adresse Laden
+	TWDR = twi_adress;															// Adresse Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 		
@@ -187,13 +180,6 @@ void twi_transmit(int twi_adress, char mode, int data){
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	
-	//TWDR = ((data >> 8 )& 0x00FF);												// Datenbyte 2 Laden
-	//TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
-	//while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
-
-	//TWDR = (data & 0x00FF);														// Datenbyte 3 Laden
-	//TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
-	//while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
 	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);										// Stopcondition senden
 	
@@ -234,9 +220,9 @@ void rf_transimit(){
 	data_array[3] = 0x00;
 	
 	
-	nrf24_send(data_array);											// Datenarray versenden
-	while(nrf24_isSending());										// Warten bis senden beendet ist
-	temp = nrf24_lastMessageStatus();								// Schaut ob alle Daten angekommen sind
+	nrf24_send(data_array);													// Datenarray versenden
+	while(nrf24_isSending());												// Warten bis senden beendet ist
+	temp = nrf24_lastMessageStatus();										// Schaut ob alle Daten angekommen sind
 
 	if(temp == NRF24_TRANSMISSON_OK){
 		
