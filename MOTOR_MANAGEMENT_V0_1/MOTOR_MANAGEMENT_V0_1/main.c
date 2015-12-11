@@ -54,6 +54,9 @@ int main(void)
 	
 	int counter = 0;
 	int data_twi[2];
+	
+	char servo_data;
+	char motor_data;
 
     while(1)
     {        
@@ -71,7 +74,7 @@ int main(void)
 				{
 					data_twi[0] = TWDR;
 					TWCR |= ( (1<<TWINT) | (1<<TWEA) );
-					_delay_ms(10);
+					_delay_ms(1);
 					if(TWSR == 0x80)
 					{
 						data_twi[1] = TWDR;
@@ -80,7 +83,7 @@ int main(void)
 					}
 					break;
 				}
-				_delay_ms(100);
+				_delay_ms(1);
 			}
 			counter = counter;
 			counter = 0;
@@ -105,7 +108,35 @@ int main(void)
 			
 			default:
 			break;
-		}		
+		}
+		
+		//If servo data
+		if(data_twi[0] == 0x55)	
+		{
+			servo_data = data_twi[1];
+			if(servo_data == 0xff)
+			{		
+				PORTC |= ( (1<<DDC0) );
+			}
+			else
+			{
+				PORTC &= ~( (1<<DDC0) );
+			}
+		}	
+
+		//If motor data
+		if(data_twi[0] == 0x66)
+		{
+			motor_data = data_twi[1];
+			if(motor_data == 0xff)
+			{
+				PORTC |= ( (1<<DDC1) );
+			}
+			else
+			{
+				PORTC &= ~( (1<<DDC1));
+			}
+		}
 		        
         /*
 		control_motor_1(motor);                                     //Set the Motor1 to Position x

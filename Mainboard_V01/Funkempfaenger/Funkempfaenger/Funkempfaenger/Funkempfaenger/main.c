@@ -147,7 +147,7 @@ int main(){
 
 void twi_init(void){
 	
-	twi_transmit(MM, Motor,0x0000);												// Init von Motor
+	twi_transmit(MM, motor,0x0000);												// Init von Motor
 	twi_transmit(MM, servo,0x0000);												// Init von Motor
 	twi_receive(EM, 0x01);														// Akkustand laden
 			
