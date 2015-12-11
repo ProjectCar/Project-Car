@@ -35,6 +35,7 @@ void forwardsecure(void);
 void backwardsecure(void);
 
 uint8_t temp;
+int ram = 0;
 uint8_t q = 0;
 uint8_t data_array[6];
 uint8_t tx_address[5] = {0xD7,0xD7,0xD7,0xD7,0xD7};
@@ -121,7 +122,11 @@ int main(){
 				
 				PORTF = (data_array[2]);
 				
-				PORTC = data_array[3];											// Beleuchtung den Daten anpassen
+				ram = data_array[3];											// Beleuchtung den Daten anpassen
+
+				if ( ram  | 0x01 ){	PORTC |= 0x0F;}else{PORTC &= ~(0x0F);}
+				if ( ram  | 0x02 ){	 }
+				if ( ram  | 0x04 ){	 }
 				
 			break;
 			
@@ -172,11 +177,11 @@ void twi_transmit(int twi_adress, char mode, int data){
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 		
-	TWDR = data;																// Datenbyte 1 Laden
+	TWDR = mode;																// Datenbyte 1 Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 
-	TWDR = 0xBB;																// Datenbyte 2 Laden
+	TWDR = data;																// Datenbyte 2 Laden
 	TWCR = (1<<TWINT) | (1<<TWEN);												// Senden beginnen
 	while (!(TWCR &(1<<TWINT)));												// Warten bis gesendet
 	
