@@ -51,6 +51,9 @@ int main(void)
     //transmit_uart('\n');    
 
 	twi_init();
+	
+	int counter = 0;
+	int data_twi[2];
 
     while(1)
     {        
@@ -59,6 +62,29 @@ int main(void)
 		{
 			case 0x60:
 			TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+			
+			while(counter < 5)
+			{
+				counter++;
+				
+				if(TWSR == 0x80)
+				{
+					data_twi[0] = TWDR;
+					TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+					_delay_ms(10);
+					if(TWSR == 0x80)
+					{
+						data_twi[1] = TWDR;
+						TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+						break;
+					}
+					break;
+				}
+				_delay_ms(100);
+			}
+			counter = counter;
+			counter = 0;
+			
 			break;
 			
 			case 0x80:

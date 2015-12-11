@@ -232,7 +232,10 @@ int main(void)
 	float current = 0;
 	float lipo = 0;
 	
+	int counter = 0;
+	
 	int data = 0;
+	int data_twi[2];
 	
 	while(1)
 	{
@@ -251,6 +254,28 @@ int main(void)
 		{
 			case 0x60:
 				TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+				
+				while(counter < 5)
+				{
+					counter++;
+					
+					if(TWSR == 0x80)
+					{
+						data_twi[0] = TWDR;
+						TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+						if(TWSR == 0x80)
+						{
+							data_twi[1] = TWDR;
+							TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+							break;
+						}
+						break;
+					}
+					_delay_ms(100);
+				}
+				counter = counter;
+				counter = 0;
+				
 				break;
 			
 			case 0x80:
