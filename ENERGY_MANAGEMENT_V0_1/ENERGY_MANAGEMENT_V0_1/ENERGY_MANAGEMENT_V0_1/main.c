@@ -236,62 +236,71 @@ int main(void)
 	
 	int data = 0;
 	int data_twi[2];
+
+	DDRD |= ( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
 	
 	while(1)
 	{
-		DDRD |= ( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
-		power_control(power_status);
-		cc_control(cc_status);
-		
 		five_rail = get_five_rail();
 		three_rail = get_three_rail();
 		current = get_current();
 		lipo = get_lipo();
-
-      twi_init();
 		
-		switch(TWSR)        //TWDR    Unknown identifier    Error
+		if(lipo < 11.0)
 		{
-			case 0x60:
-				TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+			//Bat. low
+			power_control(0);
+		}
+		else
+		{
+			power_control(1);
+			cc_control(cc_status);
+		
+			twi_init();
+		
+			switch(TWSR)        //TWDR    Unknown identifier    Error
+			{
+				case 0x60:
+					TWCR |= ( (1<<TWINT) | (1<<TWEA) );
 				
-				while(counter < 5)
-				{
-					counter++;
-					
-					if(TWSR == 0x80)
+					while(counter < 5)
 					{
-						data_twi[0] = TWDR;
-						TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+						counter++;
+					
 						if(TWSR == 0x80)
 						{
-							data_twi[1] = TWDR;
+							data_twi[0] = TWDR;
 							TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+							if(TWSR == 0x80)
+							{
+								data_twi[1] = TWDR;
+								TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+								break;
+							}
 							break;
 						}
-						break;
+						_delay_ms(100);
 					}
-					_delay_ms(100);
-				}
-				counter = counter;
-				counter = 0;
+					counter = counter;
+					counter = 0;
 				
-				break;
+					break;
 			
-			case 0x80:
-				data = TWDR;
-				TWCR |= ( (1<<TWINT) | (1<<TWEA) );
-				PORTD |= ( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
-				_delay_ms(50);
-				PORTD &= ~( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
-				break;
+				case 0x80:
+					data = TWDR;
+					TWCR |= ( (1<<TWINT) | (1<<TWEA) );
+					PORTD |= ( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
+					_delay_ms(50);
+					PORTD &= ~( (1<<PORTD5) | (1<<PORTD6) | (1<<PORTD7) );
+					break;
 			
-			case 0xA0:            /* Received Stop or Repeated Start while still addressed */
-				TWCR |= ( (1<<TWINT) );                            /* Switch to not Addressed */
-				break;
+				case 0xA0:            /* Received Stop or Repeated Start while still addressed */
+					TWCR |= ( (1<<TWINT) );                            /* Switch to not Addressed */
+					break;
 			
-			default:
-				break;
+				default:
+					break;
+			}
 		}
 	}
 }
