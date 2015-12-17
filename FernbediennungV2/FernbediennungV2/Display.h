@@ -271,7 +271,7 @@ void Ausgabe (unsigned char led, unsigned int Prozent, char pic[64][16])
 		pic[11][14] = 0X40;	pic[11][15] = 0X20;
 	}
 	
-	if (led & 0x01)
+	if (led & 0x10)		//forne oben
 	{
 		pic[25][11] = 0X98;
 		pic[26][11] = 0X4C;
@@ -286,7 +286,7 @@ void Ausgabe (unsigned char led, unsigned int Prozent, char pic[64][16])
 		pic[28][11] = 0X87;
 	}
 	
-	if (led & 0x02)
+	if (led & 0x10)		//forne unten
 	{
 		pic[51][11] = 0X97;
 		pic[52][11] = 0X26;
@@ -300,7 +300,7 @@ void Ausgabe (unsigned char led, unsigned int Prozent, char pic[64][16])
 		pic[53][11] = 0X0C;
 		pic[54][11] = 0X18;
 	}
-	if (led & 0x04)
+	if (led & 0x02)		//hinten oben
 	{
 		pic[23][4] = 0XAF;
 		pic[24][4] = 0XAF;
@@ -315,7 +315,7 @@ void Ausgabe (unsigned char led, unsigned int Prozent, char pic[64][16])
 		pic[26][4] = 0X2F;
 	}
 	
-	if (led & 0x08)
+	if (led & 0x04) //hinten unten
 	{
 		pic[53][4] = 0XAF;
 		pic[54][4] = 0XAF;
@@ -330,7 +330,7 @@ void Ausgabe (unsigned char led, unsigned int Prozent, char pic[64][16])
 		pic[56][4] = 0X2F;
 	}
 	
-	if (led & 0x10)
+	if (led & 0x08)	//Bremslicht hinten
 	{
 		pic[36][6] = 0X57;
 		pic[37][6] = 0X57;

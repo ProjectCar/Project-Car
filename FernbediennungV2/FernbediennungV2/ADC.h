@@ -26,7 +26,8 @@ unsigned int ReadADC(unsigned char ADCchannel)
 {
 	ADMUX = (ADMUX & 0xF0) | (ADCchannel & 0x0F);  //select ADC channel with safety mask
 	ADCSRA |= (1<<ADSC);  //single conversion mode
-	while( ADCSRA & (1<<ADSC) );  return ADC; // wait until ADC conversion is complete
+	while( ADCSRA & (1<<ADSC) );  
+	return ADC; // wait until ADC conversion is complete
 }
 
 

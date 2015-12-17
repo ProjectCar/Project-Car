@@ -15,7 +15,8 @@ void PORT_init(void);
 
 void PORT_init(void)
 {
-		DDRD=0xF0; //PORTD as INPUT
+		DDRD=0x00; //PORTD as INPUT
+		PORTD = 0xFF;
 		DDRC=0x00;	//PORTC als INPUT definieren
 
 }

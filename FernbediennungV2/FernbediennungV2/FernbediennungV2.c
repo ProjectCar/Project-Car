@@ -28,12 +28,17 @@
 
 #include "car_icon.h"
 
-int x1 = 0;
-int y1 = 0;
-int x2 = 0;
-int y2 = 0;
+unsigned char x1 = 0;
+unsigned char y1 = 0;
+unsigned char x2 = 0;
+unsigned char y2 = 0;
 
-char led = 0;
+unsigned char in =0;
+unsigned char in_alt= 0;
+unsigned char pos_flanken = 0;
+unsigned char neg_flanken = 0;
+
+//unsigned char led = 0;
 
 unsigned char button = 0;
 unsigned char joystick = 0;
@@ -45,7 +50,7 @@ uint8_t tx_address[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
 uint8_t rx_address[5] = {0xD7,0xD7,0xD7,0xD7,0xD7};
 	
 int rf_receive(void);
-void transmiter(int mode);
+void transmiter(char mode, char led);
 
 int main(void)
 {
@@ -84,8 +89,31 @@ int main(void)
 	
 	while(1)
     {
+		in = PIND^0xFF;					// liest taster ein
+		joystick = (PINC & 0x03)^0x03;	//list joystick knöpfe ein
 		
-		 transmiter(senden);
+		pos_flanken = in & ~ in_alt;	//	ermittelt die positive flanke von den tastern
+		neg_flanken = ~in & in_alt;		//	ermittelt die negative flanke von den tastern
+		
+		button = button ^ pos_flanken;	//	Speichert die positive flanke
+		
+		in_alt = in;		
+		
+		//	liest ADC ein
+		//ADC2/3  &6/7 (x/y)
+		y2=((unsigned char) (ReadADC(2)>>2));
+		x2=((unsigned char) (ReadADC(3)>>2));
+		y1=((unsigned char) (ReadADC(6)>>2));
+		x1=((unsigned char) (ReadADC(7)>>2));
+		
+		//	giebt auf das Display aus
+		Ausgabe(button,y2,car_icon);
+		
+		//sendet schalter (led)
+		transmiter(senden,button);
+		 
+		
+				 
 		 
     }
 }
@@ -100,7 +128,7 @@ int main(void)
 
 int rf_receive(void){
 	
-	transmiter(senden);
+	transmiter(senden,0);
 	
 	nrf24_powerUpRx();
 	
@@ -131,39 +159,12 @@ int rf_receive(void){
 // Version:	 1.1
 //////////////////////////////////////////
 
-void transmiter(int mode){
+void transmiter(char mode, char led){
 	
-
-		//ADC2/3  &6/7 (x/y)
-		y2=ReadADC(2)>>1;		
-		x2=ReadADC(3)>>1;
-		y1=ReadADC(6)>>1;
-		x1=ReadADC(7)>>1;
-		
-		button = PIND^0xFF;
-		joystick = (PINC & 0x03)^0x03;
-		
-		if (joystick==0x00)
-		{
-			Ausgabe(3,x1,car_icon);
-		}
-		else if (joystick==0x01)
-		{
-			Ausgabe(3,y1,car_icon);
-		}
-		else if (joystick== 0x02)
-		{
-			Ausgabe(3,x2,car_icon);
-		} 
-		else if (joystick==0x03)
-		{
-			Ausgabe(3,y2,car_icon);
-		}
-		 
 		 data_array[0] = mode;
 		 data_array[1] = x1;
 		 data_array[2] = y2;
-		 data_array[3] = led;
+		 data_array[3] = led;		//led
 
 		 nrf24_send(data_array);							/*Automatically goes to TX mode */
 		 
