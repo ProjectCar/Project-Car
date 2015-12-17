@@ -65,15 +65,16 @@ void control_motor_1( int power )
 
     PORTC |= (1<<DDC1);                                             //Set orange LED to show that there is something happening
 
-    CAL = 0x08FF - 0x01FF;                                          //Calibration Value. If you have Issues with this Parameter please consult Bmarty for a solution
+    CAL = 0x08FF + 100 - 0x01FF;                                          //Calibration Value. If you have Issues with this Parameter please consult Bmarty for a solution
 
     //OCR1B = ((CAL/180)*grad) + 0x01FF;                            //Calculate the Value for the Timer based on the given °                                  
-    temp = power + 100;
-	temp = temp * 1024/2;
-	temp = temp/100;
-	temp = temp + 1024;
+    //temp = power + 100;
+	//temp = temp * 1024/2;
+	//temp = temp/100;
+	//temp = temp + 1024;
 	
-	OCR1B = temp;
+	OCR1B = ((CAL/190)*power) + 0x01FF - 350;
+	//OCR1B = temp;
 	
 	PORTC &= ~(1<<DDC1);                                            //Turn off LED
 }

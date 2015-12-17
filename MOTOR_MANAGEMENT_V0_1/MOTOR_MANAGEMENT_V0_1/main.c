@@ -38,7 +38,11 @@ int main(void)
     init_servo_1();                                                 //Initalize our Servo1
     init_motor_1();                                                 //Initalize our Motor1
 
-    //init_uart(MYUBRR);
+
+	control_motor_1(128);
+	control_servo_1(128);
+    
+	//init_uart(MYUBRR);
 
     //int motor = 0;                                                  //variabel
     
@@ -49,6 +53,8 @@ int main(void)
     //transmit_uart_string("Motor Controller V0.1 Ready!!");
     //transmit_uart('\r');
     //transmit_uart('\n');    
+	
+	int motor_data_test = 128;
 
 	twi_init();
 	
@@ -92,7 +98,9 @@ int main(void)
 			
 			case 0x80:
 			data = TWDR;
-			control_motor_1(data);
+
+			
+			
 			TWCR |= ( (1<<TWINT) | (1<<TWEA) );
 			
 			PORTC |= ( (1<<DDC0) | (1<<DDC1) | (1<<DDC2) );
@@ -113,7 +121,10 @@ int main(void)
 		//If servo data
 		if(data_twi[0] == 0x55)	
 		{
+			control_servo_1(data_twi[1]);
+			
 			servo_data = data_twi[1];
+			
 			if(servo_data == 0xff)
 			{		
 				PORTC |= ( (1<<DDC0) );
@@ -127,7 +138,22 @@ int main(void)
 		//If motor data
 		if(data_twi[0] == 0x66)
 		{
+			
+			if(data_twi[1] > 200)
+			{
+				data_twi[1] = 200;
+			}
+			if(data_twi[1] < 80)
+			{
+				data_twi[1] = 80;
+			}
+			
+			control_motor_1(data_twi[1]);
+
+			//control_motor_1(motor_data_test);			
+			
 			motor_data = data_twi[1];
+			
 			if(motor_data == 0xff)
 			{
 				PORTC |= ( (1<<DDC1) );
