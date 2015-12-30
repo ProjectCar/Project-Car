@@ -63,6 +63,18 @@ int main(void)
 	
 	char servo_data;
 	char motor_data;
+	
+	//Configure OC0A
+	TCCR0A |= (1<<COM0A1);
+	TCCR0A |= (1<<COM0B1);
+	TCCR0A |= (1<<WGM00)|(1<<WGM01);
+	
+	TCCR0B |= (1<<CS01);
+	
+	DDRD |= (1<<PORTD5)|(1<<PORTD6);
+	
+	
+	
 
     while(1)
     {        
@@ -121,7 +133,16 @@ int main(void)
 		//If servo data
 		if(data_twi[0] == 0x55)	
 		{
-			control_servo_1(data_twi[1]);
+			if(data_twi[1] > 128)
+			{
+				control_servo_1(data_twi[1]);
+			}
+			
+			if(data_twi[1] < 127)
+			{
+				control_servo_1(data_twi[1]);				
+			}
+			
 			
 			servo_data = data_twi[1];
 			
@@ -138,96 +159,23 @@ int main(void)
 		//If motor data
 		if(data_twi[0] == 0x66)
 		{
-			
-			if(data_twi[1] > 200)
+			//If Forward
+			if(data_twi[1] > 128)
 			{
-				data_twi[1] = 200;
+				OCR0A = (data_twi[1] - 128) * 2;
+				//Stop Backward
+				OCR0B = 0x00;
 			}
-			if(data_twi[1] < 80)
-			{
-				data_twi[1] = 80;
-			}
-			
-			control_motor_1(data_twi[1]);
 
-			//control_motor_1(motor_data_test);			
-			
-			motor_data = data_twi[1];
-			
-			if(motor_data == 0xff)
+			//If Backward
+			if(data_twi[1] < 127)
 			{
-				PORTC |= ( (1<<DDC1) );
+				//Stop Forward
+				OCR0A = 0x00;
+				OCR0B = (127 - data_twi[1]) * 2;
 			}
-			else
-			{
-				PORTC &= ~( (1<<DDC1));
-			}
+			
+
 		}
-		        
-        /*
-		control_motor_1(motor);                                     //Set the Motor1 to Position x
-        
-        value_uart = receive_uart();
-        
-        switch(value_uart)
-        {
-            case 'w':
-                motor++;
-                break;
-            
-            case 's':
-                motor--;
-                break;
-        }
-        
-        sprintf(str,"%i",motor);
-        
-        transmit_uart_string(str);
-        transmit_uart('\r');
-        transmit_uart('\n');
-		*/
-		
-        /*
-        motor = 90;
-        
-        control_motor_1(180);                                     //Set the Motor1 to Position x
-        
-        test = 100;
-        
-        control_motor_1(10);                                     //Set the Motor1 to Position x
-        
-        test1 = 90;        
-        */
-        
-        /*
-
-        for(int x = 0; x < 90; x++)
-        {
-            control_servo_1(x);                                     //Set the Servo1 to Position x
-            //control_motor_1(x);                                     //Set the Motor1 to Position x
-            _delay_ms(10);
-        }
-
-        _delay_ms(1000);
-
-        for(int x = 90; x < 180; x++)
-        {
-            control_servo_1(x);                                     //Set the Servo1 to Position x
-            //control_motor_1(x);                                     //Set the Motor1 to Position x
-            _delay_ms(10);
-        }
-
-        _delay_ms(1000);
-
-        for(int x = 180; x > 0; x--)
-        {
-            control_servo_1(x);                                     //Set the Servo1 to Position x
-            //control_motor_1(x);                                     //Set the Motor1 to Position x
-            _delay_ms(10);        
-        }
-
-        _delay_ms(1000);
-        
-        */
     }
 }
